@@ -1,0 +1,21 @@
+# Netlify configuration for Nasser Al Ali Enterprises site
+
+[build]
+  publish   = "dist"
+  functions = "netlify/functions"
+
+[functions]
+  node_bundler = "esbuild"
+
+# Nice URL for the chat function (optional; the default /.netlify/functions/chat also works)
+[[redirects]]
+  from   = "/api/chat"
+  to     = "/.netlify/functions/chat"
+  status = 200
+
+# SPA-safe fallback for any accidental 404s on the static site
+[[redirects]]
+  from   = "/*"
+  to     = "/index.html"
+  status = 200
+  force  = false
