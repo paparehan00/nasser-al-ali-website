@@ -71,85 +71,304 @@ document.addEventListener("DOMContentLoaded", () => {
     initEverything();
   };
 
-  // Splash timer — reveal after 700ms.
-  setTimeout(revealSite, 700);
-
-  // Hard backup — force preloader gone at 1.8s even if the animation is buggy.
+  // Hard backup — 3s max on the preloader no matter what.
+  // (Scrub/video code call revealSite() sooner when their assets are ready.)
+  const HERO_HARD_TIMEOUT_MS = 3000;
   setTimeout(() => {
-    const p = document.querySelector('.preloader');
-    if (p && p.style.display !== 'none') {
-      p.style.display = 'none';
-      if (!hasRevealed) { initEverything(); hasRevealed = true; }
+    if (!hasRevealed) {
+      // Fail-open: hide loader, show poster, keep scrub attempt going in background
+      const p = document.querySelector('.preloader');
+      if (p) p.style.display = 'none';
+      showPosterOnly && showPosterOnly();
+      initEverything();
+      hasRevealed = true;
     }
-  }, 1800);
+  }, HERO_HARD_TIMEOUT_MS);
 
-  // Cosmetic progress bar — fill it up to 100% during the splash window.
+  // Real progress reporter (shared by scrub decoder + video buffer).
   const progressBar = document.getElementById("progress-bar");
   const progressText = document.getElementById("progress-text");
-  if (progressBar || progressText) {
-    const splashStart = performance.now();
-    const tick = () => {
-      const t = Math.min(1, (performance.now() - splashStart) / 700);
-      const pct = Math.floor(t * 100);
-      if (progressBar) progressBar.style.width = `${pct}%`;
-      if (progressText) progressText.innerText = `${pct}%`;
-      if (t < 1 && !hasRevealed) requestAnimationFrame(tick);
-    };
-    requestAnimationFrame(tick);
-  }
+  const reportProgress = (done, total) => {
+    if (!total) return;
+    const pct = Math.min(100, Math.floor((done / total) * 100));
+    if (progressBar) progressBar.style.width = pct + "%";
+    if (progressText) progressText.innerText = pct + "%";
+  };
 
   // ---------------------------------------------------------------------------
-  // Hero video — autoplay, muted, loop. Guarantee playback (mobile browsers).
+  // Hero — capability detection + two modes:
+  //   A) SCRUB mode: desktop, good network, no reduced-motion.
+  //      120 WebP frames, pre-decoded, drawn on canvas via a single rAF loop
+  //      driven by scroll progress.
+  //   B) VIDEO mode: mobile, slow network, save-data, reduced-motion.
+  //      Muted autoplay looping video (webm→mp4→poster).
   // ---------------------------------------------------------------------------
+  const HERO_FRAME_COUNT_MAX = 200; // upper safety bound; auto-detected from 404s
+  const HERO_FRAME_PATH = (i) => `assets/hero-frames/frame-${String(i).padStart(3, "0")}.webp`;
+
+  const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+  const saveData = !!(conn && conn.saveData);
+  const slowNet = !!(conn && /^(slow-2g|2g|3g)$/.test(conn.effectiveType || ""));
+  const useVideoFallback = isMobile || saveData || slowNet || isReducedMotion;
+
+  const heroCanvas = document.getElementById("hero-canvas");
   const heroVideo = document.getElementById("hero-video");
-  if (heroVideo) {
+  const heroFallback = document.getElementById("hero-fallback");
+
+  const showPosterOnly = () => {
+    if (heroCanvas) heroCanvas.classList.remove("is-active");
+    if (heroVideo) heroVideo.classList.remove("is-active");
+    // .hero-fallback is always visible as base layer (z-index 0)
+  };
+
+  // ---- Shared scrub-mode state --------------------------------------------
+  let heroMode = null;           // 'scrub' | 'video' | 'poster'
+  const heroFrames = [];         // heroFrames[i] = decoded HTMLImageElement (0-indexed)
+  let heroDecodedContig = 0;     // highest CONTIGUOUS decoded index + 1
+  let heroTotal = 0;             // detected frame count
+  let heroCurrentDrawn = -1;
+  let heroTargetIndex = 0;
+  let heroCtx = null;
+  let heroCoverParams = { x: 0, y: 0, w: 0, h: 0 };
+  let heroRafRunning = false;
+
+  const computeCover = (iw, ih) => {
+    if (!iw || !ih || !heroCanvas) return;
+    const cw = heroCanvas.width;
+    const ch = heroCanvas.height;
+    const scale = Math.max(cw / iw, ch / ih);
+    const w = iw * scale;
+    const h = ih * scale;
+    heroCoverParams = { x: (cw - w) / 2, y: (ch - h) / 2, w, h };
+  };
+
+  const sizeHeroCanvas = () => {
+    if (!heroCanvas) return;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const w = window.innerWidth;
+    const h = window.innerHeight;
+    heroCanvas.width = Math.round(w * dpr);
+    heroCanvas.height = Math.round(h * dpr);
+    heroCanvas.style.width = w + "px";
+    heroCanvas.style.height = h + "px";
+    const ref = heroFrames[0];
+    if (ref) computeCover(ref.naturalWidth || ref.width, ref.naturalHeight || ref.height);
+    heroCurrentDrawn = -1; // force redraw at new size
+  };
+
+  const drawHeroFrame = (idx) => {
+    if (!heroCtx) return;
+    const img = heroFrames[idx];
+    if (!img) return;
+    heroCtx.drawImage(img, heroCoverParams.x, heroCoverParams.y, heroCoverParams.w, heroCoverParams.h);
+    heroCurrentDrawn = idx;
+  };
+
+  // Single rAF loop — only re-draws when target changes and is decoded.
+  const heroRafLoop = () => {
+    if (!heroRafRunning) return;
+    const maxIdx = Math.max(0, heroDecodedContig - 1);
+    const clamped = Math.min(heroTargetIndex | 0, maxIdx);
+    if (clamped !== heroCurrentDrawn) drawHeroFrame(clamped);
+    requestAnimationFrame(heroRafLoop);
+  };
+
+  // Auto-detect the frame count by binary-probing 404s (fast; first probe hits 120)
+  const detectHeroFrameCount = () =>
+    new Promise((resolve) => {
+      const probe = (n) => new Promise((r) => {
+        const im = new Image();
+        im.onload = () => r(true);
+        im.onerror = () => r(false);
+        im.src = HERO_FRAME_PATH(n) + "?probe=1";
+      });
+      (async () => {
+        if (!(await probe(1))) return resolve(0);
+        let lo = 1;
+        let hi = HERO_FRAME_COUNT_MAX;
+        if (await probe(120)) {
+          if (!(await probe(121))) return resolve(120);
+          lo = 121;
+        } else {
+          hi = 119;
+        }
+        while (lo < hi) {
+          const mid = ((lo + hi + 1) / 2) | 0;
+          if (await probe(mid)) lo = mid;
+          else hi = mid - 1;
+        }
+        resolve(lo);
+      })();
+    });
+
+  // Pre-decode one frame via img.decode() so drawImage is instant
+  const decodeFrame = (i) => new Promise((resolve) => {
+    const img = new Image();
+    img.decoding = "async";
+    const done = (ok) => {
+      if (ok) heroFrames[i - 1] = img;
+      resolve(ok);
+    };
+    img.onload = () => {
+      if (img.decode) img.decode().then(() => done(true)).catch(() => done(!!img.complete));
+      else done(true);
+    };
+    img.onerror = () => done(false);
+    img.src = HERO_FRAME_PATH(i);
+  });
+
+  const updateDecodedCount = () => {
+    while (heroFrames[heroDecodedContig]) heroDecodedContig++;
+  };
+
+  // Kick off the video buffering. Resolves when the video is ready to play.
+  const preloadHeroVideo = () => new Promise((resolve) => {
+    if (!heroVideo) return resolve(false);
+    if (!heroVideo.querySelector("source")) {
+      const webm = document.createElement("source");
+      webm.src = "assets/hero-1080.webm"; webm.type = "video/webm";
+      const mp4 = document.createElement("source");
+      mp4.src = "assets/hero-1080.mp4"; mp4.type = "video/mp4";
+      heroVideo.appendChild(webm); heroVideo.appendChild(mp4);
+    }
+    heroVideo.preload = "auto";
     heroVideo.muted = true;
     heroVideo.playsInline = true;
-    const tryPlay = () => {
-      const p = heroVideo.play();
-      if (p && typeof p.catch === 'function') {
-        p.catch(() => {
-          // Autoplay blocked — leave poster showing. Play on first user interaction.
-          const kick = () => { heroVideo.play().catch(() => {}); document.removeEventListener('click', kick); document.removeEventListener('touchstart', kick); };
-          document.addEventListener('click', kick, { once: true });
-          document.addEventListener('touchstart', kick, { once: true });
+    const onReady = () => { cleanup(); resolve(true); };
+    const onErr = () => { cleanup(); resolve(false); };
+    const cleanup = () => {
+      heroVideo.removeEventListener("canplay", onReady);
+      heroVideo.removeEventListener("loadeddata", onReady);
+      heroVideo.removeEventListener("error", onErr);
+    };
+    heroVideo.addEventListener("canplay", onReady, { once: true });
+    heroVideo.addEventListener("loadeddata", onReady, { once: true });
+    heroVideo.addEventListener("error", onErr, { once: true });
+    try { heroVideo.load(); } catch (_) { onErr(); }
+  });
+
+  // Kick off frame decoding. Resolves when the first ~20 frames are ready.
+  const preloadHeroFrames = () => new Promise(async (resolve) => {
+    heroTotal = await detectHeroFrameCount();
+    if (!heroTotal) return resolve(false);
+
+    const REVEAL_AT = Math.min(20, heroTotal);
+    const CONCURRENCY = 8;
+    let dispatched = 0;
+    let nextToStart = 1;
+    let resolved = false;
+
+    const trySpawn = () => {
+      while (nextToStart <= heroTotal && (nextToStart - dispatched) < CONCURRENCY) {
+        const idx = nextToStart++;
+        decodeFrame(idx).then((ok) => {
+          dispatched++;
+          if (ok) updateDecodedCount();
+          reportProgress(dispatched, heroTotal);
+          if (!resolved && heroDecodedContig >= REVEAL_AT) {
+            resolved = true;
+            resolve(true);
+          }
+          if (nextToStart <= heroTotal) trySpawn();
         });
       }
     };
-    if (heroVideo.readyState >= 2) tryPlay();
-    else heroVideo.addEventListener('loadeddata', tryPlay, { once: true });
-    // Fallback kick after 500ms in case loadeddata never fires
-    setTimeout(tryPlay, 500);
-  }
+    trySpawn();
+  });
 
-  // ---------------------------------------------------------------------------
-  // Hero scroll — overlay fades out over ~1 screen-height of scroll
-  // ---------------------------------------------------------------------------
+  // Bootstrap: choose mode, start preload, resolve when ready to reveal
+  const heroPreloadPromise = (async () => {
+    if (!heroCanvas && !heroVideo) { heroMode = "poster"; return; }
+    if (useVideoFallback) {
+      heroMode = "video";
+      const ok = await preloadHeroVideo();
+      if (!ok) heroMode = "poster";
+    } else {
+      heroMode = "scrub";
+      const ok = await preloadHeroFrames();
+      if (!ok) heroMode = "poster";
+    }
+  })();
+
+  // Trigger revealSite() as soon as hero is ready (bounded by the 3s hard timeout)
+  heroPreloadPromise.then(() => {
+    if (!hasRevealed) revealSite();
+  });
+
+  // ---- Post-reveal: activate the chosen mode ------------------------------
   const initHeroScroll = () => {
+    if (heroMode === "video") {
+      if (!heroVideo) { showPosterOnly(); return; }
+      heroVideo.classList.add("is-active");
+      const tryPlay = () => {
+        const p = heroVideo.play();
+        if (p && typeof p.catch === "function") {
+          p.catch(() => {
+            const kick = () => { heroVideo.play().catch(() => {}); };
+            document.addEventListener("click", kick, { once: true });
+            document.addEventListener("touchstart", kick, { once: true });
+          });
+        }
+      };
+      tryPlay();
+      return;
+    }
+
+    if (heroMode === "scrub" && heroCanvas && heroTotal > 0 && heroDecodedContig > 0) {
+      heroCanvas.classList.add("is-active");
+      heroCtx = heroCanvas.getContext("2d", { alpha: false });
+      sizeHeroCanvas();
+      window.addEventListener("resize", sizeHeroCanvas, { passive: true });
+      const ref = heroFrames[0];
+      if (ref) {
+        computeCover(ref.naturalWidth, ref.naturalHeight);
+        drawHeroFrame(0);
+      }
+      // Start the single rAF draw loop
+      heroRafRunning = true;
+      requestAnimationFrame(heroRafLoop);
+
+      // Attach ScrollTrigger — updates heroTargetIndex only, never draws
+      if (hasGSAP && hasST) {
+        try {
+          gsap.to({ v: 0 }, {
+            v: 1,
+            ease: "none",
+            scrollTrigger: {
+              trigger: ".hero",
+              start: "top top",
+              end: "+=150vh",
+              scrub: 0.3,
+              onUpdate: (self) => {
+                const maxIdx = Math.max(0, heroDecodedContig - 1);
+                heroTargetIndex = Math.round(self.progress * maxIdx);
+              },
+            },
+          });
+        } catch (e) {
+          console.warn("Hero scrub ScrollTrigger error:", e);
+        }
+      }
+      return;
+    }
+
+    // Poster mode
+    showPosterOnly();
+  };
+
+  const initHeroOverlayFade = () => {
     if (isReducedMotion || !hasGSAP || !hasST) return;
     try {
-      gsap.to('.hero-overlay', {
+      gsap.to(".hero-overlay", {
         opacity: 0,
         scrollTrigger: {
           trigger: ".hero",
           start: "top top",
-          end: "+=80vh",
-          scrub: true
-        }
+          end: "+=120vh",
+          scrub: true,
+        },
       });
-      // Subtle video zoom-out on scroll for depth
-      gsap.to('.hero-video', {
-        scale: 1.08,
-        scrollTrigger: {
-          trigger: ".hero",
-          start: "top top",
-          end: "+=100vh",
-          scrub: true
-        }
-      });
-    } catch (e) {
-      console.warn("Hero scroll error:", e);
-    }
+    } catch (_) {}
   };
 
   // ---------------------------------------------------------------------------
@@ -297,7 +516,8 @@ document.addEventListener("DOMContentLoaded", () => {
   // Master initializer, called after preloader hides
   // ---------------------------------------------------------------------------
   const initEverything = () => {
-    initHeroScroll();
+    initHeroScroll();          // Chooses scrub (canvas) or video mode
+    initHeroOverlayFade();     // Fades hero text over ~120vh regardless of mode
     initFadeRise();
     initCounters();
     initParallax();

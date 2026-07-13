@@ -95,12 +95,15 @@
     <!-- Hero Section -->
     <section class="hero" id="hero">
       <div class="hero-sticky">
+        <!-- Poster: instant paint, base layer -->
+        <div class="hero-fallback" id="hero-fallback" style="background-image: url('assets/hero-poster.jpg');"></div>
+        <!-- Canvas: desktop frame-scrub sequence (WebP frames pre-decoded) -->
+        <canvas class="hero-canvas" id="hero-canvas" aria-hidden="true"></canvas>
+        <!-- Video: mobile / slow-network / reduced-motion fallback (autoplay loop) -->
         <video class="hero-video" id="hero-video"
-               autoplay muted loop playsinline preload="auto"
-               poster="assets/hero-frames/ezgif-frame-300.jpg">
-          <source src="assets/fvid.mp4" type="video/mp4">
-        </video>
-        <div class="hero-fallback" style="background-image: url('assets/hero-frames/ezgif-frame-300.jpg');"></div>
+               muted loop playsinline preload="none"
+               poster="assets/hero-poster.jpg"
+               aria-hidden="true"></video>
         <div class="hero-overlay">
           <div class="container hero-container">
             <div class="hero-content">
