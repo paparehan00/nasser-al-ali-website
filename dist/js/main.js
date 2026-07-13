@@ -234,6 +234,10 @@ document.addEventListener("DOMContentLoaded", () => {
     heroVideo.preload = "auto";
     heroVideo.muted = true;
     heroVideo.playsInline = true;
+    heroVideo.controls = false;
+    heroVideo.removeAttribute("controls");
+    heroVideo.setAttribute("disablepictureinpicture", "");
+    heroVideo.setAttribute("disableremoteplayback", "");
     const onReady = () => { cleanup(); resolve(true); };
     const onErr = () => { cleanup(); resolve(false); };
     const cleanup = () => {

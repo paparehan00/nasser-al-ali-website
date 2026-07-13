@@ -472,11 +472,38 @@ section + section::before {
   object-fit: cover;
   opacity: 0.7;
   pointer-events: none;
+  user-select: none;
   z-index: 1;
   display: none; /* One of them is enabled by JS based on capability */
 }
 .hero-canvas.is-active,
 .hero-video.is-active { display: block; }
+
+/* Strip every native "play" overlay / control from the hero video.
+   Browsers (esp. iOS Safari, Android Chrome) render a big centered play
+   button on any <video> that isn't currently playing — we don't want it. */
+.hero-video::-webkit-media-controls,
+.hero-video::-webkit-media-controls-enclosure,
+.hero-video::-webkit-media-controls-panel,
+.hero-video::-webkit-media-controls-play-button,
+.hero-video::-webkit-media-controls-start-playback-button,
+.hero-video::-webkit-media-controls-overlay-play-button,
+.hero-video::-webkit-media-controls-fullscreen-button,
+.hero-video::-webkit-media-controls-mute-button,
+.hero-video::-webkit-media-controls-timeline,
+.hero-video::-webkit-media-controls-current-time-display,
+.hero-video::-webkit-media-controls-time-remaining-display,
+.hero-video::-webkit-media-controls-volume-slider,
+.hero-video::-webkit-media-controls-toggle-closed-captions-button {
+  display: none !important;
+  -webkit-appearance: none !important;
+  appearance: none !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+.hero-video {
+  -webkit-user-modify: read-only !important;
+}
 .hero-sticky::after {
   content: '';
   position: absolute;

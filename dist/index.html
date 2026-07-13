@@ -99,11 +99,13 @@
         <div class="hero-fallback" id="hero-fallback" style="background-image: url('assets/hero-poster.jpg');"></div>
         <!-- Canvas: desktop frame-scrub sequence (WebP frames pre-decoded) -->
         <canvas class="hero-canvas" id="hero-canvas" aria-hidden="true"></canvas>
-        <!-- Video: mobile / slow-network / reduced-motion fallback (autoplay loop) -->
+        <!-- Video: mobile / slow-network / reduced-motion fallback (autoplay loop).
+             No poster/controls attrs — the .hero-fallback layer below owns the
+             still image; the video is decorative and non-interactive. -->
         <video class="hero-video" id="hero-video"
                muted loop playsinline preload="none"
-               poster="assets/hero-poster.jpg"
-               aria-hidden="true"></video>
+               disablepictureinpicture disableremoteplayback
+               aria-hidden="true" tabindex="-1"></video>
         <div class="hero-overlay">
           <div class="container hero-container">
             <div class="hero-content">
