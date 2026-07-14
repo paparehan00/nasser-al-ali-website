@@ -27,3 +27,4 @@ Thumbs.db
 # Client-supplied source spreadsheets (not for publishing)
 assets/clientxlsx/
 *.xlsx
+assets/reviews/
