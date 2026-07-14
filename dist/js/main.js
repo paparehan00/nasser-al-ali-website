@@ -526,11 +526,112 @@ document.addEventListener("DOMContentLoaded", () => {
     initCounters();
     initParallax();
     initMagnetic();
+    initConsentEmbeds();       // Loads gated embeds (map, calendly) when consented
     // Poke ScrollTrigger once layout is settled
     if (hasST) {
       requestAnimationFrame(() => ScrollTrigger.refresh());
     }
   };
+
+  // ---------------------------------------------------------------------------
+  // Consent-gated third-party embeds
+  // Any element with [data-consent-embed="google-maps" | "calendly"] +
+  // [data-embed-src] gets its iframe injected only when the user has accepted
+  // the "embeds" category. Re-checks on consent change.
+  // ---------------------------------------------------------------------------
+  const loadConsentEmbed = (el) => {
+    if (!el || el.dataset.loaded === "1") return;
+    const src = el.getAttribute("data-embed-src");
+    if (!src) return;
+    const title = el.getAttribute("data-embed-title") || "Embedded content";
+    const iframe = document.createElement("iframe");
+    iframe.src = src;
+    iframe.title = title;
+    iframe.loading = "lazy";
+    iframe.referrerPolicy = "no-referrer-when-downgrade";
+    iframe.setAttribute("allowfullscreen", "");
+    iframe.style.border = "0";
+    iframe.width = "100%";
+    iframe.height = "420";
+    // Replace the placeholder with the iframe
+    el.innerHTML = "";
+    el.appendChild(iframe);
+    // Re-add the "Open in Google Maps" link for maps embeds
+    if (el.getAttribute("data-consent-embed") === "google-maps") {
+      const link = document.createElement("a");
+      link.className = "map-link";
+      link.href = "https://maps.app.goo.gl/mxXTsLGDJoXVe6626";
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+      link.textContent = "Open in Google Maps →";
+      el.appendChild(link);
+    }
+    el.dataset.loaded = "1";
+  };
+
+  const applyEmbedConsent = () => {
+    const consent = window.NAAConsent;
+    const allowed = consent && consent.has ? consent.has("embeds") : false;
+    document.querySelectorAll("[data-consent-embed]").forEach((el) => {
+      if (allowed) loadConsentEmbed(el);
+    });
+  };
+
+  const initConsentEmbeds = () => {
+    // Try now, and again whenever consent changes
+    applyEmbedConsent();
+    if (window.NAAConsent && typeof window.NAAConsent.onChange === "function") {
+      window.NAAConsent.onChange(applyEmbedConsent);
+    } else {
+      // consent.js may load slightly later — retry a couple of times
+      let tries = 0;
+      const iv = setInterval(() => {
+        if (window.NAAConsent && typeof window.NAAConsent.onChange === "function") {
+          clearInterval(iv);
+          window.NAAConsent.onChange(applyEmbedConsent);
+          applyEmbedConsent();
+        } else if (++tries > 20) {
+          clearInterval(iv);
+        }
+      }, 200);
+    }
+  };
+
+  // ---------------------------------------------------------------------------
+  // Contact form — async submit to Netlify Forms (keeps user on the page)
+  // ---------------------------------------------------------------------------
+  const contactForm = document.getElementById("contact-form");
+  if (contactForm) {
+    contactForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      if (!contactForm.reportValidity()) return;
+      const successEl = contactForm.querySelector(".form-success");
+      const errorEl = contactForm.querySelector(".form-error");
+      const submitBtn = contactForm.querySelector('button[type="submit"]');
+      if (successEl) successEl.classList.remove("active");
+      if (errorEl) errorEl.hidden = true;
+      if (submitBtn) { submitBtn.disabled = true; submitBtn.dataset.origText = submitBtn.textContent; submitBtn.textContent = "Sending…"; }
+
+      const fd = new FormData(contactForm);
+      const body = new URLSearchParams();
+      for (const [k, v] of fd.entries()) body.append(k, typeof v === "string" ? v : "");
+
+      try {
+        const resp = await fetch("/", {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: body.toString(),
+        });
+        if (!resp.ok) throw new Error("HTTP " + resp.status);
+        if (successEl) successEl.classList.add("active");
+        contactForm.reset();
+      } catch (_) {
+        if (errorEl) errorEl.hidden = false;
+      } finally {
+        if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = submitBtn.dataset.origText || "Submit Enquiry"; }
+      }
+    });
+  }
 
   // ---------------------------------------------------------------------------
   // Sticky nav

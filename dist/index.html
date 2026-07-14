@@ -23,6 +23,7 @@
   <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <script src="js/consent.js" defer></script>
   <script src="js/main.js" defer></script>
   <script src="js/chat.js" defer></script>
 
@@ -517,7 +518,13 @@
           <span class="overline">ABOUT US</span>
           <h2>Two Decades of Building Qatar</h2>
           <p>Established in Qatar in 2005, Nasser Al Ali Enterprises has grown into one of the Middle East's most successful construction firms, with landmark civil, mechanical and electrical projects across Qatar and the wider Arab world. Backed by a 3,500-strong workforce and joint ventures with leading international contractors, we deliver complex projects at scale and to the highest standards.</p>
-          <a href="#contact" class="btn btn-solid btn-gold btn-large about-btn magnetic">Speak with our team</a>
+          <div class="about-actions">
+            <a href="#contact" class="btn btn-solid btn-gold btn-large about-btn magnetic">Speak with our team</a>
+            <a href="assets/company-profile.pdf" class="btn btn-outline btn-gold btn-large about-btn" target="_blank" rel="noopener noreferrer" download>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline-block; vertical-align: middle; margin-right: 6px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+              Download Company Profile
+            </a>
+          </div>
         </div>
         <div class="about-image fade-rise" data-parallax="0.1">
           <img src="assets/civil_1.jpg" alt="Construction Site in Qatar" loading="lazy">
@@ -633,45 +640,60 @@
         <div class="contact-grid">
           <div class="contact-form-wrap fade-rise">
             <h3>Send us a message</h3>
-            <form id="contact-form" onsubmit="event.preventDefault(); this.querySelector('.form-success').classList.add('active');">
+            <!-- Netlify Form: submissions appear in Netlify → Forms.
+                 Email routing is configured in Site settings → Forms → Notifications. -->
+            <form id="contact-form"
+                  name="contact"
+                  method="POST"
+                  data-netlify="true"
+                  netlify-honeypot="bot-field"
+                  data-netlify-async="true">
+              <input type="hidden" name="form-name" value="contact">
+              <p hidden><label>Leave this field empty: <input name="bot-field"></label></p>
+
               <div class="form-row">
                 <div class="form-group">
                   <label for="c-name">Name</label>
-                  <input type="text" id="c-name" placeholder="Your full name" required>
+                  <input type="text" id="c-name" name="name" placeholder="Your full name" required>
                 </div>
                 <div class="form-group">
                   <label for="c-company">Company</label>
-                  <input type="text" id="c-company" placeholder="Company name" required>
+                  <input type="text" id="c-company" name="company" placeholder="Company name" required>
                 </div>
               </div>
               <div class="form-row">
                 <div class="form-group">
                   <label for="c-email">Email</label>
-                  <input type="email" id="c-email" placeholder="you@company.com" required>
+                  <input type="email" id="c-email" name="email" placeholder="you@company.com" required>
                 </div>
                 <div class="form-group">
                   <label for="c-phone">Phone</label>
-                  <input type="tel" id="c-phone" placeholder="+974 …" required>
+                  <input type="tel" id="c-phone" name="phone" placeholder="+974 …" required>
                 </div>
               </div>
               <div class="form-group">
                 <label for="c-service">Service Needed</label>
-                <select id="c-service" required>
+                <select id="c-service" name="service" required>
                   <option value="" disabled selected>Select a service…</option>
                   <option value="manpower">Manpower Support</option>
                   <option value="equipment">Equipment Support</option>
                   <option value="civil">Civil Contracting</option>
                   <option value="mep">MEP Contracting</option>
                   <option value="cleaning">Professional Cleaning</option>
-                  <option value="business">Business Center & Real Estate</option>
+                  <option value="business">Business Center &amp; Real Estate</option>
                 </select>
               </div>
               <div class="form-group">
                 <label for="c-message">Message</label>
-                <textarea id="c-message" placeholder="Tell us about your project…" rows="5" required></textarea>
+                <textarea id="c-message" name="message" placeholder="Tell us about your project…" rows="5" required></textarea>
+              </div>
+              <div class="form-consent">
+                <input type="checkbox" id="c-consent" name="consent" required>
+                <label for="c-consent">I have read and agree to the <a href="privacy.html" target="_blank" rel="noopener">Privacy Policy</a>. I understand my message will be stored so we can respond.</label>
               </div>
               <button type="submit" class="btn btn-solid btn-gold btn-block magnetic">Submit Enquiry</button>
-              <p class="form-success">Thank you — we'll get back to you within one business day.</p>
+              <p class="form-success" role="status">Thank you — we'll get back to you within one business day.</p>
+              <p class="form-error" role="alert" hidden>Sorry — the message didn't send. Please try again, or WhatsApp us at <a href="https://wa.me/97444351112" target="_blank" rel="noopener">+974 4435 1112</a>.</p>
             </form>
           </div>
 
@@ -705,12 +727,17 @@
           </div>
         </div>
 
-        <div class="contact-map fade-rise">
-          <iframe
-            src="https://maps.google.com/maps?q=Almana%20Tower%20Ramada%20Signal%20Doha%20Qatar&t=&z=15&ie=UTF8&iwloc=&output=embed"
-            width="100%" height="420" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
-            title="Nasser Al Ali Enterprises — Almana Tower, Ramada Signal, Doha, Qatar"></iframe>
-          <a class="map-link" href="https://maps.app.goo.gl/mxXTsLGDJoXVe6626" target="_blank" rel="noopener noreferrer">Open in Google Maps →</a>
+        <div class="contact-map fade-rise" id="contact-map"
+             data-consent-embed="google-maps"
+             data-embed-src="https://maps.google.com/maps?q=Almana%20Tower%20Ramada%20Signal%20Doha%20Qatar&t=&z=15&ie=UTF8&iwloc=&output=embed"
+             data-embed-title="Nasser Al Ali Enterprises — Almana Tower, Ramada Signal, Doha, Qatar">
+          <div class="consent-gate-placeholder">
+            <div>
+              Our office map (Google Maps) loads only after you accept third-party embeds.<br>
+              <button type="button" class="btn btn-solid btn-gold" data-consent-reopen>Manage cookie preferences</button><br>
+              <a class="map-link" style="position:static; margin-top: 10px; display: inline-block;" href="https://maps.app.goo.gl/mxXTsLGDJoXVe6626" target="_blank" rel="noopener noreferrer">Or open in Google Maps →</a>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -739,8 +766,16 @@
             <a href="mailto:info@nasseralaligroup.com" class="btn-text">Email</a>
           </div>
         </div>
+        <div class="container footer-legal">
+          <ul class="footer-legal-links">
+            <li><a href="privacy.html">Privacy Policy</a></li>
+            <li><a href="terms.html">Terms of Use</a></li>
+            <li><a href="cookies.html">Cookie Policy</a></li>
+            <li><a href="#" id="footer-consent-reopen">Cookie preferences</a></li>
+          </ul>
+        </div>
         <div class="container copyright">
-          <p>&copy; 2026 Nasser Al Ali Enterprises, Qatar. All rights reserved.</p>
+          <p>&copy; 2026 Nasser Al Ali Enterprises, Qatar &middot; Commercial Registration <span class="placeholder-token">[CR — to be provided]</span> &middot; P.O. Box 13115, Doha, Qatar</p>
         </div>
       </div>
     </footer>

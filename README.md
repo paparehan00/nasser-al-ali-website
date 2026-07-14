@@ -34,7 +34,14 @@ NAA/
 4. Trigger a deploy. On the first build Netlify will:
    - Publish `dist/` as the site.
    - Bundle `netlify/functions/chat.js` (esbuild).
-   - Detect the hidden `chatbot-lead` form in `index.html` and register a **Forms** endpoint.
+   - Detect the hidden `chatbot-lead` form and the visible `contact` form in `index.html` and register **Forms** endpoints for both.
+5. **Wire up email notifications for form submissions** (one-time):
+   - **Site settings → Forms → Form notifications → Add notification → Email notification**
+   - Do this once for each form:
+     - `contact` — recipient: `info@nasseralaligroup.com` (or wherever enquiries should go)
+     - `chatbot-lead` — recipient: `info@nasseralaligroup.com` (or a sales/`crm@` alias)
+   - Optional: also enable **Slack** or **outgoing webhook** notifications from the same panel.
+   - For richer delivery (custom "from" address, HTML templates, tracked opens), swap to Resend / Postmark / SendGrid — add the provider's API key as another Netlify env var and wire it into `netlify/functions/chat.js`.
 
 That's it — visit the site, click the gold chat bubble bottom-right, and ask away.
 

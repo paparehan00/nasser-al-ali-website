@@ -60,6 +60,8 @@
       },
       clear: "Clear",
       poweredBy: "AI assistant",
+      disclosure: "Chats are processed by AI (Google Gemini). Please don't share sensitive personal information.",
+      privacyLinkText: "Privacy Policy",
     },
     ar: {
       openLabel: "افتح المحادثة",
@@ -102,6 +104,8 @@
       },
       clear: "مسح",
       poweredBy: "مساعد ذكي",
+      disclosure: "تُعالج المحادثات بواسطة الذكاء الاصطناعي (Google Gemini). يرجى عدم مشاركة أي معلومات شخصية حساسة.",
+      privacyLinkText: "سياسة الخصوصية",
     },
   };
 
@@ -406,8 +410,23 @@
     renderMessage({ role: "assistant", content: t().greet, ts: Date.now() }, { skipLead: true });
   };
 
+  const renderDisclosure = () => {
+    const dict = t();
+    const el = document.createElement("div");
+    el.className = "naa-chat-disclosure";
+    el.setAttribute("role", "note");
+    el.innerHTML = `
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/>
+      </svg>
+      <span>${escapeHtml(dict.disclosure)} <a href="privacy.html" target="_blank" rel="noopener">${escapeHtml(dict.privacyLinkText)}</a>.</span>
+    `;
+    $body.appendChild(el);
+  };
+
   const renderAll = () => {
     $body.innerHTML = "";
+    renderDisclosure();
     if (!state.messages.length) {
       renderGreeting();
     } else {
