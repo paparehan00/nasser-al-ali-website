@@ -1,0 +1,4 @@
+# Netlify SPA fallback - every deep-link route serves index.html so the
+# React router can handle it client-side. Serverless-function paths pass
+# through unchanged.
+/*    /index.html   200

@@ -22,13 +22,17 @@ Thumbs.db
 *.swp
 *~
 
-# Build artifacts (dist/ IS the site — do not ignore it)
+# Vite build output (rebuilt on every deploy)
+dist/
 
-# Client-supplied source spreadsheets (not for publishing)
+# Client-supplied source folders (post-processed into public/assets/ - originals not for publishing)
 assets/clientxlsx/
-*.xlsx
 assets/reviews/
 assets/services/
 assets/ourexpertise/
 assets/awards-gallery/
 assets/certifications/
+*.xlsx
+
+# Legacy site snapshot - kept for reference only, not for publishing
+_legacy-dist/

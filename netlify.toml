@@ -1,20 +1,12 @@
-# Netlify configuration for Nasser Al Ali Enterprises site
+# Netlify configuration for Nasser Al Ali Enterprises site (React / Vite)
 
 [build]
+  command   = "npm run build"
   publish   = "dist"
   functions = "netlify/functions"
 
+[build.environment]
+  NODE_VERSION = "20"
+
 [functions]
   node_bundler = "esbuild"
-
-# Nice URL for the chat function
-[[redirects]]
-  from   = "/api/chat"
-  to     = "/.netlify/functions/chat"
-  status = 200
-
-# Contact form → serverless email dispatcher (no Netlify Forms dependency)
-[[redirects]]
-  from   = "/api/contact"
-  to     = "/.netlify/functions/contact-submit"
-  status = 200
