@@ -19,7 +19,7 @@
 
   const I18N = {
     en: {
-      openLabel: "Open chat",
+      openLabel: "Talk to our AI assistant",
       closeLabel: "Close chat",
       title: "Ask Nasser Al Ali",
       sub: "Instant answers · powered by AI",
@@ -64,7 +64,7 @@
       privacyLinkText: "Privacy Policy",
     },
     ar: {
-      openLabel: "افتح المحادثة",
+      openLabel: "تحدث مع مساعدنا الذكي",
       closeLabel: "أغلق المحادثة",
       title: "اسأل ناصر العلي",
       sub: "إجابات فورية · مدعوم بالذكاء الاصطناعي",
@@ -187,8 +187,18 @@
   // ---------------------------------------------------------------------------
   // State
   // ---------------------------------------------------------------------------
+  // Initial language: prefer site-wide localStorage (from i18n.js), fall
+  // back to widget's own sessionStorage choice, then default English.
+  const initialLang = (() => {
+    try {
+      const site = localStorage.getItem("naa-lang");
+      if (site === "ar" || site === "en") return site;
+    } catch (_) {}
+    return sessionStorage.getItem(LANG_KEY) || "en";
+  })();
+
   const state = {
-    lang: sessionStorage.getItem(LANG_KEY) || "en",
+    lang: initialLang,
     messages: [], // [{role:'user'|'assistant', content, ts}]
     open: false,
     busy: false,
@@ -627,6 +637,20 @@
   $form.addEventListener("submit", (e) => {
     e.preventDefault();
     submitMessage($input.value);
+  });
+
+  // ---------------------------------------------------------------------------
+  // Sync with site-wide language toggle (from i18n.js).
+  // When the user flips EN/AR in the header, mirror it here too.
+  // ---------------------------------------------------------------------------
+  window.addEventListener("naa-lang-change", (e) => {
+    const lang = (e && e.detail && e.detail.lang) || "en";
+    if (lang !== state.lang && (lang === "en" || lang === "ar")) {
+      state.lang = lang;
+      try { sessionStorage.setItem(LANG_KEY, lang); } catch (_) {}
+      applyLangUI();
+      renderAll();
+    }
   });
 
   // ---------------------------------------------------------------------------

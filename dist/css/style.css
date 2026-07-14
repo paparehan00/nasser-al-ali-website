@@ -3118,3 +3118,112 @@ select {
   border: 1px dashed var(--border-strong);
   border-radius: var(--radius);
 }
+
+/* ==========================================================================
+   Language toggle (EN / ع) in header
+   ========================================================================== */
+.naa-lang-toggle {
+  display: inline-flex;
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  padding: 2px;
+  background: rgba(11, 31, 58, 0.5);
+  backdrop-filter: blur(4px);
+}
+.naa-lang-toggle-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 12px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: color 0.2s ease, background 0.2s ease;
+  letter-spacing: 0.5px;
+}
+.naa-lang-toggle-btn:hover { color: var(--text); }
+.naa-lang-toggle-btn.active {
+  background: var(--accent);
+  color: var(--bg-base);
+}
+@media (max-width: 500px) {
+  .naa-lang-toggle-btn { padding: 5px 9px; font-size: 11px; }
+}
+
+/* ==========================================================================
+   RTL adjustments - Arabic layout tweaks
+   ========================================================================== */
+html[dir="rtl"] {
+  /* Arabic sits nicer with slightly looser line-height */
+  --text-line-arabic: 1.75;
+}
+html[dir="rtl"] body { font-family: 'Tajawal', 'Cairo', 'Noto Sans Arabic', var(--font-body); }
+
+/* Nav order stays natural in RTL; flex handles it. Only need to flip a few
+   specific asymmetric decorations. */
+html[dir="rtl"] .overline {
+  padding-left: 0;
+  padding-right: 36px;
+}
+html[dir="rtl"] .overline::before {
+  left: auto;
+  right: 0;
+}
+html[dir="rtl"] .info-block {
+  border-left: none;
+  border-right: 3px solid var(--accent);
+}
+html[dir="rtl"] .about-image::after {
+  left: auto;
+  right: -24px;
+}
+@media (max-width: 1024px) {
+  html[dir="rtl"] .about-image::after { right: -16px; }
+}
+html[dir="rtl"] .chairman-quote {
+  border-left: none;
+  border-right: 3px solid var(--accent);
+  padding-left: 0;
+  padding-right: var(--sp-32);
+}
+html[dir="rtl"] .chairman-quote .quote-mark {
+  left: auto;
+  right: -6px;
+}
+html[dir="rtl"] .chairman-name-plate {
+  right: auto;
+  left: -24px;
+}
+html[dir="rtl"] .kpi-card {
+  border-left: 1px solid var(--border);
+  border-right: 3px solid var(--accent);
+}
+html[dir="rtl"] .cert-card,
+html[dir="rtl"] .review-card {
+  text-align: right;
+}
+html[dir="rtl"] .rating-summary,
+html[dir="rtl"] .section-header.center {
+  text-align: center; /* keep centred layouts centred */
+}
+
+/* Body-text elements inside long-form paragraphs: keep readable line-height */
+html[dir="rtl"] p,
+html[dir="rtl"] li {
+  line-height: 1.85;
+}
+
+/* Some inline SVG-icon-first layouts (e.g. contact-quick buttons, reviews-head)
+   flip more cleanly with row-reverse in RTL. */
+html[dir="rtl"] .contact-quick,
+html[dir="rtl"] .reviews-head {
+  flex-direction: row-reverse;
+}
+html[dir="rtl"] .footer-bottom-flex {
+  direction: rtl;
+}
+
+/* Language-toggle: switch its internal button order in RTL so ع comes first */
+html[dir="rtl"] .naa-lang-toggle { flex-direction: row-reverse; }

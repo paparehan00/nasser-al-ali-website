@@ -8,7 +8,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@600;700;800&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
 
   <noscript>
@@ -23,6 +23,7 @@
   <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <script src="js/i18n.js" defer></script>
   <script src="js/consent.js" defer></script>
   <script>window.NAA_REVIEWS = { rating: 4.6, count: "35 reviews on Google" };</script>
   <script src="js/main.js" defer></script>
@@ -73,8 +74,8 @@
       </nav>
 
       <div class="header-actions">
-        <a href="tel:+97466557728" class="btn btn-outline btn-gold header-call">Call +974 6655 7728</a>
-        <a href="https://wa.me/97466557728" class="btn btn-solid btn-green header-wa">WhatsApp</a>
+        <a href="tel:+97466557728" class="btn btn-outline btn-gold header-call" data-i18n="header.call">Call +974 6655 7728</a>
+        <a href="https://wa.me/97466557728" class="btn btn-solid btn-green header-wa" data-i18n="header.whatsapp">WhatsApp</a>
         <button class="mobile-menu-toggle" aria-label="Toggle Menu">
           <span></span><span></span><span></span>
         </button>
@@ -100,12 +101,12 @@
         <div class="hero-overlay">
           <div class="container hero-container">
             <div class="hero-content">
-              <span class="overline hero-overline fade-rise">EST. 2005 · DOHA, QATAR</span>
-              <h1 class="hero-title fade-rise">Building Qatar's Landmarks Since 2005</h1>
-              <p class="hero-subtitle fade-rise">Civil contracting, MEP, skilled manpower and heavy-equipment support for the region's most demanding projects.</p>
+              <span class="overline hero-overline fade-rise" data-i18n="hero.overline">EST. 2005 · DOHA, QATAR</span>
+              <h1 class="hero-title fade-rise" data-i18n="hero.title">Building Qatar's Landmarks Since 2005</h1>
+              <p class="hero-subtitle fade-rise" data-i18n="hero.subtitle">Civil contracting, MEP, skilled manpower and heavy-equipment support for the region's most demanding projects.</p>
               <div class="hero-buttons fade-rise">
-                <a href="#contact" class="btn btn-solid btn-gold btn-large magnetic">Request a Proposal</a>
-                <a href="#projects" class="btn btn-outline btn-white btn-large">View Our Projects</a>
+                <a href="#contact" class="btn btn-solid btn-gold btn-large magnetic" data-i18n="hero.btnProposal">Request a Proposal</a>
+                <a href="#projects" class="btn btn-outline btn-white btn-large" data-i18n="hero.btnProjects">View Our Projects</a>
               </div>
               <div class="hero-phone fade-rise">
                 <a href="tel:+97466557728" class="phone-link">+974 6655 7728</a>
@@ -116,7 +117,7 @@
             <div class="mouse">
               <div class="wheel"></div>
             </div>
-            <span>Scroll to Explore</span>
+            <span data-i18n="hero.scroll">Scroll to Explore</span>
           </div>
         </div>
       </div>
@@ -127,22 +128,22 @@
       <div class="container stat-container fade-rise">
         <div class="stat-item">
           <span class="stat-number" data-target="21">0</span>
-          <span class="stat-label">Years Established</span>
+          <span class="stat-label" data-i18n="stats.years">Years Established</span>
         </div>
         <div class="stat-divider"></div>
         <div class="stat-item">
           <span class="stat-number" data-target="5000">0</span><span class="stat-plus">+</span>
-          <span class="stat-label">Skilled Workforce</span>
+          <span class="stat-label" data-i18n="stats.workforce">Skilled Workforce</span>
         </div>
         <div class="stat-divider"></div>
         <div class="stat-item">
           <span class="stat-number" data-target="43">0</span><span class="stat-plus">+</span>
-          <span class="stat-label">Major Clients</span>
+          <span class="stat-label" data-i18n="stats.clients">Major Clients</span>
         </div>
         <div class="stat-divider"></div>
         <div class="stat-item">
           <span class="stat-number" data-target="6">0</span>
-          <span class="stat-label">Service Divisions</span>
+          <span class="stat-label" data-i18n="stats.divisions">Service Divisions</span>
         </div>
       </div>
     </section>
@@ -151,9 +152,9 @@
     <section class="trusted-by section-alt" id="clients">
       <div class="container">
         <div class="section-header center fade-rise">
-          <span class="overline">OUR CLIENTS</span>
-          <h2>Trusted by Qatar's Leading Contractors</h2>
-          <p class="section-lede">A partial list of the international and regional firms we've supported on landmark projects across the country.</p>
+          <span class="overline" data-i18n="clients.overline">OUR CLIENTS</span>
+          <h2 data-i18n="clients.title">Trusted by Qatar's Leading Contractors</h2>
+          <p class="section-lede" data-i18n="clients.lede">A partial list of the international and regional firms we've supported on landmark projects across the country.</p>
         </div>
         <div class="logos-grid fade-rise">
           <div class="logo-item"><img src="assets/alhabtoor.png" alt="Al Habtoor" loading="lazy"></div>
@@ -214,9 +215,9 @@
       </svg>
       <div class="container">
         <div class="section-header fade-rise">
-          <span class="overline">OUR EXPERTISE</span>
-          <h2>Core Services</h2>
-          <p class="section-lede">Six divisions, one accountable partner - from manpower to turnkey delivery.</p>
+          <span class="overline" data-i18n="services.overline">OUR EXPERTISE</span>
+          <h2 data-i18n="services.title">Core Services</h2>
+          <p class="section-lede" data-i18n="services.lede">Six divisions, one accountable partner - from manpower to turnkey delivery.</p>
         </div>
         <div class="services-grid">
 
@@ -228,7 +229,7 @@
               </div>
             </div>
             <div class="service-body">
-              <h3>Manpower Support</h3>
+              <h3 data-i18n="services.manpower.title">Manpower Support</h3>
               <div class="card-line"></div>
               <p>Skilled, reliable workforce for construction, maintenance and industrial operations across Qatar.</p>
             </div>
@@ -242,7 +243,7 @@
               </div>
             </div>
             <div class="service-body">
-              <h3>Equipment Support</h3>
+              <h3 data-i18n="services.equipment.title">Equipment Support</h3>
               <div class="card-line"></div>
               <p>A modern heavy-equipment fleet with operators for excavation, lifting and site logistics.</p>
             </div>
@@ -256,7 +257,7 @@
               </div>
             </div>
             <div class="service-body">
-              <h3>Civil Contracting</h3>
+              <h3 data-i18n="services.civil.title">Civil Contracting</h3>
               <div class="card-line"></div>
               <p>Turnkey civil construction: substations, villas, landscaping and infrastructure.</p>
             </div>
@@ -270,7 +271,7 @@
               </div>
             </div>
             <div class="service-body">
-              <h3>MEP Contracting</h3>
+              <h3 data-i18n="services.mep.title">MEP Contracting</h3>
               <div class="card-line"></div>
               <p>Integrated mechanical, electrical and plumbing works for buildings and industrial facilities.</p>
             </div>
@@ -284,7 +285,7 @@
               </div>
             </div>
             <div class="service-body">
-              <h3>Professional Cleaning</h3>
+              <h3 data-i18n="services.cleaning.title">Professional Cleaning</h3>
               <div class="card-line"></div>
               <p>Comprehensive commercial and post-construction cleaning services.</p>
             </div>
@@ -298,7 +299,7 @@
               </div>
             </div>
             <div class="service-body">
-              <h3>Business Center & Real Estate</h3>
+              <h3 data-i18n="services.business.title">Business Center &amp; Real Estate</h3>
               <div class="card-line"></div>
               <p>Managed office space and real-estate solutions through our Nasser Al Ali Business Center and group real-estate arm.</p>
             </div>
@@ -312,9 +313,9 @@
     <section class="fleet section-alt" id="fleet">
       <div class="container">
         <div class="section-header fade-rise">
-          <span class="overline">HEAVY EQUIPMENT</span>
-          <h2>Our Fleet</h2>
-          <p class="section-lede">A modern, owner-operated fleet supporting civil, MEP and site-logistics work across Qatar and the wider GCC.</p>
+          <span class="overline" data-i18n="fleet.overline">HEAVY EQUIPMENT</span>
+          <h2 data-i18n="fleet.title">Our Fleet</h2>
+          <p class="section-lede" data-i18n="fleet.lede">A modern, owner-operated fleet supporting civil, MEP and site-logistics work across Qatar and the wider GCC.</p>
         </div>
         <div class="fleet-grid">
           <div class="fleet-card fade-rise">
@@ -322,7 +323,7 @@
               <img src="assets/fleet/tower-cranes.webp" alt="Tower cranes on a Doha construction site" loading="lazy">
             </div>
             <div class="fleet-body">
-              <h3>Tower Cranes</h3>
+              <h3 data-i18n="fleet.towerCranes.title">Tower Cranes</h3>
               <p>High-lift capacity for tower and mid-rise construction sites.</p>
             </div>
           </div>
@@ -332,7 +333,7 @@
               <img src="assets/fleet/excavators-jcbs.webp" alt="Excavators and JCBs at a Qatar earthworks site" loading="lazy">
             </div>
             <div class="fleet-body">
-              <h3>Excavators & JCBs</h3>
+              <h3 data-i18n="fleet.excavators.title">Excavators &amp; JCBs</h3>
               <p>Tracked and wheeled excavators for foundation and earthworks.</p>
             </div>
           </div>
@@ -342,7 +343,7 @@
               <img src="assets/fleet/wheel-loaders.webp" alt="Wheel loader handling aggregate at an industrial site" loading="lazy">
             </div>
             <div class="fleet-body">
-              <h3>Wheel Loaders</h3>
+              <h3 data-i18n="fleet.loaders.title">Wheel Loaders</h3>
               <p>Front-end loaders for aggregate handling and site clearance.</p>
             </div>
           </div>
@@ -352,7 +353,7 @@
               <img src="assets/fleet/tipper-trucks.webp" alt="Tipper truck offloading excavated material" loading="lazy">
             </div>
             <div class="fleet-body">
-              <h3>Tipper Trucks</h3>
+              <h3 data-i18n="fleet.tippers.title">Tipper Trucks</h3>
               <p>Bulk haulage for excavated material, aggregates and concrete.</p>
             </div>
           </div>
@@ -362,7 +363,7 @@
               <img src="assets/fleet/concrete-mixers.webp" alt="Concrete mixer truck at a Nasser Al Ali site" loading="lazy">
             </div>
             <div class="fleet-body">
-              <h3>Concrete Mixers</h3>
+              <h3 data-i18n="fleet.mixers.title">Concrete Mixers</h3>
               <p>Transit mixers keeping pours on schedule for high-volume projects.</p>
             </div>
           </div>
@@ -372,7 +373,7 @@
               <img src="assets/fleet/boom-scissor-lifts.webp" alt="Scissor lift and boom lift for aerial works" loading="lazy">
             </div>
             <div class="fleet-body">
-              <h3>Boom & Scissor Lifts</h3>
+              <h3 data-i18n="fleet.lifts.title">Boom &amp; Scissor Lifts</h3>
               <p>Aerial work platforms for MEP, facade and finishing works at height.</p>
             </div>
           </div>
@@ -384,9 +385,9 @@
     <section class="projects" id="projects">
       <div class="container">
         <div class="section-header fade-rise">
-          <span class="overline">PORTFOLIO</span>
-          <h2>Featured Projects</h2>
-          <p class="section-lede">A selection of landmark builds we've delivered or supported across Doha and beyond.</p>
+          <span class="overline" data-i18n="projects.overline">PORTFOLIO</span>
+          <h2 data-i18n="projects.title">Featured Projects</h2>
+          <p class="section-lede" data-i18n="projects.lede">A selection of landmark builds we've delivered or supported across Doha and beyond.</p>
         </div>
         <div class="masonry-grid fade-rise">
 
@@ -498,9 +499,9 @@
     <section class="gallery section-alt">
       <div class="container">
         <div class="section-header fade-rise">
-          <span class="overline">CIVIL WORKS</span>
-          <h2>Civil Gallery</h2>
-          <p class="section-lede">On-site photography from villa builds, substations, landscaping and infrastructure projects.</p>
+          <span class="overline" data-i18n="gallery.overline">CIVIL WORKS</span>
+          <h2 data-i18n="gallery.title">Civil Gallery</h2>
+          <p class="section-lede" data-i18n="gallery.lede">On-site photography from villa builds, substations, landscaping and infrastructure projects.</p>
         </div>
       </div>
       <div class="carousel-container fade-rise">
@@ -514,14 +515,14 @@
     <section class="about" id="about">
       <div class="container about-container">
         <div class="about-content fade-rise">
-          <span class="overline">ABOUT US</span>
-          <h2>Two Decades of Building Qatar</h2>
+          <span class="overline" data-i18n="about.overline">ABOUT US</span>
+          <h2 data-i18n="about.title">Two Decades of Building Qatar</h2>
           <p>Established in Qatar in 2005, Nasser Al Ali Enterprises has grown into one of the Middle East's most successful construction firms, with landmark civil, mechanical and electrical projects across Qatar - including the Doha Metro network, the National Museum of Qatar and Lusail City. Backed by a 5,000+ workforce and joint ventures with leading international contractors, we deliver complex projects at scale and to the highest standards.</p>
           <div class="about-actions">
-            <a href="#contact" class="btn btn-solid btn-gold btn-large about-btn magnetic">Speak with our team</a>
+            <a href="#contact" class="btn btn-solid btn-gold btn-large about-btn magnetic" data-i18n="about.speak">Speak with our team</a>
             <a href="assets/company-profile.pdf" class="btn btn-outline btn-gold btn-large about-btn" target="_blank" rel="noopener noreferrer" download>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline-block; vertical-align: middle; margin-right: 6px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
-              Download Company Profile
+              <span data-i18n="about.download">Download Company Profile</span>
             </a>
           </div>
         </div>
@@ -544,13 +545,13 @@
           </div>
         </div>
         <div class="chairman-content fade-rise">
-          <span class="overline">CHAIRMAN'S MESSAGE</span>
-          <h2>A word from our Chairman</h2>
+          <span class="overline" data-i18n="chairman.overline">CHAIRMAN'S MESSAGE</span>
+          <h2 data-i18n="chairman.title">A word from our Chairman</h2>
           <blockquote class="chairman-quote">
             <svg class="quote-mark" viewBox="0 0 40 40" aria-hidden="true"><path d="M8 28c0-8 5-14 12-16v4c-4 2-7 6-7 10h7v12H8V28zm18 0c0-8 5-14 12-16v4c-4 2-7 6-7 10h7v12H26V28z" fill="currentColor"/></svg>
             <p>With a modest beginning as a manpower support services provider, Nasser Al Ali Enterprises has grown to its current position thanks to our team's commitment and the demand for quality services in Qatar's booming construction sector. Having built our company one block at a time, we established ourselves as one of the most sought-after service providers through our professionalism, dedication and commitment to work.</p>
             <p>We know that delivering the results our clients need, when they need them, should never mean sacrificing quality. We place the utmost emphasis on our people, because we firmly believe a company is what its people are - a team of highly skilled, motivated individuals chosen for the right experience. Nasser Al Ali Enterprises is out to make a difference by setting examples.</p>
-            <footer class="quote-signoff">- Nasser Ali J.Z. Al Ali, Chairman</footer>
+            <footer class="quote-signoff" data-i18n="chairman.signoff">- Nasser Ali J.Z. Al Ali, Chairman</footer>
           </blockquote>
         </div>
       </div>
@@ -560,9 +561,9 @@
     <section class="leadership" id="leadership">
       <div class="container">
         <div class="section-header center fade-rise">
-          <span class="overline">ORGANIZATION</span>
-          <h2>Our Leadership</h2>
-          <p class="section-lede">The team steering Nasser Al Ali Enterprises day-to-day.</p>
+          <span class="overline" data-i18n="leadership.overline">ORGANIZATION</span>
+          <h2 data-i18n="leadership.title">Our Leadership</h2>
+          <p class="section-lede" data-i18n="leadership.lede">The team steering Nasser Al Ali Enterprises day-to-day.</p>
         </div>
 
         <div class="org-chart">
@@ -572,7 +573,7 @@
                 <img src="assets/chairman.png" alt="Nasser Ali J.Z. Al Ali - Chairman" loading="lazy">
               </div>
               <div class="leader-body">
-                <span class="leader-role">Chairman</span>
+                <span class="leader-role" data-i18n="leadership.chairman">Chairman</span>
                 <h4 class="leader-name">Nasser Ali J.Z. Al Ali</h4>
               </div>
             </div>
@@ -590,7 +591,7 @@
                 <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="20" cy="15" r="6"/><path d="M8 34c1-6 6-10 12-10s11 4 12 10"/></svg>
               </div>
               <div class="leader-body">
-                <span class="leader-role">General Manager</span>
+                <span class="leader-role" data-i18n="leadership.gm">General Manager</span>
                 <h4 class="leader-name">[Name - to be provided]</h4>
               </div>
             </div>
@@ -599,7 +600,7 @@
                 <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="20" cy="15" r="6"/><path d="M8 34c1-6 6-10 12-10s11 4 12 10"/></svg>
               </div>
               <div class="leader-body">
-                <span class="leader-role">HR Manager</span>
+                <span class="leader-role" data-i18n="leadership.hr">HR Manager</span>
                 <h4 class="leader-name">[Name - to be provided]</h4>
               </div>
             </div>
@@ -608,7 +609,7 @@
                 <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="20" cy="15" r="6"/><path d="M8 34c1-6 6-10 12-10s11 4 12 10"/></svg>
               </div>
               <div class="leader-body">
-                <span class="leader-role">Admin Manager</span>
+                <span class="leader-role" data-i18n="leadership.admin">Admin Manager</span>
                 <h4 class="leader-name">[Name - to be provided]</h4>
               </div>
             </div>
@@ -617,7 +618,7 @@
                 <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="20" cy="15" r="6"/><path d="M8 34c1-6 6-10 12-10s11 4 12 10"/></svg>
               </div>
               <div class="leader-body">
-                <span class="leader-role">Operations Manager</span>
+                <span class="leader-role" data-i18n="leadership.ops">Operations Manager</span>
                 <h4 class="leader-name">[Name - to be provided]</h4>
               </div>
             </div>
@@ -677,9 +678,9 @@
     <section class="numbers section-alt" id="numbers">
       <div class="container">
         <div class="section-header center fade-rise">
-          <span class="overline">BY THE NUMBERS</span>
-          <h2>Two decades of measurable growth</h2>
-          <p class="section-lede">Where our people, projects and clients have taken us since 2005.</p>
+          <span class="overline" data-i18n="numbers.overline">BY THE NUMBERS</span>
+          <h2 data-i18n="numbers.title">Two decades of measurable growth</h2>
+          <p class="section-lede" data-i18n="numbers.lede">Where our people, projects and clients have taken us since 2005.</p>
         </div>
 
         <div class="numbers-grid">
@@ -836,9 +837,9 @@
     <section class="reviews" id="reviews">
       <div class="container">
         <div class="section-header center fade-rise">
-          <span class="overline">OUR REPUTATION</span>
-          <h2>What our clients say</h2>
-          <p class="section-lede">Verified reviews from clients and site teams on Google.</p>
+          <span class="overline" data-i18n="reviews.overline">OUR REPUTATION</span>
+          <h2 data-i18n="reviews.title">What our clients say</h2>
+          <p class="section-lede" data-i18n="reviews.lede">Verified reviews from clients and site teams on Google.</p>
         </div>
 
         <div class="reviews-layout">
@@ -867,7 +868,7 @@
             <a class="rating-cta"
                href="https://www.google.com/maps/place/Nasser+Al+Ali+Enterprises/@25.2622799,51.4955186,17z/data=!3m1!4b1!4m6!3m5!1s0x3e45daa2d2da6967:0x259d12bb069a271!8m2!3d25.2622799!4d51.4955186"
                target="_blank" rel="noopener noreferrer">
-              Read all reviews on Google
+              <span data-i18n="reviews.readAll">Read all reviews on Google</span>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M7 17L17 7M7 7h10v10"/></svg>
             </a>
           </aside>
@@ -991,15 +992,15 @@
     <section class="contact section-alt" id="contact">
       <div class="container">
         <div class="section-header center fade-rise">
-          <span class="overline">GET IN TOUCH</span>
-          <h2>Get in Touch</h2>
-          <p class="section-lede">Book a consultation with our team.</p>
-          <a href="#contact-form" class="btn btn-solid btn-gold btn-large magnetic contact-cta">Book a Consultation</a>
+          <span class="overline" data-i18n="contact.overline">GET IN TOUCH</span>
+          <h2 data-i18n="contact.title">Get in Touch</h2>
+          <p class="section-lede" data-i18n="contact.lede">Book a consultation with our team.</p>
+          <a href="#contact-form" class="btn btn-solid btn-gold btn-large magnetic contact-cta" data-i18n="contact.book">Book a Consultation</a>
         </div>
 
         <div class="contact-grid">
           <div class="contact-form-wrap fade-rise">
-            <h3>Send us a message</h3>
+            <h3 data-i18n="contact.formTitle">Send us a message</h3>
             <!-- Contact form → /api/contact serverless function → emails info@nasseralaligroup.com -->
             <form id="contact-form"
                   name="contact"
@@ -1010,28 +1011,28 @@
 
               <div class="form-row">
                 <div class="form-group">
-                  <label for="c-name">Name</label>
-                  <input type="text" id="c-name" name="name" placeholder="Your full name" required>
+                  <label for="c-name" data-i18n="contact.form.name">Name</label>
+                  <input type="text" id="c-name" name="name" placeholder="Your full name" data-i18n-placeholder="contact.form.namePh" required>
                 </div>
                 <div class="form-group">
-                  <label for="c-company">Company</label>
-                  <input type="text" id="c-company" name="company" placeholder="Company name" required>
+                  <label for="c-company" data-i18n="contact.form.company">Company</label>
+                  <input type="text" id="c-company" name="company" placeholder="Company name" data-i18n-placeholder="contact.form.companyPh" required>
                 </div>
               </div>
               <div class="form-row">
                 <div class="form-group">
-                  <label for="c-email">Email</label>
-                  <input type="email" id="c-email" name="email" placeholder="you@company.com" required>
+                  <label for="c-email" data-i18n="contact.form.email">Email</label>
+                  <input type="email" id="c-email" name="email" placeholder="you@company.com" data-i18n-placeholder="contact.form.emailPh" required>
                 </div>
                 <div class="form-group">
-                  <label for="c-phone">Phone</label>
-                  <input type="tel" id="c-phone" name="phone" placeholder="+974 …" required>
+                  <label for="c-phone" data-i18n="contact.form.phone">Phone</label>
+                  <input type="tel" id="c-phone" name="phone" placeholder="+974 …" data-i18n-placeholder="contact.form.phonePh" required>
                 </div>
               </div>
               <div class="form-group">
-                <label for="c-service">Service Needed</label>
+                <label for="c-service" data-i18n="contact.form.service">Service Needed</label>
                 <select id="c-service" name="service" required>
-                  <option value="" disabled selected>Select a service…</option>
+                  <option value="" disabled selected data-i18n="contact.form.servicePh">Select a service…</option>
                   <option value="manpower">Manpower Support</option>
                   <option value="equipment">Equipment Support</option>
                   <option value="civil">Civil Contracting</option>
@@ -1041,41 +1042,41 @@
                 </select>
               </div>
               <div class="form-group">
-                <label for="c-message">Message</label>
-                <textarea id="c-message" name="message" placeholder="Tell us about your project…" rows="5" required></textarea>
+                <label for="c-message" data-i18n="contact.form.message">Message</label>
+                <textarea id="c-message" name="message" placeholder="Tell us about your project…" data-i18n-placeholder="contact.form.messagePh" rows="5" required></textarea>
               </div>
               <div class="form-consent">
                 <input type="checkbox" id="c-consent" name="consent" required>
-                <label for="c-consent">I have read and agree to the <a href="privacy.html" target="_blank" rel="noopener">Privacy Policy</a>. I understand my message will be stored so we can respond.</label>
+                <label for="c-consent" data-i18n="contact.form.consent">I have read and agree to the <a href="privacy.html" target="_blank" rel="noopener">Privacy Policy</a>. I understand my message will be stored so we can respond.</label>
               </div>
-              <button type="submit" class="btn btn-solid btn-gold btn-block magnetic">Submit Enquiry</button>
-              <p class="form-success" role="status">Thank you - we'll get back to you within one business day.</p>
-              <p class="form-error" role="alert" hidden>Sorry - the message didn't send. Please try again, or WhatsApp us at <a href="https://wa.me/97466557728" target="_blank" rel="noopener">+974 6655 7728</a>.</p>
+              <button type="submit" class="btn btn-solid btn-gold btn-block magnetic" data-i18n="contact.form.submit">Submit Enquiry</button>
+              <p class="form-success" role="status" data-i18n="contact.form.success">Thank you - we'll get back to you within one business day.</p>
+              <p class="form-error" role="alert" hidden data-i18n="contact.form.error">Sorry - the message didn't send. Please try again, or WhatsApp us at <a href="https://wa.me/97466557728" target="_blank" rel="noopener">+974 6655 7728</a>.</p>
             </form>
           </div>
 
           <div class="contact-details fade-rise">
             <div class="info-block">
-              <h4>Head Office</h4>
+              <h4 data-i18n="contact.info.office">Head Office</h4>
               <p>Salwa Road, Building-155, Zone 43<br>Doha, State of Qatar</p>
               <p>P.O. Box 13115, Doha, Qatar</p>
             </div>
             <div class="info-block">
-              <h4>Phone</h4>
+              <h4 data-i18n="contact.info.phone">Phone</h4>
               <p><a href="tel:+97466557728">+974 6655 7728</a> <span style="color: var(--accent); font-size: 11px; letter-spacing: 1px;">(WhatsApp)</span></p>
               <p><a href="tel:+97444354422">+974 4435 4422</a></p>
               <p><a href="tel:+97444351112">+974 4435 1112</a></p>
               <p>Fax: +974 4431 1474</p>
             </div>
             <div class="info-block">
-              <h4>Email & Web</h4>
+              <h4 data-i18n="contact.info.email">Email &amp; Web</h4>
               <p><a href="mailto:info@nasseralaligroup.com">info@nasseralaligroup.com</a></p>
               <p><a href="https://www.nasseralaligroup.com" target="_blank" rel="noopener noreferrer">www.nasseralaligroup.com</a></p>
             </div>
             <div class="contact-quick">
               <a href="tel:+97466557728" class="btn btn-solid btn-gold magnetic">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.37 1.9.72 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.35 1.85.59 2.81.72A2 2 0 0 1 22 16.92z"/></svg>
-                Call Now
+                <span data-i18n="contact.callNow">Call Now</span>
               </a>
               <a href="https://wa.me/97466557728" class="btn btn-solid btn-green magnetic" target="_blank" rel="noopener noreferrer">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4c-.3-.15-1.77-.87-2.04-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.49-1.77-1.66-2.07-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.51-.17-.01-.37-.01-.57-.01-.2 0-.52.07-.8.37-.27.3-1.05 1.02-1.05 2.5 0 1.47 1.07 2.89 1.22 3.09.15.2 2.11 3.22 5.11 4.51.71.31 1.27.49 1.7.63.72.23 1.37.2 1.88.12.57-.08 1.77-.72 2.02-1.42.25-.7.25-1.29.17-1.42-.07-.13-.27-.2-.57-.35zM12 2C6.48 2 2 6.48 2 12c0 1.85.5 3.58 1.38 5.06L2 22l5.11-1.34C8.55 21.53 10.22 22 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2z"/></svg>
