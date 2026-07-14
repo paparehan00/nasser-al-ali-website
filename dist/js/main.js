@@ -9,18 +9,26 @@ document.addEventListener("DOMContentLoaded", () => {
   const isMobile = window.innerWidth <= 768;
   const isReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  // Low-power heuristic: mobile, <=4 CPU cores, or 2g/3g/save-data
+  const conn0 = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+  const lowPower =
+    isMobile ||
+    (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4) ||
+    (conn0 && (conn0.saveData || /^(slow-2g|2g|3g)$/.test(conn0.effectiveType || "")));
+
   // ---------------------------------------------------------------------------
-  // Lenis Smooth Scroll
+  // Lenis Smooth Scroll — skipped on low-power devices; native scroll is faster.
   // ---------------------------------------------------------------------------
   let lenis = null;
   try {
-    if (hasLenis && !isReducedMotion) {
+    if (hasLenis && !isReducedMotion && !lowPower) {
       lenis = new Lenis({
-        duration: 1.1,
+        duration: 1.0,
         easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
         smoothWheel: true,
         smoothTouch: false,
-        touchMultiplier: 2,
+        touchMultiplier: 1.5,
+        lerp: 0.12,
       });
       const raf = (time) => { lenis.raf(time); requestAnimationFrame(raf); };
       requestAnimationFrame(raf);
@@ -28,13 +36,21 @@ document.addEventListener("DOMContentLoaded", () => {
   } catch (e) {
     console.warn("Lenis init failed:", e);
   }
+  // Expose Lenis so external scripts (chat widget CTAs) can use it for smooth-scroll
+  if (lenis) window.lenis = lenis;
 
   // ---------------------------------------------------------------------------
-  // GSAP + ScrollTrigger + Lenis wiring
+  // GSAP + ScrollTrigger + Lenis wiring + performance config
   // ---------------------------------------------------------------------------
   try {
     if (hasGSAP && hasST) {
       gsap.registerPlugin(ScrollTrigger);
+      // Reduce ScrollTrigger churn — don't refresh on every resize on mobile,
+      // and only listen to the events that actually matter for layout changes.
+      ScrollTrigger.config({
+        ignoreMobileResize: true,
+        autoRefreshEvents: "visibilitychange,DOMContentLoaded,load",
+      });
       if (lenis) {
         lenis.on('scroll', ScrollTrigger.update);
         gsap.ticker.add((time) => { lenis.raf(time * 1000); });
@@ -144,7 +160,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const sizeHeroCanvas = () => {
     if (!heroCanvas) return;
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    // Lower DPR ceiling — perceptible quality diff vs 2.0 is minimal, GPU cost
+    // is roughly (dpr^2), so 1.5 vs 2.0 is ~44% less pixel work per frame.
+    const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
     const w = window.innerWidth;
     const h = window.innerHeight;
     heroCanvas.width = Math.round(w * dpr);
@@ -477,11 +495,13 @@ document.addEventListener("DOMContentLoaded", () => {
   // Parallax on [data-parallax] — subtle Y translate on scroll
   // ---------------------------------------------------------------------------
   const initParallax = () => {
-    if (!hasGSAP || !hasST || isReducedMotion) return;
+    // Skip on low-power / mobile — parallax + scrub triggers are the top
+    // contributor to scroll jank on constrained devices.
+    if (!hasGSAP || !hasST || isReducedMotion || lowPower) return;
     try {
       document.querySelectorAll('[data-parallax]').forEach(el => {
         const speed = parseFloat(el.getAttribute('data-parallax')) || 0.05;
-        const distance = 80 * speed * 10; // px
+        const distance = 60 * speed * 10; // px (reduced from 80)
         gsap.fromTo(el, { y: distance }, {
           y: -distance,
           ease: "none",
@@ -499,10 +519,10 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   // ---------------------------------------------------------------------------
-  // Magnetic buttons — small translate toward cursor
+  // Magnetic buttons — small translate toward cursor (desktop only, no touch)
   // ---------------------------------------------------------------------------
   const initMagnetic = () => {
-    if (isReducedMotion) return;
+    if (isReducedMotion || isMobile || ("ontouchstart" in window)) return;
     document.querySelectorAll('.magnetic').forEach(btn => {
       btn.addEventListener('mousemove', (e) => {
         const r = btn.getBoundingClientRect();
@@ -598,6 +618,77 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   // ---------------------------------------------------------------------------
+  // Google Reviews card — client can override defaults by setting these
+  // globals from a small inline script (or from CMS):
+  //   window.NAA_REVIEWS = { rating: 4.7, count: "38 reviews" };
+  // Falls back to a plausible "pending" state if not set.
+  // ---------------------------------------------------------------------------
+  (() => {
+    const cfg = window.NAA_REVIEWS || {};
+    const rating = typeof cfg.rating === "number" ? cfg.rating : null;
+    const countText = typeof cfg.count === "string" ? cfg.count : null;
+    const valEl = document.getElementById("reviews-value");
+    const starsEl = document.getElementById("reviews-stars");
+    const countEl = document.getElementById("reviews-count");
+    if (!valEl || !starsEl) return;
+
+    const displayRating = rating != null ? rating.toFixed(1) : "—";
+    valEl.textContent = displayRating;
+
+    if (rating != null) {
+      // Render 5 stars with half-star support
+      let stars = "";
+      for (let i = 1; i <= 5; i++) {
+        if (rating >= i) stars += "★";
+        else if (rating >= i - 0.5) stars += "⯪"; // half-ish
+        else stars += "☆";
+      }
+      starsEl.textContent = stars;
+    } else {
+      starsEl.textContent = "☆☆☆☆☆";
+    }
+
+    if (countEl) {
+      countEl.textContent = countText || "Rating displayed as an estimate — see live count on Google.";
+    }
+  })();
+
+  // ---------------------------------------------------------------------------
+  // Awards & Community gallery — auto-discovers /assets/awards/award-NN.jpg
+  // Hidden by default; unhides only if at least one image loads.
+  // ---------------------------------------------------------------------------
+  const awardsGrid = document.getElementById("awards-grid");
+  const awardsSection = document.getElementById("awards");
+  if (awardsGrid && awardsSection) {
+    const AWARD_MAX = 40; // upper safety bound; stops early at first missing file
+    let awardsFound = 0;
+    let awardsChecked = 0;
+    const probe = (n) => new Promise((res) => {
+      const im = new Image();
+      const src = `assets/awards/award-${String(n).padStart(2, "0")}.jpg`;
+      im.onload = () => res(src);
+      im.onerror = () => res(null);
+      im.src = src + "?p=1";
+    });
+    (async () => {
+      for (let i = 1; i <= AWARD_MAX; i++) {
+        const src = await probe(i);
+        awardsChecked++;
+        if (!src) break; // first miss = end of set
+        awardsFound++;
+        const item = document.createElement("figure");
+        item.className = "award-item";
+        item.innerHTML = `<div class="award-img-wrap"><img src="${src}" alt="Award moment ${i}" loading="lazy"></div>`;
+        awardsGrid.appendChild(item);
+      }
+      if (awardsFound > 0) {
+        awardsSection.hidden = false;
+        if (hasST) ScrollTrigger.refresh();
+      }
+    })();
+  }
+
+  // ---------------------------------------------------------------------------
   // Contact form — async submit to Netlify Forms (keeps user on the page)
   // ---------------------------------------------------------------------------
   const contactForm = document.getElementById("contact-form");
@@ -617,7 +708,7 @@ document.addEventListener("DOMContentLoaded", () => {
       for (const [k, v] of fd.entries()) body.append(k, typeof v === "string" ? v : "");
 
       try {
-        const resp = await fetch("/", {
+        const resp = await fetch("/api/contact", {
           method: "POST",
           headers: { "Content-Type": "application/x-www-form-urlencoded" },
           body: body.toString(),
@@ -719,7 +810,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const lightboxClose = document.getElementById('lightbox-close');
 
   document.addEventListener('click', (e) => {
-    const item = e.target.closest('.carousel-item, .project-img-wrapper');
+    const item = e.target.closest('.carousel-item, .project-img-wrapper, .award-img-wrap');
     if (item && lightbox && lightboxImg) {
       const img = item.querySelector('img');
       if (img) {

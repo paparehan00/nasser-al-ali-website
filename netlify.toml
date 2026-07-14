@@ -7,15 +7,14 @@
 [functions]
   node_bundler = "esbuild"
 
-# Nice URL for the chat function (optional; the default /.netlify/functions/chat also works)
+# Nice URL for the chat function
 [[redirects]]
   from   = "/api/chat"
   to     = "/.netlify/functions/chat"
   status = 200
 
-# SPA-safe fallback for any accidental 404s on the static site
+# Contact form → serverless email dispatcher (no Netlify Forms dependency)
 [[redirects]]
-  from   = "/*"
-  to     = "/index.html"
+  from   = "/api/contact"
+  to     = "/.netlify/functions/contact-submit"
   status = 200
-  force  = false

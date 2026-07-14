@@ -483,7 +483,7 @@
       body.append("intent", "chatbot-lead");
       body.append("conversation", JSON.stringify(state.messages).slice(0, 3000));
       try {
-        await fetch("/", {
+        await fetch("/api/contact", {
           method: "POST",
           headers: { "Content-Type": "application/x-www-form-urlencoded" },
           body: body.toString(),

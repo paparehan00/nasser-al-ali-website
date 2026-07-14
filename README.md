@@ -35,13 +35,22 @@ NAA/
    - Publish `dist/` as the site.
    - Bundle `netlify/functions/chat.js` (esbuild).
    - Detect the hidden `chatbot-lead` form and the visible `contact` form in `index.html` and register **Forms** endpoints for both.
-5. **Wire up email notifications for form submissions** (one-time):
-   - **Site settings → Forms → Form notifications → Add notification → Email notification**
-   - Do this once for each form:
-     - `contact` — recipient: `info@nasseralaligroup.com` (or wherever enquiries should go)
-     - `chatbot-lead` — recipient: `info@nasseralaligroup.com` (or a sales/`crm@` alias)
-   - Optional: also enable **Slack** or **outgoing webhook** notifications from the same panel.
-   - For richer delivery (custom "from" address, HTML templates, tracked opens), swap to Resend / Postmark / SendGrid — add the provider's API key as another Netlify env var and wire it into `netlify/functions/chat.js`.
+5. **Wire up email delivery for contact + chatbot leads** (one-time):
+   - Contact-form and chatbot-lead submissions are handled by the
+     `netlify/functions/contact-submit.js` serverless function. It calls the
+     **Resend** API to email `info@nasseralaligroup.com`.
+   - Sign up at <https://resend.com> (free tier: 100 emails/day, 3,000/month).
+   - Under **Site settings → Environment variables** add:
+     - `RESEND_API_KEY` — the API key from Resend's dashboard.
+     - `RESEND_FROM` (optional) — a verified sender address, e.g.
+       `"Nasser Al Ali Website <noreply@nasseralaligroup.com>"`.
+       If unset, the function uses Resend's `onboarding@resend.dev` sandbox sender
+       (works immediately without domain verification).
+   - Every submission is also written to Netlify function logs
+     (**Site → Functions → contact-submit**) as a backup, whether or not the
+     Resend send succeeds — nothing is ever lost.
+   - The visitor only ever sees a "Thank you" message; the email routing is
+     invisible to them.
 
 That's it — visit the site, click the gold chat bubble bottom-right, and ask away.
 
