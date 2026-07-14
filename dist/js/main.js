@@ -560,7 +560,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (el.getAttribute("data-consent-embed") === "google-maps") {
       const link = document.createElement("a");
       link.className = "map-link";
-      link.href = "https://maps.app.goo.gl/mxXTsLGDJoXVe6626";
+      link.href = "https://www.google.com/maps/search/?api=1&query=Salwa+Road+Building+155+Zone+43+Doha+Qatar";
       link.target = "_blank";
       link.rel = "noopener noreferrer";
       link.textContent = "Open in Google Maps →";

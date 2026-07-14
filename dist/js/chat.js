@@ -13,8 +13,8 @@
   const API_ENDPOINT = "/api/chat"; // Netlify redirects → /.netlify/functions/chat
   const STORAGE_KEY = "naa-chat-session-v1";
   const LANG_KEY = "naa-chat-lang";
-  const WA_URL = "https://wa.me/97444351112";
-  const TEL_URL = "tel:+97444351112";
+  const WA_URL = "https://wa.me/97466557728";
+  const TEL_URL = "tel:+97466557728";
   const LOGO_SRC = "assets/logo.png";
 
   const I18N = {
@@ -36,7 +36,7 @@
       ],
       typing: "Assistant is typing",
       offline:
-        "I couldn't reach the assistant. Please try again, or WhatsApp us at +974 4435 1112.",
+        "I couldn't reach the assistant. Please try again, or WhatsApp us at +974 6655 7728.",
       rateLimit: "One moment — we're a bit busy. Trying again…",
       leadTitle: "Would you like our team to reach out?",
       leadBody: "Share your contact and we'll be in touch shortly.",
@@ -51,7 +51,7 @@
         quote: "Request a Quote",
         consultation: "Book a Consultation",
         whatsapp: "Chat on WhatsApp",
-        call: "Call +974 4435 1112",
+        call: "Call +974 6655 7728",
         projects: "View Projects",
         services: "View Services",
         fleet: "View Fleet",
@@ -80,7 +80,7 @@
         "أين يقع مقركم؟",
       ],
       typing: "المساعد يكتب",
-      offline: "تعذّر الوصول إلى المساعد. حاول لاحقًا أو راسلنا على واتساب +974 4435 1112.",
+      offline: "تعذّر الوصول إلى المساعد. حاول لاحقًا أو راسلنا على واتساب +974 6655 7728.",
       rateLimit: "لحظة من فضلك — النظام مشغول قليلًا…",
       leadTitle: "هل تودّ أن يتواصل معك فريقنا؟",
       leadBody: "شارك بيانات التواصل وسنعاود الاتصال بك قريبًا.",
@@ -95,7 +95,7 @@
         quote: "اطلب عرض سعر",
         consultation: "احجز استشارة",
         whatsapp: "تواصل عبر واتساب",
-        call: "اتصل بنا +974 4435 1112",
+        call: "اتصل بنا +974 6655 7728",
         projects: "عرض المشاريع",
         services: "عرض الخدمات",
         fleet: "عرض الأسطول",
