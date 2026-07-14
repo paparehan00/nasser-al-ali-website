@@ -560,7 +560,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (el.getAttribute("data-consent-embed") === "google-maps") {
       const link = document.createElement("a");
       link.className = "map-link";
-      link.href = "https://www.google.com/maps/search/?api=1&query=Salwa+Road+Building+155+Zone+43+Doha+Qatar";
+      link.href = "https://www.google.com/maps/place/Nasser+Al+Ali+Enterprises/@25.2622799,51.4955186,17z/data=!3m1!4b1!4m6!3m5!1s0x3e45daa2d2da6967:0x259d12bb069a271!8m2!3d25.2622799!4d51.4955186";
       link.target = "_blank";
       link.rel = "noopener noreferrer";
       link.textContent = "Open in Google Maps →";

@@ -50,9 +50,11 @@ CAREERS
 The company regularly hires Civil Engineers, MEP Technicians, Site Supervisors, Equipment Operators, Skilled Labour, and Safety Officers. Direct applicants to the Careers section to apply with a CV.
 
 CONTACT
-- Phone: +974 6655 7728
+- Primary phone / WhatsApp: +974 6655 7728 (mobile — this is the WhatsApp number)
+- Landline: +974 4435 4422
+- Landline: +974 4435 1112
+- Fax: +974 4431 1474
 - Email: info@nasseralaligroup.com
-- WhatsApp: +974 6655 7728
 - P.O. Box: 13115, Doha, Qatar
 - Group website: www.nasseralaligroup.com
 
