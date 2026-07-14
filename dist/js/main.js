@@ -753,18 +753,17 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   // ---------------------------------------------------------------------------
-  // Awards & Community gallery - auto-discovers /assets/awards/award-NN.jpg
-  // Hidden by default; unhides only if at least one image loads.
+  // Employee Recognition & Awards gallery - auto-discovers
+  // /assets/awards/award-NN.webp. Hidden until at least one image loads.
   // ---------------------------------------------------------------------------
   const awardsGrid = document.getElementById("awards-grid");
   const awardsSection = document.getElementById("awards");
   if (awardsGrid && awardsSection) {
-    const AWARD_MAX = 40; // upper safety bound; stops early at first missing file
+    const AWARD_MAX = 60; // upper safety bound; stops early at first missing file
     let awardsFound = 0;
-    let awardsChecked = 0;
     const probe = (n) => new Promise((res) => {
       const im = new Image();
-      const src = `assets/awards/award-${String(n).padStart(2, "0")}.jpg`;
+      const src = `assets/awards/award-${String(n).padStart(2, "0")}.webp`;
       im.onload = () => res(src);
       im.onerror = () => res(null);
       im.src = src + "?p=1";
@@ -772,12 +771,11 @@ document.addEventListener("DOMContentLoaded", () => {
     (async () => {
       for (let i = 1; i <= AWARD_MAX; i++) {
         const src = await probe(i);
-        awardsChecked++;
         if (!src) break; // first miss = end of set
         awardsFound++;
         const item = document.createElement("figure");
         item.className = "award-item";
-        item.innerHTML = `<div class="award-img-wrap"><img src="${src}" alt="Award moment ${i}" loading="lazy"></div>`;
+        item.innerHTML = `<div class="award-img-wrap"><img src="${src}" alt="Chairman presenting a recognition award to a team member (${i})" loading="lazy"></div>`;
         awardsGrid.appendChild(item);
       }
       if (awardsFound > 0) {
