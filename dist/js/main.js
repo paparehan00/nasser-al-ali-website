@@ -907,6 +907,19 @@ document.addEventListener("DOMContentLoaded", () => {
   const lightboxClose = document.getElementById('lightbox-close');
 
   document.addEventListener('click', (e) => {
+    // Cert cards use <a href="…webp"> — prevent nav, open in lightbox instead
+    const cert = e.target.closest('.cert-card');
+    if (cert && lightbox && lightboxImg) {
+      e.preventDefault();
+      const href = cert.getAttribute('href');
+      if (href) {
+        lightboxImg.src = href;
+        lightboxImg.alt = cert.getAttribute('data-cert-title') || 'Certificate';
+        lightbox.classList.add('active');
+        if (lenis) lenis.stop();
+        return;
+      }
+    }
     const item = e.target.closest('.carousel-item, .project-img-wrapper, .award-img-wrap');
     if (item && lightbox && lightboxImg) {
       const img = item.querySelector('img');
