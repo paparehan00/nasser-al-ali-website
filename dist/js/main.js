@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Nasser Al Ali Enterprises — main.js
+   Nasser Al Ali Enterprises - main.js
    Fail-open animations, snappy hero, parallax, magnetic buttons, count-ups.
    ========================================================================== */
 document.addEventListener("DOMContentLoaded", () => {
@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
     (conn0 && (conn0.saveData || /^(slow-2g|2g|3g)$/.test(conn0.effectiveType || "")));
 
   // ---------------------------------------------------------------------------
-  // Lenis Smooth Scroll — skipped on low-power devices; native scroll is faster.
+  // Lenis Smooth Scroll - skipped on low-power devices; native scroll is faster.
   // ---------------------------------------------------------------------------
   let lenis = null;
   try {
@@ -45,7 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
   try {
     if (hasGSAP && hasST) {
       gsap.registerPlugin(ScrollTrigger);
-      // Reduce ScrollTrigger churn — don't refresh on every resize on mobile,
+      // Reduce ScrollTrigger churn - don't refresh on every resize on mobile,
       // and only listen to the events that actually matter for layout changes.
       ScrollTrigger.config({
         ignoreMobileResize: true,
@@ -62,7 +62,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // ---------------------------------------------------------------------------
-  // Preloader / reveal — quick branded splash, decoupled from all heavy loads.
+  // Preloader / reveal - quick branded splash, decoupled from all heavy loads.
   // ---------------------------------------------------------------------------
   let hasRevealed = false;
 
@@ -87,7 +87,7 @@ document.addEventListener("DOMContentLoaded", () => {
     initEverything();
   };
 
-  // Hard backup — 3s max on the preloader no matter what.
+  // Hard backup - 3s max on the preloader no matter what.
   // (Scrub/video code call revealSite() sooner when their assets are ready.)
   const HERO_HARD_TIMEOUT_MS = 3000;
   setTimeout(() => {
@@ -112,7 +112,7 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   // ---------------------------------------------------------------------------
-  // Hero — capability detection + two modes:
+  // Hero - capability detection + two modes:
   //   A) SCRUB mode: desktop, good network, no reduced-motion.
   //      120 WebP frames, pre-decoded, drawn on canvas via a single rAF loop
   //      driven by scroll progress.
@@ -160,7 +160,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const sizeHeroCanvas = () => {
     if (!heroCanvas) return;
-    // Lower DPR ceiling — perceptible quality diff vs 2.0 is minimal, GPU cost
+    // Lower DPR ceiling - perceptible quality diff vs 2.0 is minimal, GPU cost
     // is roughly (dpr^2), so 1.5 vs 2.0 is ~44% less pixel work per frame.
     const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
     const w = window.innerWidth;
@@ -182,7 +182,7 @@ document.addEventListener("DOMContentLoaded", () => {
     heroCurrentDrawn = idx;
   };
 
-  // Single rAF loop — only re-draws when target changes and is decoded.
+  // Single rAF loop - only re-draws when target changes and is decoded.
   const heroRafLoop = () => {
     if (!heroRafRunning) return;
     const maxIdx = Math.max(0, heroDecodedContig - 1);
@@ -350,7 +350,7 @@ document.addEventListener("DOMContentLoaded", () => {
       heroRafRunning = true;
       requestAnimationFrame(heroRafLoop);
 
-      // Attach ScrollTrigger — updates heroTargetIndex only, never draws
+      // Attach ScrollTrigger - updates heroTargetIndex only, never draws
       if (hasGSAP && hasST) {
         try {
           gsap.to({ v: 0 }, {
@@ -394,7 +394,7 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   // ---------------------------------------------------------------------------
-  // Scroll-triggered fade-rise — fail-open by design:
+  // Scroll-triggered fade-rise - fail-open by design:
   //   1. CSS keeps .fade-rise at opacity:1 (visible baseline).
   //   2. GSAP sets opacity:0 ONLY when ScrollTrigger successfully creates.
   //   3. onEnter callback animates back to visible.
@@ -410,7 +410,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const targets = Array.from(section.querySelectorAll('.fade-rise'));
         if (!targets.length) return;
 
-        // Hide manually — only after both GSAP + ScrollTrigger confirmed
+        // Hide manually - only after both GSAP + ScrollTrigger confirmed
         gsap.set(targets, { opacity: 0, y: 24 });
         targets.forEach(t => allTargets.push(t));
 
@@ -492,10 +492,10 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   // ---------------------------------------------------------------------------
-  // Parallax on [data-parallax] — subtle Y translate on scroll
+  // Parallax on [data-parallax] - subtle Y translate on scroll
   // ---------------------------------------------------------------------------
   const initParallax = () => {
-    // Skip on low-power / mobile — parallax + scrub triggers are the top
+    // Skip on low-power / mobile - parallax + scrub triggers are the top
     // contributor to scroll jank on constrained devices.
     if (!hasGSAP || !hasST || isReducedMotion || lowPower) return;
     try {
@@ -519,7 +519,7 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   // ---------------------------------------------------------------------------
-  // Magnetic buttons — small translate toward cursor (desktop only, no touch)
+  // Magnetic buttons - small translate toward cursor (desktop only, no touch)
   // ---------------------------------------------------------------------------
   const initMagnetic = () => {
     if (isReducedMotion || isMobile || ("ontouchstart" in window)) return;
@@ -603,7 +603,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (window.NAAConsent && typeof window.NAAConsent.onChange === "function") {
       window.NAAConsent.onChange(applyEmbedConsent);
     } else {
-      // consent.js may load slightly later — retry a couple of times
+      // consent.js may load slightly later - retry a couple of times
       let tries = 0;
       const iv = setInterval(() => {
         if (window.NAAConsent && typeof window.NAAConsent.onChange === "function") {
@@ -618,7 +618,7 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   // ---------------------------------------------------------------------------
-  // Google Reviews card — client can override defaults by setting these
+  // Google Reviews card - client can override defaults by setting these
   // globals from a small inline script (or from CMS):
   //   window.NAA_REVIEWS = { rating: 4.7, count: "38 reviews" };
   // Falls back to a plausible "pending" state if not set.
@@ -632,7 +632,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const countEl = document.getElementById("reviews-count");
     if (!valEl || !starsEl) return;
 
-    const displayRating = rating != null ? rating.toFixed(1) : "—";
+    const displayRating = rating != null ? rating.toFixed(1) : "-";
     valEl.textContent = displayRating;
 
     if (rating != null) {
@@ -649,12 +649,12 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     if (countEl) {
-      countEl.textContent = countText || "Rating displayed as an estimate — see live count on Google.";
+      countEl.textContent = countText || "Rating displayed as an estimate - see live count on Google.";
     }
   })();
 
   // ---------------------------------------------------------------------------
-  // Awards & Community gallery — auto-discovers /assets/awards/award-NN.jpg
+  // Awards & Community gallery - auto-discovers /assets/awards/award-NN.jpg
   // Hidden by default; unhides only if at least one image loads.
   // ---------------------------------------------------------------------------
   const awardsGrid = document.getElementById("awards-grid");
@@ -689,7 +689,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // ---------------------------------------------------------------------------
-  // Contact form — async submit to Netlify Forms (keeps user on the page)
+  // Contact form - async submit to Netlify Forms (keeps user on the page)
   // ---------------------------------------------------------------------------
   const contactForm = document.getElementById("contact-form");
   if (contactForm) {
@@ -708,7 +708,7 @@ document.addEventListener("DOMContentLoaded", () => {
       for (const [k, v] of fd.entries()) body.append(k, typeof v === "string" ? v : "");
 
       try {
-        const resp = await fetch("/api/contact", {
+        const resp = await fetch("/.netlify/functions/contact-submit", {
           method: "POST",
           headers: { "Content-Type": "application/x-www-form-urlencoded" },
           body: body.toString(),
@@ -762,7 +762,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // ---------------------------------------------------------------------------
-  // Civil Gallery Carousel — infinite marquee
+  // Civil Gallery Carousel - infinite marquee
   // ---------------------------------------------------------------------------
   const galleryTrack = document.getElementById("gallery-track");
   const civilImages = [

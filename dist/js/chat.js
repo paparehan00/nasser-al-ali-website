@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Nasser Al Ali — Chat Widget
+   Nasser Al Ali - Chat Widget
    Self-contained vanilla JS. Talks to /.netlify/functions/chat (via /api/chat)
    which proxies Google Gemini. Bilingual (EN / AR), CTA button parsing,
    lead capture via a hidden Netlify Form.
@@ -37,7 +37,7 @@
       typing: "Assistant is typing",
       offline:
         "I couldn't reach the assistant. Please try again, or WhatsApp us at +974 6655 7728.",
-      rateLimit: "One moment — we're a bit busy. Trying again…",
+      rateLimit: "One moment - we're a bit busy. Trying again…",
       leadTitle: "Would you like our team to reach out?",
       leadBody: "Share your contact and we'll be in touch shortly.",
       leadName: "Your name",
@@ -46,7 +46,7 @@
       leadNotes: "Anything specific?",
       leadSubmit: "Send to team",
       leadSkip: "No thanks",
-      leadThanks: "Thanks — we'll be in touch shortly.",
+      leadThanks: "Thanks - we'll be in touch shortly.",
       cta: {
         quote: "Request a Quote",
         consultation: "Book a Consultation",
@@ -81,7 +81,7 @@
       ],
       typing: "المساعد يكتب",
       offline: "تعذّر الوصول إلى المساعد. حاول لاحقًا أو راسلنا على واتساب +974 6655 7728.",
-      rateLimit: "لحظة من فضلك — النظام مشغول قليلًا…",
+      rateLimit: "لحظة من فضلك - النظام مشغول قليلًا…",
       leadTitle: "هل تودّ أن يتواصل معك فريقنا؟",
       leadBody: "شارك بيانات التواصل وسنعاود الاتصال بك قريبًا.",
       leadName: "الاسم",
@@ -90,7 +90,7 @@
       leadNotes: "ملاحظات إضافية",
       leadSubmit: "إرسال إلى الفريق",
       leadSkip: "لا، شكرًا",
-      leadThanks: "شكرًا لك — سنتواصل معك قريبًا.",
+      leadThanks: "شكرًا لك - سنتواصل معك قريبًا.",
       cta: {
         quote: "اطلب عرض سعر",
         consultation: "احجز استشارة",
@@ -172,7 +172,7 @@
     return { clean, ctas: [...ctas], lead };
   };
 
-  // Detect Arabic script — used to auto-flip language when the user types Arabic
+  // Detect Arabic script - used to auto-flip language when the user types Arabic
   const containsArabic = (s) => /[؀-ۿݐ-ݿ]/.test(s);
 
   const fmtTime = (d = new Date()) =>
@@ -483,13 +483,13 @@
       body.append("intent", "chatbot-lead");
       body.append("conversation", JSON.stringify(state.messages).slice(0, 3000));
       try {
-        await fetch("/api/contact", {
+        await fetch("/.netlify/functions/contact-submit", {
           method: "POST",
           headers: { "Content-Type": "application/x-www-form-urlencoded" },
           body: body.toString(),
         });
       } catch (_) {
-        /* silent — form still visually confirms */
+        /* silent - form still visually confirms */
       }
       form.hidden = true;
       thanks.hidden = false;
@@ -574,7 +574,7 @@
     const text = String(raw || "").trim();
     if (!text || state.busy) return;
 
-    // Auto-detect Arabic — switch language on first Arabic input
+    // Auto-detect Arabic - switch language on first Arabic input
     if (containsArabic(text) && state.lang !== "ar") {
       state.lang = "ar";
       sessionStorage.setItem(LANG_KEY, "ar");

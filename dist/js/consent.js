@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Nasser Al Ali — Cookie Consent Banner & Gating
+   Nasser Al Ali - Cookie Consent Banner & Gating
    Self-contained vanilla JS. Runs everywhere consent.js is included.
    Exposes window.NAAConsent for other scripts to check categories.
    ========================================================================== */
@@ -184,7 +184,7 @@
   };
 
   // ---------------------------------------------------------------------------
-  // "Reopen" triggers — any element with [data-consent-reopen]
+  // "Reopen" triggers - any element with [data-consent-reopen]
   // ---------------------------------------------------------------------------
   const wireReopen = () => {
     document.addEventListener("click", (e) => {

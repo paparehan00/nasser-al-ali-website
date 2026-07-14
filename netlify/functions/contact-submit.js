@@ -1,6 +1,6 @@
 // netlify/functions/contact-submit.js
 // Receives the contact-form POST and emails info@nasseralaligroup.com
-// via Resend. The visitor is only ever shown "Thank you" — the email
+// via Resend. The visitor is only ever shown "Thank you" - the email
 // routing detail is never exposed client-side.
 
 const TO_EMAIL = "info@nasseralaligroup.com";
@@ -42,7 +42,7 @@ exports.handler = async (event) => {
     return { statusCode: 400, headers: CORS, body: JSON.stringify({ error: "Invalid body" }) };
   }
 
-  // Honeypot — silently accept if the bot field is filled
+  // Honeypot - silently accept if the bot field is filled
   if (data["bot-field"] && String(data["bot-field"]).trim().length) {
     return { statusCode: 200, headers: CORS, body: JSON.stringify({ ok: true }) };
   }
@@ -113,7 +113,7 @@ exports.handler = async (event) => {
   // If no Resend key, we still return 200 so the visitor sees success; the
   // submission is preserved in Netlify function logs.
   if (!apiKey) {
-    console.warn("[contact-submit] RESEND_API_KEY not set — enquiry only logged, not emailed.");
+    console.warn("[contact-submit] RESEND_API_KEY not set - enquiry only logged, not emailed.");
     return { statusCode: 200, headers: CORS, body: JSON.stringify({ ok: true }) };
   }
 
@@ -137,7 +137,7 @@ exports.handler = async (event) => {
     if (!resp.ok) {
       const errBody = await resp.text();
       console.error("[contact-submit] Resend API error", resp.status, errBody);
-      // Still return 200 to the client — log preserves the submission
+      // Still return 200 to the client - log preserves the submission
       return { statusCode: 200, headers: CORS, body: JSON.stringify({ ok: true }) };
     }
   } catch (e) {
