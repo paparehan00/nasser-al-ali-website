@@ -547,6 +547,7 @@ document.addEventListener("DOMContentLoaded", () => {
     initParallax();
     initMagnetic();
     initConsentEmbeds();       // Loads gated embeds (map, calendly) when consented
+    initNumbersAnimations();   // Bar + donut chart animate on scroll
     // Poke ScrollTrigger once layout is settled
     if (hasST) {
       requestAnimationFrame(() => ScrollTrigger.refresh());
@@ -652,6 +653,104 @@ document.addEventListener("DOMContentLoaded", () => {
       countEl.textContent = countText || "Rating displayed as an estimate - see live count on Google.";
     }
   })();
+
+  // ---------------------------------------------------------------------------
+  // "By the Numbers" - scroll-triggered dynamic charts
+  //   * Bar chart: bars scaleY 0->1 via CSS transitions (staggered)
+  //   * Bar labels: count up 0 -> data-target (with 'k' formatting)
+  //   * Donut: each segment's stroke-dasharray transitions from 0 to target
+  // Uses IntersectionObserver, plays ONCE. Respects prefers-reduced-motion.
+  // ---------------------------------------------------------------------------
+  const initNumbersAnimations = () => {
+    // ----- Bar chart -----
+    const barChart = document.querySelector(".bar-chart");
+    if (barChart) {
+      const labels = barChart.querySelectorAll(".bar-value");
+
+      const formatValue = (n, format, suffix) => {
+        let s;
+        if (format === "k" && n >= 1000) {
+          const kv = n / 1000;
+          s = kv >= 10 ? `${Math.round(kv)}K` : `${kv.toFixed(1).replace(/\.0$/, "")}K`;
+        } else {
+          s = Math.round(n).toLocaleString();
+        }
+        return s + (suffix || "");
+      };
+
+      const animateLabel = (el) => {
+        const target = parseFloat(el.getAttribute("data-target"));
+        const format = el.getAttribute("data-format");
+        const suffix = el.getAttribute("data-suffix") || "";
+        const duration = 1300;
+        const start = performance.now();
+        const tick = (now) => {
+          const t = Math.min(1, (now - start) / duration);
+          // easeOutCubic
+          const e = 1 - Math.pow(1 - t, 3);
+          el.textContent = formatValue(target * e, format, t === 1 ? suffix : "");
+          if (t < 1) requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
+      };
+
+      const playBar = () => {
+        barChart.classList.add("is-visible");
+        // Stagger label count-ups roughly in sync with bars
+        labels.forEach((el, i) => setTimeout(() => animateLabel(el), 100 + i * 150));
+      };
+
+      if (isReducedMotion) {
+        barChart.classList.add("is-visible");
+        labels.forEach((el) => {
+          const t = parseFloat(el.getAttribute("data-target"));
+          el.textContent = formatValue(t, el.getAttribute("data-format"), el.getAttribute("data-suffix") || "");
+        });
+      } else if ("IntersectionObserver" in window) {
+        const obs = new IntersectionObserver((entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) { playBar(); obs.disconnect(); }
+          });
+        }, { threshold: 0.35 });
+        obs.observe(barChart);
+      } else {
+        playBar();
+      }
+    }
+
+    // ----- Donut chart -----
+    const donut = document.querySelector(".donut-chart");
+    if (donut) {
+      const segs = donut.querySelectorAll(".donut-seg");
+      // Capture target dasharray strings, then reset to "0 <circumference>"
+      const CIRC = 439.82;
+      const targets = [];
+      segs.forEach((s) => {
+        targets.push(s.getAttribute("stroke-dasharray"));
+        s.setAttribute("stroke-dasharray", `0 ${CIRC}`);
+      });
+
+      const playDonut = () => {
+        donut.classList.add("is-visible");
+        // Set each segment to its final dasharray (transition kicks in)
+        segs.forEach((s, i) => s.setAttribute("stroke-dasharray", targets[i]));
+      };
+
+      if (isReducedMotion) {
+        segs.forEach((s, i) => s.setAttribute("stroke-dasharray", targets[i]));
+        donut.classList.add("is-visible");
+      } else if ("IntersectionObserver" in window) {
+        const obs2 = new IntersectionObserver((entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) { playDonut(); obs2.disconnect(); }
+          });
+        }, { threshold: 0.35 });
+        obs2.observe(donut);
+      } else {
+        playDonut();
+      }
+    }
+  };
 
   // ---------------------------------------------------------------------------
   // Awards & Community gallery - auto-discovers /assets/awards/award-NN.jpg
