@@ -23,3 +23,7 @@ Thumbs.db
 *~
 
 # Build artifacts (dist/ IS the site — do not ignore it)
+
+# Client-supplied source spreadsheets (not for publishing)
+assets/clientxlsx/
+*.xlsx
