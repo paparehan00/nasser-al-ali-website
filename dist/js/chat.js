@@ -1,8 +1,10 @@
 /* ==========================================================================
    Nasser Al Ali - Chat Widget
-   Self-contained vanilla JS. Talks to /.netlify/functions/chat (via /api/chat)
-   which proxies Google Gemini. Bilingual (EN / AR), CTA button parsing,
-   lead capture via a hidden Netlify Form.
+   Self-contained vanilla JS. Talks to a serverless endpoint whose URL is
+   supplied by the site at runtime (window.NAA_CHAT_API_URL, populated by
+   index.html from Vite env VITE_CHAT_API_URL). If the URL is missing the
+   widget still works - it just shows a graceful "temporarily unavailable"
+   message on submit instead of erroring. Bilingual (EN / AR).
    ========================================================================== */
 (() => {
   "use strict";
@@ -10,7 +12,12 @@
   // ---------------------------------------------------------------------------
   // Config & i18n
   // ---------------------------------------------------------------------------
-  const API_ENDPOINT = "/api/chat"; // Netlify redirects → /.netlify/functions/chat
+  // When VITE_CHAT_API_URL is unset at build time, Vite leaves the literal
+  // "%VITE_CHAT_API_URL%" placeholder in place. Treat that (and any obviously
+  // non-URL value) the same as an empty endpoint - the widget will show the
+  // graceful "unavailable" state.
+  const rawEndpoint = (typeof window !== "undefined" && window.NAA_CHAT_API_URL) || "";
+  const API_ENDPOINT = /^https?:\/\//i.test(rawEndpoint) ? rawEndpoint : "";
   const STORAGE_KEY = "naa-chat-session-v1";
   const LANG_KEY = "naa-chat-lang";
   const WA_URL = "https://wa.me/97466557728";
@@ -37,6 +44,8 @@
       typing: "Assistant is typing",
       offline:
         "I couldn't reach the assistant. Please try again, or WhatsApp us at +974 6655 7728.",
+      unavailable:
+        "Assistant temporarily unavailable - WhatsApp us at +974 6655 7728.",
       rateLimit: "One moment - we're a bit busy. Trying again…",
       leadTitle: "Would you like our team to reach out?",
       leadBody: "Share your contact and we'll be in touch shortly.",
@@ -81,6 +90,7 @@
       ],
       typing: "المساعد يكتب",
       offline: "تعذّر الوصول إلى المساعد. حاول لاحقًا أو راسلنا على واتساب +974 6655 7728.",
+      unavailable: "المساعد غير متاح مؤقتًا - راسلنا على واتساب +974 6655 7728.",
       rateLimit: "لحظة من فضلك - النظام مشغول قليلًا…",
       leadTitle: "هل تودّ أن يتواصل معك فريقنا؟",
       leadBody: "شارك بيانات التواصل وسنعاود الاتصال بك قريبًا.",
@@ -484,22 +494,30 @@
       e.preventDefault();
       if (!form.reportValidity()) return;
       const fd = new FormData(form);
-      const body = new URLSearchParams();
-      body.append("form-name", "chatbot-lead");
-      body.append("name", fd.get("name") || "");
-      body.append("email", fd.get("email") || "");
-      body.append("phone", fd.get("phone") || "");
-      body.append("notes", fd.get("notes") || "");
-      body.append("intent", "chatbot-lead");
-      body.append("conversation", JSON.stringify(state.messages).slice(0, 3000));
-      try {
-        await fetch("/.netlify/functions/contact-submit", {
-          method: "POST",
-          headers: { "Content-Type": "application/x-www-form-urlencoded" },
-          body: body.toString(),
-        });
-      } catch (_) {
-        /* silent - form still visually confirms */
+      const key = (typeof window !== "undefined" && window.NAA_LEAD_FORM_KEY) || "";
+      // If a Web3Forms key is exposed to the widget, mirror the site's contact
+      // form and post to Web3Forms directly. Otherwise (default) we just show
+      // "thanks" and let the visitor follow up via WhatsApp / the main form.
+      if (key) {
+        const payload = {
+          access_key: key,
+          subject: `Chat lead from ${fd.get("name") || "website visitor"}`,
+          from_name: fd.get("name") || "Chat lead",
+          reply_to:  fd.get("email") || "",
+          name:      fd.get("name") || "",
+          email:     fd.get("email") || "",
+          phone:     fd.get("phone") || "",
+          notes:     fd.get("notes") || "",
+          intent:    "chatbot-lead",
+          conversation: JSON.stringify(state.messages).slice(0, 3000),
+        };
+        try {
+          await fetch("https://api.web3forms.com/submit", {
+            method: "POST",
+            headers: { "Content-Type": "application/json", Accept: "application/json" },
+            body: JSON.stringify(payload),
+          });
+        } catch (_) { /* silent - form still visually confirms */ }
       }
       form.hidden = true;
       thanks.hidden = false;
@@ -599,6 +617,22 @@
     state.messages.push(userMsg);
     renderMessage(userMsg);
     persist();
+
+    // Graceful "not yet configured" state - if the site hasn't provided
+    // a chat endpoint URL yet, respond with a WhatsApp fallback instead
+    // of pretending to try (which would look like an error to the user).
+    if (!API_ENDPOINT) {
+      const msg = {
+        role: "assistant",
+        content: t().unavailable + "\n\n[[CTA:whatsapp]]",
+        ts: Date.now(),
+      };
+      state.messages.push(msg);
+      renderMessage(msg);
+      persist();
+      state.busy = false;
+      return;
+    }
 
     const typingEl = renderTyping();
 

@@ -13,6 +13,9 @@
   </head>
   <body>
     <div id="root"></div>
+    <!-- Chat endpoint URL from build-time env (VITE_CHAT_API_URL). If empty,
+         the chat widget shows a graceful "temporarily unavailable" state. -->
+    <script>window.NAA_CHAT_API_URL = "%VITE_CHAT_API_URL%";</script>
     <script type="module" src="/src/main.jsx"></script>
     <!-- Legacy vanilla scripts (self-contained). Both read localStorage.naa-lang
          and listen for the "naa-lang-change" event that our I18nContext fires,
