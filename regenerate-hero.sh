@@ -7,6 +7,12 @@ set -e
 ROOT="/mnt/c/Users/HP/.gemini/antigravity/scratch/NAA"
 cd "$ROOT"
 
+# Post-monorepo layout: source scratch stays at repo-root `assets/`,
+# but outputs must land in `client/public/assets/` so the React app can
+# reference them as /assets/hero-1080.webm etc.
+OUT="client/public/assets"
+mkdir -p "$OUT"
+
 # --- 1. Find the source merged video (edit SRC if it's elsewhere) ---
 SRC=""
 for c in assets/fvid.mp4 assets/fvid assets/references/fvid.mp4 references/fvid.mp4 assets/fvid.webm assets/hero.mp4; do
@@ -25,7 +31,7 @@ if ! command -v ffmpeg >/dev/null; then
   exit 1
 fi
 
-FRAMES="assets/hero-frames"
+FRAMES="$OUT/hero-frames"
 mkdir -p "$FRAMES/_old_jpg_backup"
 # move the old 300 JPGs out of the way (kept as backup)
 mv "$FRAMES"/*.jpg "$FRAMES/_old_jpg_backup"/ 2>/dev/null || true
@@ -40,16 +46,16 @@ echo "Clip duration: ${DUR}s  ->  extracting at ${FPS} fps (~120 frames)"
 ffmpeg -y -i "$SRC" -vf "fps=${FPS},scale=1920:-2" -c:v libwebp -q:v 78 -compression_level 6 "$FRAMES/frame-%03d.webp"
 
 # --- 5. Poster (first frame) for instant paint / fallback ---
-ffmpeg -y -i "$SRC" -vframes 1 -vf "scale=1920:-2" -q:v 3 assets/hero-poster.jpg
+ffmpeg -y -i "$SRC" -vframes 1 -vf "scale=1920:-2" -q:v 3 "$OUT/hero-poster.jpg"
 
 # --- 6. Looping fallback video, 1080p, muted, web-optimized (mp4 + webm) ---
-ffmpeg -y -i "$SRC" -vf "scale=1920:-2" -c:v libx264 -profile:v high -crf 24 -pix_fmt yuv420p -an -movflags +faststart assets/hero-1080.mp4
-ffmpeg -y -i "$SRC" -vf "scale=1920:-2" -c:v libvpx-vp9 -crf 32 -b:v 0 -an assets/hero-1080.webm
+ffmpeg -y -i "$SRC" -vf "scale=1920:-2" -c:v libx264 -profile:v high -crf 24 -pix_fmt yuv420p -an -movflags +faststart "$OUT/hero-1080.mp4"
+ffmpeg -y -i "$SRC" -vf "scale=1920:-2" -c:v libvpx-vp9 -crf 32 -b:v 0 -an "$OUT/hero-1080.webm"
 
 # --- 7. Report ---
 echo "--------------------------------------------"
 echo "WebP frames created: $(ls "$FRAMES"/frame-*.webp 2>/dev/null | wc -l)"
 echo "Frames total size:   $(du -ch "$FRAMES"/frame-*.webp 2>/dev/null | tail -1 | cut -f1)"
-du -h assets/hero-1080.mp4 assets/hero-1080.webm assets/hero-poster.jpg 2>/dev/null
+du -h "$OUT/hero-1080.mp4" "$OUT/hero-1080.webm" "$OUT/hero-poster.jpg" 2>/dev/null
 echo "Old JPGs backed up in: $FRAMES/_old_jpg_backup  (delete once the WebP hero is confirmed working)"
 echo "Done. Now hand the optimization prompt to Claude Code to wire these in."

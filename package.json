@@ -1,21 +1,28 @@
 {
-  "name": "nasser-al-ali-website",
+  "name": "naa-monorepo",
   "private": true,
   "version": "2.0.0",
   "type": "module",
-  "description": "Nasser Al Ali Enterprises marketing site + AI chat widget (Vite + React)",
-  "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
+  "description": "Nasser Al Ali Enterprises - full-stack monorepo (React client + Node/Express server + SQLite)",
+  "engines": {
+    "node": ">=20.0.0"
   },
-  "dependencies": {
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "react-router-dom": "^6.28.0"
+  "scripts": {
+    "dev": "concurrently -k -n client,server -c cyan,magenta \"npm --prefix client run dev\" \"npm --prefix server run dev\"",
+    "dev:client": "npm --prefix client run dev",
+    "dev:server": "npm --prefix server run dev",
+    "build": "npm --prefix client run build",
+    "preview": "npm --prefix client run preview",
+    "install:all": "npm install && npm --prefix client install && npm --prefix server install",
+    "postinstall": "test -d client/node_modules || npm --prefix client install && test -d server/node_modules || npm --prefix server install",
+    "server:migrate": "npm --prefix server run db:migrate",
+    "server:seed": "npm --prefix server run db:seed",
+    "server:seed:content": "npm --prefix server run db:seed:content",
+    "server:reset": "npm --prefix server run db:reset",
+    "server:backup": "npm --prefix server run db:backup",
+    "start": "npm --prefix server start"
   },
   "devDependencies": {
-    "@vitejs/plugin-react": "^4.3.4",
-    "vite": "^8.1.5"
+    "concurrently": "^9.1.0"
   }
 }

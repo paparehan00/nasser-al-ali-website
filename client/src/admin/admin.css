@@ -1,0 +1,376 @@
+/* -----------------------------------------------------------------------
+ * NAA admin panel styles. All classes prefixed with `naa-admin-` so they
+ * cannot collide with the public site's stylesheet.
+ * Brand: navy #0B1F3A / gold #C9A24B / warm off-white #F6F3EC
+ * ----------------------------------------------------------------------- */
+
+:root {
+  --naa-navy:      #0B1F3A;
+  --naa-navy-2:    #143050;
+  --naa-navy-3:    #1B3D66;
+  --naa-gold:      #C9A24B;
+  --naa-gold-2:    #B08F3F;
+  --naa-cream:     #F6F3EC;
+  --naa-line:      #E4DFCF;
+  --naa-ink:       #1a1a1a;
+  --naa-muted:     #6B6F7A;
+  --naa-danger:    #C1443F;
+  --naa-danger-2:  #A03730;
+  --naa-ok:        #2E7D5A;
+  --naa-warn:      #B58A18;
+}
+
+/* Hide the public site chrome when admin is mounted */
+body.naa-admin-active .naa-chat-launcher,
+body.naa-admin-active .naa-chat-panel,
+body.naa-admin-active .naa-consent,
+body.naa-admin-active .floating-btns,
+body.naa-admin-active .float-btn,
+body.naa-admin-active header.site-header,
+body.naa-admin-active footer.site-footer { display: none !important; }
+
+body.naa-admin-active {
+  background: var(--naa-cream);
+  font-family: "Inter", system-ui, sans-serif;
+  color: var(--naa-ink);
+}
+
+/* ----- boot / auth screens ----- */
+.naa-admin-boot {
+  min-height: 100vh; display: flex; align-items: center; justify-content: center;
+  gap: 12px; color: var(--naa-muted); font-size: 15px;
+}
+.naa-admin-boot-err { color: var(--naa-danger); }
+.naa-admin-boot-spinner {
+  width: 16px; height: 16px; border-radius: 50%;
+  border: 2px solid var(--naa-line); border-top-color: var(--naa-gold);
+  animation: naa-spin 0.8s linear infinite;
+}
+@keyframes naa-spin { to { transform: rotate(360deg); } }
+
+.naa-admin-auth {
+  min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 24px; background:
+    radial-gradient(1200px 800px at 20% 0%,  rgba(201,162,75,0.10), transparent 60%),
+    radial-gradient(1000px 800px at 100% 100%, rgba(11,31,58,0.08), transparent 60%),
+    var(--naa-cream);
+}
+.naa-admin-auth-card { width: 100%; max-width: 420px; padding: 32px 28px; }
+.naa-admin-authfoot { margin-top: 16px; color: var(--naa-muted); font-size: 12px; letter-spacing: 0.05em; }
+
+.naa-admin-brand {
+  display: flex; justify-content: center; margin-bottom: 20px;
+}
+.naa-admin-brand img { width: 72px; height: 72px; object-fit: contain; }
+
+/* ----- card, form, buttons ----- */
+.naa-admin-card {
+  background: #fff; border: 1px solid var(--naa-line);
+  border-radius: 6px; padding: 24px; margin-bottom: 20px;
+  box-shadow: 0 1px 2px rgba(11,31,58,0.04);
+}
+.naa-admin-card h1 { margin: 0 0 4px; font-family: "Montserrat", sans-serif; font-size: 22px; color: var(--naa-navy); }
+.naa-admin-card h2 { margin: 0 0 16px; font-family: "Montserrat", sans-serif; font-size: 16px; color: var(--naa-navy); text-transform: uppercase; letter-spacing: 0.05em; }
+.naa-admin-sub  { margin: 0 0 20px; color: var(--naa-muted); font-size: 14px; }
+
+.naa-admin-field { display: block; margin-bottom: 14px; }
+.naa-admin-field > span, .naa-admin-field > label { display: block; margin-bottom: 6px; font-size: 12px; color: var(--naa-muted); text-transform: uppercase; letter-spacing: 0.06em; font-weight: 600; }
+.naa-admin-field input[type="text"],
+.naa-admin-field input[type="email"],
+.naa-admin-field input[type="password"],
+.naa-admin-field textarea {
+  display: block; width: 100%; padding: 9px 11px;
+  border: 1px solid var(--naa-line); border-radius: 4px;
+  background: #fff; font: inherit; color: var(--naa-ink);
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.naa-admin-field input:focus,
+.naa-admin-field textarea:focus {
+  outline: none; border-color: var(--naa-gold);
+  box-shadow: 0 0 0 3px rgba(201,162,75,0.15);
+}
+.naa-admin-field textarea { resize: vertical; min-height: 60px; font-family: inherit; }
+
+.naa-admin-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  padding: 9px 16px; font: 600 13px/1 "Inter", sans-serif; letter-spacing: 0.02em;
+  border-radius: 4px; border: 1px solid transparent; cursor: pointer;
+  transition: background 0.12s, border-color 0.12s, color 0.12s, opacity 0.12s;
+}
+.naa-admin-btn + .naa-admin-btn { margin-left: 8px; }
+.naa-admin-btn:disabled { opacity: 0.55; cursor: not-allowed; }
+.naa-admin-btn-primary { background: var(--naa-navy); color: #fff; }
+.naa-admin-btn-primary:hover:not(:disabled) { background: var(--naa-navy-3); }
+.naa-admin-btn-ghost   { background: transparent; color: var(--naa-navy); border-color: var(--naa-line); }
+.naa-admin-btn-ghost:hover:not(:disabled) { background: #F1EDDC; }
+.naa-admin-btn-danger  { background: var(--naa-danger); color: #fff; }
+.naa-admin-btn-danger:hover:not(:disabled) { background: var(--naa-danger-2); }
+.naa-admin-btn-danger-outline { background: transparent; color: var(--naa-danger); border-color: rgba(193,68,63,0.4); }
+.naa-admin-btn-danger-outline:hover:not(:disabled) { background: rgba(193,68,63,0.08); border-color: var(--naa-danger); }
+
+.naa-admin-actions-row { display: flex; align-items: center; gap: 8px; margin-top: 4px; }
+.naa-admin-row-between { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+
+.naa-admin-alert {
+  background: rgba(193,68,63,0.08); color: var(--naa-danger-2);
+  border: 1px solid rgba(193,68,63,0.25); padding: 10px 12px;
+  border-radius: 4px; font-size: 13px; margin-bottom: 14px;
+}
+
+/* ----- shell / sidebar / topbar ----- */
+.naa-admin-shell {
+  display: grid; grid-template-columns: 260px 1fr; min-height: 100vh;
+}
+.naa-admin-sidebar {
+  background: var(--naa-navy); color: #E1E7F1;
+  padding: 24px 0; position: sticky; top: 0; height: 100vh; overflow-y: auto;
+}
+.naa-admin-side-brand {
+  display: flex; align-items: center; gap: 12px;
+  padding: 0 20px 20px; border-bottom: 1px solid rgba(255,255,255,0.08); margin-bottom: 12px;
+}
+.naa-admin-side-brand img { width: 44px; height: 44px; object-fit: contain; }
+.naa-admin-side-org { font-family: "Montserrat", sans-serif; font-weight: 700; font-size: 14px; }
+.naa-admin-side-sub { font-size: 11px; color: var(--naa-gold); letter-spacing: 0.15em; text-transform: uppercase; }
+
+.naa-admin-nav { padding: 0 8px; }
+.naa-admin-navlink {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 8px 12px; margin: 1px 0; border-radius: 4px;
+  color: rgba(225,231,241,0.75); font-size: 13.5px; text-decoration: none;
+  transition: background 0.12s, color 0.12s;
+}
+.naa-admin-navlink:hover { background: rgba(255,255,255,0.06); color: #fff; }
+.naa-admin-navlink.active { background: rgba(201,162,75,0.14); color: #fff; }
+.naa-admin-navlink.active::before { content: ""; position: absolute; left: 0; width: 3px; height: 22px; background: var(--naa-gold); border-radius: 0 3px 3px 0; margin-left: -8px; }
+.naa-admin-navcount {
+  font-size: 11px; padding: 2px 6px; border-radius: 10px;
+  background: rgba(255,255,255,0.08); color: rgba(225,231,241,0.7);
+}
+.naa-admin-nav-divider {
+  padding: 14px 12px 6px; font-size: 10.5px; letter-spacing: 0.15em;
+  text-transform: uppercase; color: rgba(225,231,241,0.35);
+}
+
+.naa-admin-main { display: flex; flex-direction: column; min-width: 0; }
+.naa-admin-topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 32px; background: #fff; border-bottom: 1px solid var(--naa-line);
+  position: sticky; top: 0; z-index: 10;
+}
+.naa-admin-topbar-title {
+  font-family: "Montserrat", sans-serif; font-weight: 700; font-size: 13px;
+  letter-spacing: 0.06em; text-transform: uppercase; color: var(--naa-navy);
+}
+.naa-admin-user { position: relative; display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--naa-muted); cursor: pointer; user-select: none; }
+.naa-admin-user-btn { background: none; border: none; cursor: pointer; padding: 4px 6px; color: var(--naa-navy); }
+.naa-admin-menu {
+  position: absolute; top: calc(100% + 6px); right: 0; min-width: 160px;
+  background: #fff; border: 1px solid var(--naa-line); border-radius: 4px;
+  box-shadow: 0 4px 16px rgba(11,31,58,0.10);
+  padding: 4px; z-index: 20;
+}
+.naa-admin-menu button {
+  display: block; width: 100%; padding: 8px 12px; border: none;
+  background: transparent; text-align: left; font: inherit; color: var(--naa-ink);
+  cursor: pointer; border-radius: 3px;
+}
+.naa-admin-menu button:hover { background: #F1EDDC; }
+
+.naa-admin-content { padding: 28px 32px 60px; max-width: 1080px; width: 100%; }
+
+/* ----- pages ----- */
+.naa-admin-pagehead { margin-bottom: 20px; }
+.naa-admin-pagehead h1 { margin: 0 0 4px; font-family: "Montserrat", sans-serif; font-size: 24px; color: var(--naa-navy); }
+.naa-admin-pagehead p  { margin: 0; color: var(--naa-muted); font-size: 14px; }
+.naa-admin-crumb code {
+  background: rgba(11,31,58,0.06); padding: 2px 6px; border-radius: 3px;
+  font-size: 12px; color: var(--naa-navy);
+}
+.naa-admin-loading { padding: 24px; color: var(--naa-muted); }
+.naa-admin-empty { padding: 20px; background: #F6F3EC; border-radius: 4px; color: var(--naa-muted); font-size: 13.5px; line-height: 1.5; }
+
+.naa-admin-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
+.naa-admin-tile {
+  text-decoration: none; color: inherit; padding: 16px; display: block;
+  border-color: var(--naa-line); transition: border-color 0.12s, transform 0.12s;
+}
+.naa-admin-tile:hover { border-color: var(--naa-gold); transform: translateY(-1px); }
+.naa-admin-tile-key { font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--naa-gold); }
+.naa-admin-tile-title { font-family: "Montserrat", sans-serif; font-weight: 700; font-size: 15px; color: var(--naa-navy); margin: 4px 0 8px; }
+.naa-admin-tile-meta  { color: var(--naa-muted); font-size: 12.5px; }
+
+/* ----- bilingual fields ----- */
+.naa-admin-bilingual { margin-bottom: 14px; }
+.naa-admin-bilingual-label { font-size: 12px; color: var(--naa-muted); text-transform: uppercase; letter-spacing: 0.06em; font-weight: 600; margin-bottom: 6px; }
+.naa-admin-bilingual-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.naa-admin-bilingual-half { display: block; position: relative; }
+.naa-admin-lang {
+  position: absolute; top: 8px; right: 10px; font-size: 10px; font-weight: 700;
+  color: var(--naa-muted); background: #F6F3EC; padding: 1px 6px; border-radius: 2px;
+  letter-spacing: 0.08em; pointer-events: none;
+}
+.naa-admin-bilingual-half input,
+.naa-admin-bilingual-half textarea {
+  width: 100%; padding: 9px 42px 9px 11px;
+  border: 1px solid var(--naa-line); border-radius: 4px; background: #fff;
+  font: inherit;
+}
+.naa-admin-bilingual-half input:focus,
+.naa-admin-bilingual-half textarea:focus {
+  outline: none; border-color: var(--naa-gold); box-shadow: 0 0 0 3px rgba(201,162,75,0.15);
+}
+.naa-admin-bilingual-half textarea { resize: vertical; }
+
+/* ----- JSON editor ----- */
+.naa-admin-json {
+  font-family: "JetBrains Mono", "Menlo", "Consolas", monospace;
+  font-size: 12.5px; line-height: 1.5;
+  background: #FBFAF3; border: 1px solid var(--naa-line);
+}
+.naa-admin-json-err { border-color: var(--naa-danger); background: rgba(193,68,63,0.03); }
+.naa-admin-inline-err { color: var(--naa-danger); font-size: 12px; margin-top: 4px; }
+
+/* ----- items list ----- */
+.naa-admin-itemlist { list-style: none; margin: 0; padding: 0; }
+.naa-admin-item {
+  background: #FBFAF3; border: 1px solid var(--naa-line); border-radius: 4px;
+  padding: 14px 16px; margin-bottom: 10px;
+}
+.naa-admin-item-head {
+  display: flex; align-items: center; gap: 10px; margin-bottom: 12px;
+}
+.naa-admin-item-title {
+  flex: 1; font-family: "Montserrat", sans-serif; font-weight: 700;
+  font-size: 13px; color: var(--naa-navy);
+}
+.naa-admin-item-actions { display: flex; align-items: center; }
+.naa-admin-drag {
+  background: transparent; border: 1px solid var(--naa-line); border-radius: 3px;
+  padding: 4px 8px; cursor: grab; color: var(--naa-muted);
+  font-family: monospace; font-weight: 700;
+}
+.naa-admin-drag:active { cursor: grabbing; }
+
+/* ----- modal ----- */
+.naa-admin-modal-backdrop {
+  position: fixed; inset: 0; background: rgba(11,31,58,0.35);
+  display: flex; align-items: center; justify-content: center; z-index: 100;
+  padding: 24px;
+}
+.naa-admin-modal {
+  background: #fff; border-radius: 6px; padding: 24px 24px 20px;
+  max-width: 480px; width: 100%; box-shadow: 0 8px 32px rgba(11,31,58,0.20);
+}
+.naa-admin-modal h2 { margin: 0 0 8px; font-family: "Montserrat", sans-serif; font-size: 18px; color: var(--naa-navy); }
+.naa-admin-modal p  { margin: 0 0 20px; color: var(--naa-muted); line-height: 1.5; }
+.naa-admin-modal-actions { display: flex; justify-content: flex-end; }
+
+/* ----- toasts ----- */
+.naa-toast-stack {
+  position: fixed; bottom: 20px; right: 20px; z-index: 200;
+  display: flex; flex-direction: column; gap: 8px; max-width: 400px;
+  pointer-events: none;
+}
+.naa-toast {
+  display: flex; align-items: flex-start; gap: 10px;
+  background: #fff; border: 1px solid var(--naa-line); border-left-width: 4px;
+  border-radius: 4px; padding: 12px 14px;
+  box-shadow: 0 4px 16px rgba(11,31,58,0.12);
+  font-size: 13.5px; color: var(--naa-ink); pointer-events: auto;
+  animation: naa-toast-in 0.18s ease-out;
+}
+.naa-toast-success { border-left-color: var(--naa-ok); }
+.naa-toast-error   { border-left-color: var(--naa-danger); }
+.naa-toast-info    { border-left-color: var(--naa-navy); }
+.naa-toast-msg { flex: 1; line-height: 1.4; }
+.naa-toast-x {
+  background: none; border: none; padding: 0 4px; margin: -2px -4px 0 0;
+  color: var(--naa-muted); cursor: pointer; font-size: 18px; line-height: 1;
+}
+.naa-toast-x:hover { color: var(--naa-ink); }
+@keyframes naa-toast-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ----- image upload ----- */
+.naa-admin-dropzone {
+  border: 2px dashed var(--naa-line); border-radius: 4px; background: #FBFAF3;
+  padding: 22px 16px; text-align: center; color: var(--naa-muted); font-size: 13.5px;
+  cursor: pointer; transition: border-color 0.15s, background 0.15s;
+}
+.naa-admin-dropzone:hover { border-color: var(--naa-gold); background: #F8F1DC; color: var(--naa-navy); }
+.naa-admin-dropzone.is-drag { border-color: var(--naa-gold); background: rgba(201,162,75,0.10); color: var(--naa-navy); }
+.naa-admin-dropzone.is-busy { pointer-events: none; opacity: 0.7; }
+.naa-admin-dropzone-sub { font-size: 11.5px; color: var(--naa-muted); margin-top: 4px; }
+
+.naa-admin-imgrow {
+  display: grid; grid-template-columns: 120px 1fr; gap: 14px;
+  padding: 12px; background: #FBFAF3; border: 1px solid var(--naa-line); border-radius: 4px;
+}
+.naa-admin-imgpreview {
+  width: 120px; height: 90px; border-radius: 3px; overflow: hidden;
+  background: #fff; border: 1px solid var(--naa-line);
+  display: flex; align-items: center; justify-content: center;
+}
+.naa-admin-imgpreview img { max-width: 100%; max-height: 100%; object-fit: contain; }
+.naa-admin-imgmeta { display: flex; flex-direction: column; justify-content: space-between; min-width: 0; }
+.naa-admin-imgpath {
+  display: block; font-family: monospace; font-size: 11.5px; color: var(--naa-muted);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  background: #fff; padding: 4px 6px; border-radius: 2px; border: 1px solid var(--naa-line);
+}
+.naa-admin-imgbtns { display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
+
+.naa-admin-imgpath-details { margin-top: 8px; }
+.naa-admin-imgpath-details summary {
+  cursor: pointer; font-size: 11.5px; color: var(--naa-muted); user-select: none;
+  padding: 4px 0;
+}
+.naa-admin-imgpath-details summary:hover { color: var(--naa-navy); }
+.naa-admin-imgpath-input {
+  display: block; width: 100%; margin-top: 4px; padding: 6px 8px;
+  border: 1px solid var(--naa-line); border-radius: 3px;
+  font-family: monospace; font-size: 12px; background: #fff;
+}
+
+/* ----- audit log ----- */
+.naa-admin-audit-filter {
+  padding: 7px 10px; border: 1px solid var(--naa-line); border-radius: 4px;
+  font: inherit; min-width: 260px; background: #fff;
+}
+.naa-admin-audit-pager { display: flex; align-items: center; gap: 8px; }
+.naa-admin-audit-pageinfo { font-size: 12px; color: var(--naa-muted); }
+.naa-admin-audit-table {
+  width: 100%; border-collapse: collapse; font-size: 13px;
+}
+.naa-admin-audit-table th {
+  text-align: left; padding: 8px 10px; font-size: 10.5px; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--naa-muted); border-bottom: 1px solid var(--naa-line);
+}
+.naa-admin-audit-table td {
+  padding: 8px 10px; border-bottom: 1px solid rgba(228,223,207,0.5); vertical-align: top;
+}
+.naa-admin-audit-ts { color: var(--naa-muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.naa-admin-audit-target code {
+  font-size: 12px; color: var(--naa-navy);
+}
+.naa-admin-audit-ip { color: var(--naa-muted); font-family: monospace; font-size: 11.5px; }
+.naa-admin-audit-badge {
+  display: inline-block; padding: 2px 8px; border-radius: 3px;
+  font-size: 11.5px; font-weight: 600; font-family: monospace;
+}
+.naa-admin-audit-ok   { background: rgba(46,125,90,0.10);  color: var(--naa-ok); }
+.naa-admin-audit-warn { background: rgba(181,138,24,0.12); color: var(--naa-warn); }
+.naa-admin-audit-err  { background: rgba(193,68,63,0.10);  color: var(--naa-danger); }
+.naa-admin-audit-n    { background: rgba(11,31,58,0.06);   color: var(--naa-navy); }
+
+/* ----- responsive ----- */
+@media (max-width: 900px) {
+  .naa-admin-shell { grid-template-columns: 1fr; }
+  .naa-admin-sidebar { position: static; height: auto; padding: 12px 0 8px; }
+  .naa-admin-sidebar { display: none; } /* mobile MVP: hide sidebar; owner uses tiles on Overview */
+  .naa-admin-content { padding: 20px; }
+  .naa-admin-bilingual-row { grid-template-columns: 1fr; }
+}
