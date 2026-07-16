@@ -21,10 +21,10 @@
  * VITE_CHAT_API_URL, then rebuild the site.
  */
 
-// AI provider endpoint. Override with env.AI_MODEL_ENDPOINT + env.AI_MODEL
-// to swap providers without touching this file.
-const AI_MODEL = "gemini-1.5-flash";
-const AI_ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models/${AI_MODEL}:generateContent`;
+// AI provider endpoint - Groq (OpenAI-compatible chat-completions API).
+// Auth uses `Authorization: Bearer ${AI_API_KEY}` header, NOT a ?key= query param.
+const AI_MODEL = "llama-3.3-70b-versatile";
+const AI_ENDPOINT = "https://api.groq.com/openai/v1/chat/completions";
 
 const SYSTEM_PROMPT = `You are the official AI assistant for Nasser Al Ali Enterprises, a Qatar-based heavy-construction and contracting company. Be professional, helpful, concise, and warm.
 
@@ -82,6 +82,7 @@ GROUP / SISTER COMPANIES (16)
 Nasser Al Ali Group, Nasser Al Ali Contracting, Nasser Bin Ali Trading Est, Nasser Al Ali International, Nasser Al Ali Roads, SAI Qatar Trading & Contracting, Expo International Enterprises, Doha Mechanical Engineering & Development, Wrangler Trading & Contracting, Red Sea Trading & Contracting Co. W.L.L, Al Magateer Trading & Contracting Co., Ambition Projects W.L.L, Aigner Trading & Contracting, Electroline International, Lusern Contracting & Cleaning, Nasser Al Ali Business Center.
 
 STYLE
+- Answer ONLY from the provided company information above. If you don't know something, say so plainly and offer to connect the visitor via WhatsApp/contact - never guess or invent facts, names, or prices.
 - Reply in the visitor's language (English or Arabic). If they write in Arabic, reply fully in Arabic.
 - Keep answers concise (2-5 short paragraphs max), professional, warm.
 - Use light Markdown when helpful: **bold** for key terms, "-" bullet lists, [links](https://…) for URLs. Do NOT use headings (# ##).
@@ -133,15 +134,18 @@ export default {
     const rawMessages = Array.isArray(payload.messages) ? payload.messages : [];
     const lang = payload.lang === "ar" ? "ar" : "en";
 
-    const contents = rawMessages
+    // OpenAI / Groq chat-completions message shape:
+    // {role:"system"|"user"|"assistant", content:"..."}
+    // Client sends role="user"/"assistant"; anything else is normalised to "user".
+    const conversation = rawMessages
       .filter((m) => m && typeof m.content === "string" && m.content.trim().length)
       .slice(-16)
       .map((m) => ({
-        role: m.role === "assistant" ? "model" : "user",
-        parts: [{ text: String(m.content).slice(0, 4000) }],
+        role: m.role === "assistant" ? "assistant" : "user",
+        content: String(m.content).slice(0, 4000),
       }));
 
-    if (!contents.length) {
+    if (!conversation.length) {
       return json({ error: "No messages provided" }, 400, env);
     }
 
@@ -150,24 +154,26 @@ export default {
       : "\n\nReply in English unless the visitor writes in Arabic in a later turn.";
 
     const body = {
-      system_instruction: { parts: [{ text: SYSTEM_PROMPT + langNote }] },
-      contents,
-      generationConfig: { temperature: 0.6, topP: 0.9, maxOutputTokens: 800 },
-      safetySettings: [
-        { category: "HARM_CATEGORY_HARASSMENT",        threshold: "BLOCK_ONLY_HIGH" },
-        { category: "HARM_CATEGORY_HATE_SPEECH",       threshold: "BLOCK_ONLY_HIGH" },
-        { category: "HARM_CATEGORY_SEXUALLY_EXPLICIT", threshold: "BLOCK_ONLY_HIGH" },
-        { category: "HARM_CATEGORY_DANGEROUS_CONTENT", threshold: "BLOCK_ONLY_HIGH" },
+      model: AI_MODEL,
+      messages: [
+        { role: "system", content: SYSTEM_PROMPT + langNote },
+        ...conversation,
       ],
+      temperature: 0.3,   // Low = literal / faithful to the company facts
+      max_tokens: 800,
+      stream: false,      // Matches previous non-streaming behaviour
     };
 
     // Small retry loop for 429/5xx
     let resp;
     for (let attempt = 0; attempt < 3; attempt++) {
       try {
-        resp = await fetch(`${AI_ENDPOINT}?key=${encodeURIComponent(env.AI_API_KEY)}`, {
+        resp = await fetch(AI_ENDPOINT, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type":  "application/json",
+            "Authorization": `Bearer ${env.AI_API_KEY}`,
+          },
           body: JSON.stringify(body),
         });
       } catch (netErr) {
@@ -188,10 +194,16 @@ export default {
       return json({ error: friendly, status: resp.status }, resp.status, env);
     }
 
+    // OpenAI / Groq response shape:
+    //   { choices: [{ message: { role, content }, finish_reason }, ...], ... }
     const data = await resp.json().catch(() => ({}));
-    const candidate = data && data.candidates && data.candidates[0];
-    const parts = (candidate && candidate.content && candidate.content.parts) || [];
-    const text = parts.map((p) => p && p.text).filter(Boolean).join("").trim();
+    const text = (
+      data &&
+      data.choices &&
+      data.choices[0] &&
+      data.choices[0].message &&
+      typeof data.choices[0].message.content === "string"
+    ) ? data.choices[0].message.content.trim() : "";
 
     if (!text) {
       return json({
