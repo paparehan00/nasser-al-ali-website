@@ -1,11 +1,21 @@
 import { useDocumentTitle } from "../hooks/useDocumentTitle.js";
 import { ROUTE_TITLES } from "../lib/constants.js";
+import { useI18n } from "../context/I18nContext.jsx";
 import LegalPage from "../components/LegalPage.jsx";
 
 export default function Privacy() {
   useDocumentTitle(ROUTE_TITLES["/privacy"]);
+  const { t, lang } = useI18n();
   return (
-    <LegalPage crumb="Privacy Policy" title="Privacy Policy" updated="[DATE]">
+    <LegalPage crumb={t("legal.crumb.privacy")} title={t("legal.title.privacy")}>
+      {lang === "ar" ? <ArabicBody /> : <EnglishBody />}
+    </LegalPage>
+  );
+}
+
+function EnglishBody() {
+  return (
+    <>
       <h2>1. Who we are</h2>
       <p>This Privacy Policy explains how <strong>Nasser Al Ali Enterprises</strong> ("we", "us", "our") collects, uses, stores and protects personal information you share with us through this website, our related digital services (chat assistant, appointment booking, forms), and our contact channels.</p>
       <p>We are a Qatar-registered construction and contracting company.</p>
@@ -85,10 +95,100 @@ export default function Privacy() {
       <p>Our services are directed at businesses and adult professionals. We do not knowingly collect personal data from anyone under 18.</p>
 
       <h2>13. Changes to this policy</h2>
-      <p>We may update this policy from time to time. Material changes will be highlighted at the top of this page with a new "Last updated" date.</p>
+      <p>We may update this policy from time to time. Material changes will be highlighted at the top of this page.</p>
 
       <h2>14. Contact us</h2>
       <p>Nasser Al Ali Enterprises · Salwa Road, Building-155, Zone 43, Doha, State of Qatar · P.O. Box 13115, Doha, Qatar · <a href="mailto:info@nasseralaligroup.com">info@nasseralaligroup.com</a> · +974 6655 7728</p>
-    </LegalPage>
+    </>
+  );
+}
+
+function ArabicBody() {
+  return (
+    <>
+      <h2>1. من نحن</h2>
+      <p>توضّح سياسة الخصوصية هذه كيف تقوم <strong>ناصر العلي للمقاولات</strong> ("نحن") بجمع واستخدام وحفظ وحماية المعلومات الشخصية التي تشاركها معنا عبر هذا الموقع، وخدماتنا الرقمية المرتبطة (المساعد الذكي، حجز المواعيد، النماذج)، وقنوات التواصل الأخرى.</p>
+      <p>نحن شركة مقاولات وإنشاءات مُسجَّلة في دولة قطر.</p>
+      <ul>
+        <li><strong>المكتب:</strong> طريق سلوى، مبنى 155، المنطقة 43، الدوحة، دولة قطر</li>
+        <li><strong>البريدي:</strong> ص.ب 13115، الدوحة، قطر</li>
+        <li><strong>البريد الإلكتروني:</strong> <a href="mailto:info@nasseralaligroup.com">info@nasseralaligroup.com</a></li>
+        <li><strong>الهاتف / واتساب:</strong> +974 6655 7728</li>
+        <li><strong>الخطوط الأرضية:</strong> +974 4435 4422 · +974 4435 1112</li>
+        <li><strong>الفاكس:</strong> +974 4431 1474</li>
+      </ul>
+      <div className="callout"><strong>جهة اتصال حماية البيانات:</strong> <a href="mailto:info@nasseralaligroup.com">info@nasseralaligroup.com</a></div>
+
+      <h2>2. الأساس القانوني</h2>
+      <p>نُعالج البيانات الشخصية وفقًا لأحكام <strong>القانون القطري رقم 13 لسنة 2016</strong> بشأن حماية خصوصية البيانات الشخصية ("قانون حماية البيانات")، والقرارات التنفيذية الصادرة عن إدارة الامتثال وحماية البيانات في وزارة المواصلات والاتصالات وتقنية المعلومات. كما نلتزم بأفضل ممارسات اللائحة العامة لحماية البيانات (GDPR) للزائرين من الدول الأخرى.</p>
+      <p>الأسس القانونية التي نعتمد عليها:</p>
+      <ul>
+        <li><strong>الموافقة</strong> - لملفات تعريف الارتباط الاختيارية والتحليلات ورسائل التسويق.</li>
+        <li><strong>المصلحة التجارية المشروعة</strong> - للرد على الاستفسارات، وتقييم طلبات التوظيف، وتقديم الخدمات المتعاقد عليها، وحماية أنظمتنا.</li>
+        <li><strong>الالتزام القانوني</strong> - حيثما تُلزم القوانين القطرية أو المتطلبات المحاسبية أو التدقيقية بحفظ البيانات.</li>
+        <li><strong>العقد</strong> - عندما تكون المعالجة ضرورية للتفاوض على عقد أو تنفيذه معك.</li>
+      </ul>
+
+      <h2>3. البيانات التي نجمعها</h2>
+      <p>نجمع فقط ما نحتاج إليه. قد تشمل البيانات:</p>
+      <ul>
+        <li><strong>بيانات الهوية والتواصل</strong> - الاسم، الشركة، المسمى الوظيفي، البريد الإلكتروني، رقم الهاتف.</li>
+        <li><strong>بيانات الاستفسار</strong> - محتوى أي رسالة، ملخص المشروع، الجدول الزمني، مؤشر الميزانية.</li>
+        <li><strong>بيانات طلب عرض السعر</strong> - الملفات المرفوعة (جداول الكميات، الرسومات، المواصفات، مستندات المناقصات).</li>
+        <li><strong>بيانات التوظيف</strong> - السيرة الذاتية، خطاب التقديم، تاريخ العمل، المراجع، وأي معلومات تُدرجها في طلبك.</li>
+        <li><strong>بيانات المواعيد</strong> - موضوع الاجتماع، الوقت المفضّل، المنطقة الزمنية، والبيانات الوصفية للتقويم.</li>
+        <li><strong>بيانات محادثات المساعد الذكي</strong> - الرسائل المتبادلة مع مساعدنا الذكي. تُحفظ في جلسة المتصفح؛ إذا أرسلت نموذج التواصل داخل المحادثة، قد يُحفظ نص المحادثة في سجلاتنا.</li>
+        <li><strong>البيانات التقنية</strong> - عنوان IP، معرّفات الجهاز/المتصفح، الرابط المُحيل، الصفحات المُشاهدة، وبيانات التحليلات (بعد الموافقة).</li>
+      </ul>
+
+      <h2>4. كيف نجمع البيانات</h2>
+      <ul>
+        <li><strong>نماذج الموقع</strong> - نموذج التواصل، طلب عرض السعر (مع رفع ملفات)، رفع السيرة الذاتية، ونماذج حجز المواعيد.</li>
+        <li><strong>حجز المواعيد</strong> - عبر أداة الجدولة (Calendly) عند حجز استشارة.</li>
+        <li><strong>المساعد الذكي</strong> - عند كتابة رسالة داخل شاشة المحادثة على موقعنا.</li>
+        <li><strong>التواصل المباشر</strong> - عبر البريد الإلكتروني أو الهاتف أو واتساب.</li>
+        <li><strong>تلقائيًا</strong> - عبر سجلات الخادم، ملفات تعريف الارتباط الأساسية، وملفات التحليلات (بعد الموافقة).</li>
+      </ul>
+
+      <h2>5. لماذا نستخدم البيانات</h2>
+      <ul>
+        <li>للرد على الاستفسارات، وإعداد عروض الأسعار، والتفاوض على العقود.</li>
+        <li>لتقييم طلبات التوظيف وإدارة عملية الاختيار.</li>
+        <li>لجدولة وإجراء الاستشارات والاجتماعات الميدانية.</li>
+        <li>للإجابة على الأسئلة عبر مساعدنا الذكي.</li>
+        <li>لتقديم خدماتنا وإدارتها وتحسينها.</li>
+        <li>للوفاء بالالتزامات القانونية والتنظيمية والتدقيقية في قطر.</li>
+        <li>لحماية أمن وسلامة موقعنا وأنظمتنا.</li>
+        <li>بموافقتك: لإرسال رسائل تسويقية وقياس استخدام الموقع.</li>
+      </ul>
+
+      <h2>6. الأطراف الثالثة والمُعالِجون</h2>
+      <p>نستعين بأطراف ثالثة موثوقة لتشغيل موقعنا وخدماتنا، وهم يُعالجون البيانات وفق تعليماتنا وبموجب اتفاقيات مكتوبة، وتشمل: مزوّد استضافة الموقع، مزوّد الذكاء الاصطناعي (يُستخدم فقط للمساعد الذكي)، خرائط Google (خريطة المكتب المُضمَّنة)، Calendly (حجز المواعيد)، Meta/WhatsApp (إذا بدأت محادثة عبر واتساب)، وGoogle Analytics 4 (تحليلات تجميعية بعد الموافقة).</p>
+      <div className="callout"><strong>إشعار المساعد الذكي:</strong> مساعدنا الذكي أداة معلوماتية مدعومة بمزوّد ذكاء اصطناعي من طرف ثالث، وقد يُقدّم أحيانًا إجابات غير مكتملة أو غير دقيقة. لا يُعتبر بديلًا عن الاستشارة المتخصصة. يُرجى عدم مشاركة أي معلومات شخصية حساسة (أرقام الهوية/جوازات السفر، بيانات صحية، بيانات مالية) عبر المساعد.</div>
+
+      <h2>7. النقل الدولي للبيانات</h2>
+      <p>قد تُعالج بعض شركات الطرف الثالث المذكورة أعلاه (مزوّد الاستضافة، Google، Calendly، Meta) البيانات خارج قطر. في هذه الحالة، نطلب منهم تطبيق حماية مُكافئة للمعايير القطرية بما يتماشى مع المادة 18 من قانون حماية البيانات، والامتثال لأنظمتهم الخاصة (GDPR وإطار خصوصية البيانات بين الاتحاد الأوروبي والولايات المتحدة).</p>
+
+      <h2>8. مدة الاحتفاظ بالبيانات</h2>
+      <p>نحتفظ بالبيانات فقط للفترة اللازمة للغرض الذي جُمعت لأجله، مضافًا إليها أي فترة يتطلبها القانون. للاطلاع على جدول الاحتفاظ الحالي، راسلنا على <a href="mailto:info@nasseralaligroup.com">info@nasseralaligroup.com</a>.</p>
+
+      <h2>9. حقوقك</h2>
+      <p>وفقًا لقانون حماية البيانات القطري (والأنظمة الدولية المعادلة)، يحق لك: الاطلاع، الحصول على نسخة من بياناتك، طلب التصحيح، الاعتراض على المعالجة، طلب الحذف، وسحب الموافقة. راسلنا على <a href="mailto:info@nasseralaligroup.com">info@nasseralaligroup.com</a> مع عنوان الرسالة "طلب بيانات". نستهدف الرد خلال 30 يومًا.</p>
+
+      <h2>10. ملفات تعريف الارتباط والتحليلات</h2>
+      <p>نستخدم عددًا محدودًا من العناصر الأساسية و(بموافقتك) Google Analytics. للتفاصيل، راجع <a href="/cookies">سياسة الكوكيز</a>.</p>
+
+      <h2>11. الأمن</h2>
+      <p>نستخدم التشفير أثناء النقل (HTTPS/TLS)، والصلاحيات الأقل امتيازًا، وضوابط استضافة معيارية. إذا اشتبهت بأي خرق، يُرجى التواصل معنا فورًا.</p>
+
+      <h2>12. الأطفال</h2>
+      <p>خدماتنا موجّهة للشركات والمهنيين البالغين. لا نجمع عمدًا أي بيانات شخصية لمن هم دون الثامنة عشرة.</p>
+
+      <h2>13. التعديلات على هذه السياسة</h2>
+      <p>قد نُحدّث هذه السياسة من وقت لآخر. سيتم إبراز أي تغييرات جوهرية في أعلى الصفحة.</p>
+
+      <h2>14. تواصل معنا</h2>
+      <p>ناصر العلي للمقاولات · طريق سلوى، مبنى 155، المنطقة 43، الدوحة، دولة قطر · ص.ب 13115، الدوحة، قطر · <a href="mailto:info@nasseralaligroup.com">info@nasseralaligroup.com</a> · +974 6655 7728</p>
+    </>
   );
 }

@@ -132,6 +132,7 @@ const T = {
     "numbers.kpiGroupDetail":  "A vertically-integrated ecosystem covering construction, MEP, real estate & support services.",
     "numbers.kpiYears":        "Years in Qatar",
     "numbers.kpiYearsDetail":  "Established 2005 · Doha, State of Qatar · continuous operations.",
+    "numbers.donutLabel":      "EMPLOYEES",
 
     "reviews.overline":    "OUR REPUTATION",
     "reviews.title":       "What our clients say",
@@ -187,6 +188,8 @@ const T = {
     "contact.map.manage":        "Manage cookie preferences",
     "contact.map.open":          "Or open in Google Maps →",
 
+    "footer.slogan":       "Two decades of raising Qatar's skyline.",
+    "footer.tag":          "Safely, on time, at scale.",
     "footer.rights":       "© 2026 Nasser Al Ali Enterprises, Qatar · P.O. Box 13115, Doha, Qatar",
     "footer.cookieSettings":"Cookie settings",
     "footer.privacy":      "Privacy Policy",
@@ -200,6 +203,14 @@ const T = {
     "toggle.aria":         "Switch language",
 
     "preloader.loading":   "Loading",
+
+    "legal.freshness":     "Up to industry standards @ 2026",
+    "legal.crumb.privacy": "Privacy Policy",
+    "legal.crumb.terms":   "Terms of Use",
+    "legal.crumb.cookies": "Cookie Policy",
+    "legal.title.privacy": "Privacy Policy",
+    "legal.title.terms":   "Terms of Use",
+    "legal.title.cookies": "Cookie Policy",
   },
 
   ar: {
@@ -326,6 +337,7 @@ const T = {
     "numbers.kpiGroupDetail":  "منظومة متكاملة رأسيًا تشمل البناء والكهروميكانيك والعقارات وخدمات الدعم.",
     "numbers.kpiYears":        "سنة في قطر",
     "numbers.kpiYearsDetail":  "تأسست 2005 · الدوحة، دولة قطر · عمليات مستمرة.",
+    "numbers.donutLabel":      "موظف",
 
     "reviews.overline":    "سُمعتنا",
     "reviews.title":       "ما يقوله عملاؤنا",
@@ -381,6 +393,8 @@ const T = {
     "contact.map.manage":        "إدارة تفضيلات ملفات تعريف الارتباط",
     "contact.map.open":          "أو افتح في خرائط جوجل →",
 
+    "footer.slogan":       "عقدان من رفع سماء قطر.",
+    "footer.tag":          "بأمان، في الوقت المحدد، وعلى نطاق واسع.",
     "footer.rights":       "© 2026 ناصر العلي للمقاولات، قطر · ص.ب 13115، الدوحة، قطر",
     "footer.cookieSettings":"إعدادات الكوكيز",
     "footer.privacy":      "سياسة الخصوصية",
@@ -394,6 +408,14 @@ const T = {
     "toggle.aria":         "تبديل اللغة",
 
     "preloader.loading":   "جارٍ التحميل",
+
+    "legal.freshness":     "مواكِبٌ لمعايير الصناعة @ 2026",
+    "legal.crumb.privacy": "سياسة الخصوصية",
+    "legal.crumb.terms":   "شروط الاستخدام",
+    "legal.crumb.cookies": "سياسة الكوكيز",
+    "legal.title.privacy": "سياسة الخصوصية",
+    "legal.title.terms":   "شروط الاستخدام",
+    "legal.title.cookies": "سياسة الكوكيز",
   },
 };
 

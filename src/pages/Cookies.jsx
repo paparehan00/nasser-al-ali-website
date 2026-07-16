@@ -1,11 +1,21 @@
 import { useDocumentTitle } from "../hooks/useDocumentTitle.js";
 import { ROUTE_TITLES } from "../lib/constants.js";
+import { useI18n } from "../context/I18nContext.jsx";
 import LegalPage from "../components/LegalPage.jsx";
 
 export default function Cookies() {
   useDocumentTitle(ROUTE_TITLES["/cookies"]);
+  const { t, lang } = useI18n();
   return (
-    <LegalPage crumb="Cookie Policy" title="Cookie Policy" updated="[DATE]">
+    <LegalPage crumb={t("legal.crumb.cookies")} title={t("legal.title.cookies")}>
+      {lang === "ar" ? <ArabicBody /> : <EnglishBody />}
+    </LegalPage>
+  );
+}
+
+function EnglishBody() {
+  return (
+    <>
       <h2>1. What cookies are</h2>
       <p>Cookies are small text files that websites store on your device. This site also uses browser <strong>local storage</strong> and <strong>session storage</strong> for a small number of essential preferences. Some are strictly necessary; others are set only with your consent.</p>
 
@@ -43,6 +53,50 @@ export default function Cookies() {
 
       <h2>6. Contact</h2>
       <p>Questions about this Cookie Policy: <a href="mailto:info@nasseralaligroup.com">info@nasseralaligroup.com</a> · +974 6655 7728.</p>
-    </LegalPage>
+    </>
+  );
+}
+
+function ArabicBody() {
+  return (
+    <>
+      <h2>1. ما هي ملفات تعريف الارتباط</h2>
+      <p>ملفات تعريف الارتباط (الكوكيز) هي ملفات نصية صغيرة تُخزّنها المواقع على جهازك. يستخدم هذا الموقع أيضًا <strong>التخزين المحلي</strong> و<strong>تخزين الجلسة</strong> في المتصفح لعدد محدود من التفضيلات الأساسية. بعضها ضروري تمامًا؛ والبعض الآخر لا يُفعَّل إلا بموافقتك.</p>
+
+      <h2>2. عناصر التخزين المستخدمة</h2>
+      <h3>ضرورية تمامًا</h3>
+      <p>مطلوبة للوظائف الأساسية ولا يمكن تعطيلها.</p>
+      <table>
+        <thead><tr><th>الاسم</th><th>النوع</th><th>الغرض</th><th>المدة</th></tr></thead>
+        <tbody>
+          <tr><td><code>naa-consent-v1</code></td><td>localStorage</td><td>يحفظ اختيارك للموافقة على الكوكيز.</td><td>12 شهرًا</td></tr>
+          <tr><td><code>naa-chat-session-v1</code></td><td>sessionStorage</td><td>يحفظ محادثتك النشطة مع المساعد الذكي.</td><td>حتى إغلاق التبويب</td></tr>
+          <tr><td><code>naa-lang</code></td><td>localStorage</td><td>يحفظ لغة الموقع (عربي / إنجليزي).</td><td>حتى المسح اليدوي</td></tr>
+        </tbody>
+      </table>
+
+      <h3>طرف ثالث (تُحمَّل فقط بعد موافقتك)</h3>
+      <table>
+        <thead><tr><th>المزوّد</th><th>مكان الظهور</th><th>ما يتم تخزينه</th></tr></thead>
+        <tbody>
+          <tr><td><strong>خرائط Google</strong></td><td>خريطة المكتب المُضمَّنة في صفحة التواصل.</td><td>ملفات Google الخاصة.</td></tr>
+          <tr><td><strong>Calendly</strong></td><td>أداة حجز المواعيد المُضمَّنة (عند تفعيلها).</td><td>ملفات Calendly الخاصة.</td></tr>
+          <tr><td><strong>Google Analytics 4</strong></td><td>تحليلات تجميعية ومجهولة الهوية للزيارات.</td><td><code>_ga</code>، <code>_ga_*</code> - حتى سنتين.</td></tr>
+        </tbody>
+      </table>
+      <p>سياسات المزوّدين الخاصة: <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">Google</a> · <a href="https://calendly.com/pages/privacy" target="_blank" rel="noopener noreferrer">Calendly</a>.</p>
+
+      <h2>3. إدارة تفضيلاتك</h2>
+      <p>يمكنك تغيير موافقتك في أي وقت عبر رابط "إعدادات الكوكيز" في تذييل الصفحة.</p>
+
+      <h2>4. أدوات التحكم في المتصفح</h2>
+      <p>تسمح جميع المتصفحات الحديثة بحظر أو حذف الكوكيز. لاحظ أن حظر العناصر الأساسية قد يُعطّل بعض أجزاء الموقع (مثل المساعد الذكي).</p>
+
+      <h2>5. التعديلات</h2>
+      <p>عند إضافة عناصر تخزين جديدة أو تضمينات من طرف ثالث، سنُحدّث هذه الصفحة ونطلب موافقتك مجددًا حيثما لزم.</p>
+
+      <h2>6. تواصل معنا</h2>
+      <p>للاستفسار حول سياسة الكوكيز: <a href="mailto:info@nasseralaligroup.com">info@nasseralaligroup.com</a> · +974 6655 7728.</p>
+    </>
   );
 }

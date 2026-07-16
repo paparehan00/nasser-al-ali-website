@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { useI18n } from "../context/I18nContext.jsx";
-import { EMAIL, PHONE, PHONE_TEL, WHATSAPP_URL } from "../lib/constants.js";
+import { EMAIL, PHONE_TEL, WHATSAPP_URL } from "../lib/constants.js";
 
 export default function Footer() {
   const { t } = useI18n();
@@ -12,14 +12,10 @@ export default function Footer() {
             <img src="/assets/logo.png" alt="Nasser Al Ali Logo" />
             <span>Nasser Al Ali Enterprises</span>
           </div>
-          <ul className="footer-links">
-            <li><Link to="/services">{t("nav.services")}</Link></li>
-            <li><Link to="/projects">{t("nav.projects")}</Link></li>
-            <li><Link to="/about">{t("nav.about")}</Link></li>
-            <li><Link to="/certifications">{t("nav.certifications")}</Link></li>
-            <li><Link to="/awards">{t("nav.awards")}</Link></li>
-            <li><Link to="/contact">{t("nav.contact")}</Link></li>
-          </ul>
+          <div className="footer-slogan">
+            <span className="slogan-line">{t("footer.slogan")}</span>
+            <span className="slogan-tag">{t("footer.tag")}</span>
+          </div>
           <div className="footer-social">
             <a href={PHONE_TEL} className="btn-text">{t("cta.callAria").split(" ")[0]}</a>
             <span className="divider">·</span>

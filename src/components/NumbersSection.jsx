@@ -121,7 +121,7 @@ export default function NumbersSection() {
                 ))}
                 <g className="donut-center">
                   <text x="100" y="94" textAnchor="middle" fill="#fff" fontFamily="Montserrat,sans-serif" fontSize="28" fontWeight="800">5K+</text>
-                  <text x="100" y="114" textAnchor="middle" fill="#B8C4D6" fontFamily="Inter,sans-serif" fontSize="10" letterSpacing="2">EMPLOYEES</text>
+                  <text x="100" y="114" textAnchor="middle" fill="#B8C4D6" fontFamily="Inter,sans-serif" fontSize="10" letterSpacing="2">{t("numbers.donutLabel")}</text>
                 </g>
               </svg>
               <ul className="donut-legend">
