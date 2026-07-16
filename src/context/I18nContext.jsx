@@ -97,7 +97,7 @@ export const T = {
     "leadership.hr":       "HR Manager",
     "leadership.admin":    "Admin Manager",
     "leadership.ops":      "Operations Manager",
-    "leadership.tbd":      "—",
+    "leadership.tbd":      "-",
 
     "certs.overline":      "CREDENTIALS",
     "certs.title":         "Certifications",
@@ -286,7 +286,7 @@ export const T = {
     "leadership.hr":       "مدير الموارد البشرية",
     "leadership.admin":    "المدير الإداري",
     "leadership.ops":      "مدير العمليات",
-    "leadership.tbd":      "—",
+    "leadership.tbd":      "-",
 
     "certs.overline":      "اعتماداتنا",
     "certs.title":         "الشهادات",

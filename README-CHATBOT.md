@@ -1,6 +1,6 @@
 # AI Chatbot - Deploy Guide
 
-The chat widget on the site is a static file (`public/js/chat.js`) that talks to a **serverless endpoint** for the actual AI response. The AI provider's API key never touches the frontend — it lives only in the endpoint's environment.
+The chat widget on the site is a static file (`public/js/chat.js`) that talks to a **serverless endpoint** for the actual AI response. The AI provider's API key never touches the frontend - it lives only in the endpoint's environment.
 
 The recommended endpoint is a **Cloudflare Worker** (100k free requests/day, one-command deploy, works from any static host).
 
@@ -62,13 +62,13 @@ Then `npx wrangler deploy` again.
 
 The site keeps working. The chat button opens the widget, and on any user message the widget shows a friendly:
 
-> *Assistant temporarily unavailable — WhatsApp us at +974 6655 7728.*
+> *Assistant temporarily unavailable - WhatsApp us at +974 6655 7728.*
 
 Same message in Arabic when the site is in Arabic mode. Users always have a working escape hatch (WhatsApp / phone) even if the AI is down.
 
 ## Editing the knowledge base
 
-The company facts, tone rules, and CTA / lead-form tags all live in the `SYSTEM_PROMPT` constant at the top of `workers/chat-worker.js`. Edit there, then `npx wrangler deploy`. No frontend changes needed — the widget doesn't know the prompt contents.
+The company facts, tone rules, and CTA / lead-form tags all live in the `SYSTEM_PROMPT` constant at the top of `workers/chat-worker.js`. Edit there, then `npx wrangler deploy`. No frontend changes needed - the widget doesn't know the prompt contents.
 
 ## Costs
 
