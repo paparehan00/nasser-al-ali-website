@@ -97,7 +97,7 @@ export const T = {
     "leadership.hr":       "HR Manager",
     "leadership.admin":    "Admin Manager",
     "leadership.ops":      "Operations Manager",
-    "leadership.tbd":      "[Name - to be provided]",
+    "leadership.tbd":      "—",
 
     "certs.overline":      "CREDENTIALS",
     "certs.title":         "Certifications",
@@ -106,7 +106,6 @@ export const T = {
     "certs.iso14001.title":"Environmental Management System",
     "certs.ohsas.title":   "Occupational Health & Safety Management System",
     "certs.issuer":        "Equalitas Certifications Limited",
-    "certs.note":          "Certificates on file are dated 2014. Please contact us to confirm current renewal status before any pre-qualification submission.",
 
     "numbers.overline":    "BY THE NUMBERS",
     "numbers.title":       "Two decades of measurable growth",
@@ -176,7 +175,7 @@ export const T = {
     "contact.map.manage":        "Manage cookie preferences",
     "contact.map.open":          "Or open in Google Maps →",
 
-    "footer.rights":       "© 2026 Nasser Al Ali Enterprises, Qatar · Commercial Registration [CR - to be provided] · P.O. Box 13115, Doha, Qatar",
+    "footer.rights":       "© 2026 Nasser Al Ali Enterprises, Qatar · P.O. Box 13115, Doha, Qatar",
     "footer.cookieSettings":"Cookie settings",
     "footer.privacy":      "Privacy Policy",
     "footer.terms":        "Terms of Use",
@@ -282,7 +281,7 @@ export const T = {
     "leadership.hr":       "مدير الموارد البشرية",
     "leadership.admin":    "المدير الإداري",
     "leadership.ops":      "مدير العمليات",
-    "leadership.tbd":      "[الاسم - سيتم توفيره]",
+    "leadership.tbd":      "—",
 
     "certs.overline":      "اعتماداتنا",
     "certs.title":         "الشهادات",
@@ -291,7 +290,6 @@ export const T = {
     "certs.iso14001.title":"نظام الإدارة البيئية",
     "certs.ohsas.title":   "نظام إدارة الصحة والسلامة المهنية",
     "certs.issuer":        "Equalitas Certifications Limited",
-    "certs.note":          "الشهادات المسجّلة تعود إلى عام 2014. يُرجى التواصل معنا لتأكيد حالة التجديد قبل تقديم أي عرض تأهيل.",
 
     "numbers.overline":    "بالأرقام",
     "numbers.title":       "عقدان من النمو الملموس",
@@ -361,7 +359,7 @@ export const T = {
     "contact.map.manage":        "إدارة تفضيلات ملفات تعريف الارتباط",
     "contact.map.open":          "أو افتح في خرائط جوجل →",
 
-    "footer.rights":       "© 2026 ناصر العلي للمقاولات، قطر · السجل التجاري [CR - سيتم توفيره] · ص.ب 13115، الدوحة، قطر",
+    "footer.rights":       "© 2026 ناصر العلي للمقاولات، قطر · ص.ب 13115، الدوحة، قطر",
     "footer.cookieSettings":"إعدادات الكوكيز",
     "footer.privacy":      "سياسة الخصوصية",
     "footer.terms":        "شروط الاستخدام",

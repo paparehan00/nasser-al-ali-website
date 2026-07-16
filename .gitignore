@@ -3,8 +3,9 @@
 .env.*
 !.env.example
 
-# Netlify local dev
-.netlify/
+# Host tooling caches (Wrangler, Vercel, etc.)
+.wrangler/
+.vercel/
 
 # Node
 node_modules/

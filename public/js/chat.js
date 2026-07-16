@@ -69,7 +69,7 @@
       },
       clear: "Clear",
       poweredBy: "AI assistant",
-      disclosure: "Chats are processed by AI (Google Gemini). Please don't share sensitive personal information.",
+      disclosure: "Our AI chat assistant is an informational aid and may occasionally produce incomplete or incorrect answers. Please don't share sensitive personal information (ID/passport numbers, health data, financial credentials).",
       privacyLinkText: "Privacy Policy",
     },
     ar: {
@@ -114,7 +114,7 @@
       },
       clear: "مسح",
       poweredBy: "مساعد ذكي",
-      disclosure: "تُعالج المحادثات بواسطة الذكاء الاصطناعي (Google Gemini). يرجى عدم مشاركة أي معلومات شخصية حساسة.",
+      disclosure: "مساعدنا الذكي أداة معلوماتية قد يُقدّم أحيانًا إجابات غير مكتملة أو غير دقيقة. يرجى عدم مشاركة أي معلومات شخصية حساسة (أرقام الهوية/جوازات السفر، البيانات الصحية أو المالية).",
       privacyLinkText: "سياسة الخصوصية",
     },
   };
@@ -456,7 +456,8 @@
   };
 
   // ---------------------------------------------------------------------------
-  // Lead capture form (submits to Netlify Form 'chatbot-lead')
+  // Lead capture form (submits to Web3Forms when window.NAA_LEAD_FORM_KEY is set,
+  // otherwise just shows the "thanks" confirmation).
   // ---------------------------------------------------------------------------
   const renderLeadForm = () => {
     const dict = t();

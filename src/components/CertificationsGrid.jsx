@@ -38,7 +38,6 @@ export default function CertificationsGrid({ onOpen }) {
             </a>
           ))}
         </div>
-        <p className="certs-note">{t("certs.note")}</p>
       </div>
     </section>
   );

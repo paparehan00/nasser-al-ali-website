@@ -72,4 +72,4 @@ The company facts, tone rules, and CTA / lead-form tags all live in the `SYSTEM_
 
 ## Costs
 
-Cloudflare Workers: 100,000 requests/day on the free tier. Google Gemini 2.0 Flash: 15 requests/minute free tier, then pennies per 1K tokens on the paid tier. Realistic small-business traffic (~50 chats/day) stays comfortably free.
+Cloudflare Workers: 100,000 requests/day on the free tier. Most AI providers offer a generous free tier for small-business traffic (~50 chats/day), so realistic usage stays comfortably free.

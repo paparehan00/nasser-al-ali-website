@@ -6,8 +6,6 @@ export default function Cookies() {
   useDocumentTitle(ROUTE_TITLES["/cookies"]);
   return (
     <LegalPage crumb="Cookie Policy" title="Cookie Policy" updated="[DATE]">
-      <div className="callout"><strong>Legal review required.</strong> This policy is a working draft. It should be reviewed by qualified legal counsel in Qatar before being relied upon as a binding legal document.</div>
-
       <h2>1. What cookies are</h2>
       <p>Cookies are small text files that websites store on your device. This site also uses browser <strong>local storage</strong> and <strong>session storage</strong> for a small number of essential preferences. Some are strictly necessary; others are set only with your consent.</p>
 

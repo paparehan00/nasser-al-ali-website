@@ -6,13 +6,9 @@ export default function Privacy() {
   useDocumentTitle(ROUTE_TITLES["/privacy"]);
   return (
     <LegalPage crumb="Privacy Policy" title="Privacy Policy" updated="[DATE]">
-      <div className="callout">
-        <strong>Legal review required.</strong> This policy is a working draft based on our current data flows. It should be reviewed by qualified legal counsel in Qatar before being relied upon as a binding legal document.
-      </div>
-
       <h2>1. Who we are</h2>
       <p>This Privacy Policy explains how <strong>Nasser Al Ali Enterprises</strong> ("we", "us", "our") collects, uses, stores and protects personal information you share with us through this website, our related digital services (chat assistant, appointment booking, forms), and our contact channels.</p>
-      <p>We are a Qatar-registered construction and contracting company. Commercial Registration: <span className="placeholder-token">[CR number - to be provided]</span>.</p>
+      <p>We are a Qatar-registered construction and contracting company.</p>
       <ul>
         <li><strong>Office:</strong> Salwa Road, Building-155, Zone 43, Doha, State of Qatar</li>
         <li><strong>Postal:</strong> P.O. Box 13115, Doha, Qatar</li>
@@ -21,7 +17,7 @@ export default function Privacy() {
         <li><strong>Landlines:</strong> +974 4435 4422 · +974 4435 1112</li>
         <li><strong>Fax:</strong> +974 4431 1474</li>
       </ul>
-      <div className="callout"><strong>Data-protection contact:</strong> <span className="placeholder-token">[data-protection contact name - to be provided]</span> · <a href="mailto:info@nasseralaligroup.com">info@nasseralaligroup.com</a></div>
+      <div className="callout"><strong>Data-protection contact:</strong> <a href="mailto:info@nasseralaligroup.com">info@nasseralaligroup.com</a></div>
 
       <h2>2. Legal basis</h2>
       <p>We process personal data in accordance with <strong>Qatar Law No. 13 of 2016</strong> on the Protection of Personal Data Privacy (the "PDPPL") and its implementing decisions issued by the Compliance and Data Protection Department of the Ministry of Communications and Information Technology (MCIT). For visitors from other jurisdictions we also align with GDPR best practice.</p>
@@ -67,11 +63,11 @@ export default function Privacy() {
       </ul>
 
       <h2>6. Third parties and processors</h2>
-      <p>We use trusted third parties to operate our website and services. They process personal data on our instructions under written terms: Netlify (hosting, forms, serverless functions), Google Gemini API (chat assistant), Google Maps (embedded office pin), Calendly (appointment booking), Meta/WhatsApp (if you initiate a WhatsApp chat), Google Analytics 4 (aggregate analytics, only after consent).</p>
-      <div className="callout"><strong>Chatbot notice:</strong> Messages sent to our AI chat assistant are processed by Google's Gemini API. Please do <strong>not</strong> share sensitive personal information (ID / passport numbers, health data, financial credentials) through the chatbot. If your enquiry needs sensitive information, please email us instead.</div>
+      <p>We use trusted third parties to operate our website and services. They process personal data on our instructions under written terms, including: our website host, a third-party AI provider (used only by the chat assistant), Google Maps (embedded office pin), Calendly (appointment booking), Meta/WhatsApp (if you initiate a WhatsApp chat), and Google Analytics 4 (aggregate analytics, only after consent).</p>
+      <div className="callout"><strong>Chatbot notice:</strong> Our AI chat assistant is an informational aid powered by a third-party AI provider and may occasionally produce incomplete or incorrect answers. It is not a substitute for professional advice. Please do not share sensitive personal information (ID/passport numbers, health data, financial credentials) through the chat assistant.</div>
 
       <h2>7. International transfers</h2>
-      <p>Some of the providers above (Netlify, Google, Calendly, Meta) may process personal data outside Qatar. Where this happens, we require them to apply protections equivalent to Qatari standards, in line with Article 18 of the PDPPL, and to comply with their own applicable data-protection regimes (e.g. GDPR, EU-U.S. Data Privacy Framework).</p>
+      <p>Some of the providers above (our website host, Google, Calendly, Meta) may process personal data outside Qatar. Where this happens, we require them to apply protections equivalent to Qatari standards, in line with Article 18 of the PDPPL, and to comply with their own applicable data-protection regimes (e.g. GDPR, EU-U.S. Data Privacy Framework).</p>
 
       <h2>8. How long we keep your data</h2>
       <p>We keep data only for as long as we need it for the purpose we collected it, plus any period required by law. Contact us at <a href="mailto:info@nasseralaligroup.com">info@nasseralaligroup.com</a> for the current retention schedule.</p>
