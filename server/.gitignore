@@ -4,8 +4,6 @@ data/*.db-journal
 data/*.db-wal
 data/*.db-shm
 data/backups/
-.env
 
 # Uploaded images (owner-uploaded content, not source-controlled)
-uploads/*
-!uploads/.gitkeep
+
