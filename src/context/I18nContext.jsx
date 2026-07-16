@@ -4,8 +4,10 @@ const STORAGE_KEY = "naa-lang";
 const SUPPORTED = ["en", "ar"];
 const DEFAULT = "en";
 
-// Translation dictionary - shared with the vanilla i18n.js of the old site.
-export const T = {
+// Translation dictionary - module-local (was previously exported, which broke
+// React Fast Refresh because the file exports both components and a plain
+// object). Components consume it through the `t()` helper from useI18n().
+const T = {
   en: {
     "nav.services":        "Services",
     "nav.fleet":           "Fleet",

@@ -13,5 +13,17 @@ export default defineConfig({
   server: {
     port: 5173,
     open: false,
+    watch: {
+      // Don't watch source-asset scratch folders (originals get processed into
+      // public/assets/). Windows leaves ".~tmp" lock files when apps like
+      // Photoshop save images, which chokes the FS watcher.
+      ignored: [
+        "**/assets/**",           // repo-root scratchpad, not the app's public/assets
+        "**/_legacy-dist/**",     // pre-migration snapshot
+        "**/dist/**",             // build output
+        "**/*.~tmp",              // Windows temp-save lock files
+        "**/*.tmp",
+      ],
+    },
   },
 });
