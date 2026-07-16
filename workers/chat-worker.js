@@ -23,7 +23,7 @@
 
 // AI provider endpoint. Override with env.AI_MODEL_ENDPOINT + env.AI_MODEL
 // to swap providers without touching this file.
-const AI_MODEL = "gemini-2.0-flash";
+const AI_MODEL = "gemini-1.5-flash";
 const AI_ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models/${AI_MODEL}:generateContent`;
 
 const SYSTEM_PROMPT = `You are the official AI assistant for Nasser Al Ali Enterprises, a Qatar-based heavy-construction and contracting company. Be professional, helpful, concise, and warm.
