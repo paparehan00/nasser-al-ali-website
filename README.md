@@ -1,89 +1,62 @@
-# Nasser Al Ali Enterprises — Website + AI Chat Widget
+# Nasser Al Ali Enterprises - Website
 
-Static marketing site + a bilingual (EN / AR) AI chat assistant powered by Google Gemini via a Netlify serverless function.
+React SPA (Vite + React Router) with a bilingual EN/AR interface, contact form, and AI chat assistant. **Host-agnostic** - builds to a plain `dist/` folder that any static host can serve.
 
 ## Repo layout
 
 ```
 NAA/
-├── netlify.toml              # Netlify build + functions config
-├── netlify/
-│   └── functions/
-│       └── chat.js           # Serverless proxy → Gemini (holds the SYSTEM prompt)
-├── dist/                     # Published site
-│   ├── index.html
-│   ├── css/style.css
-│   ├── js/
-│   │   ├── main.js           # Site animations, hero video, gallery, etc.
-│   │   └── chat.js           # Chat widget (vanilla JS, self-contained)
-│   └── assets/…              # Logos, images, videos
-└── README.md                 # This file
+├── package.json / vite.config.js / index.html   # Vite entry
+├── public/
+│   ├── assets/         # images, videos, logos (published as-is under /assets/)
+│   └── js/             # legacy vanilla chat + consent widgets
+├── src/
+│   ├── main.jsx / App.jsx
+│   ├── components/     # Header, Footer, FloatingButtons, all section components
+│   ├── pages/          # Home, Services, Projects, About, Certifications,
+│   │                   # Awards, Reviews, Contact, Privacy, Terms, Cookies, NotFound
+│   ├── context/        # I18nContext (EN/AR)
+│   ├── hooks/          # useDocumentTitle
+│   ├── lib/            # constants (PHONE, EMAIL, MAP_LINK, ROUTE_TITLES)
+│   └── styles/         # global.css
+├── workers/            # Cloudflare Worker for the AI chat endpoint
+├── deploy/             # host configs (.htaccess, nginx.conf, vercel.json) + README
+├── README-CHATBOT.md   # how to deploy the chat worker
+└── .env.example        # copy to .env and fill in
 ```
 
-## Deploy on Netlify
-
-1. Push this repo to GitHub / GitLab / Bitbucket and connect it to Netlify.
-2. `netlify.toml` at the root already declares:
-   - `publish = "dist"`
-   - `functions = "netlify/functions"`
-   - `/api/chat` → `/.netlify/functions/chat` rewrite
-3. Set the API key **as a Netlify environment variable** (never commit it):
-   - **Site settings → Environment variables → Add a variable**
-   - Key: `GEMINI_API_KEY`
-   - Value: your Gemini API key from <https://aistudio.google.com/apikey>
-4. Trigger a deploy. On the first build Netlify will:
-   - Publish `dist/` as the site.
-   - Bundle `netlify/functions/chat.js` (esbuild).
-   - Detect the hidden `chatbot-lead` form and the visible `contact` form in `index.html` and register **Forms** endpoints for both.
-5. **Wire up email delivery for contact + chatbot leads** (one-time):
-   - Contact-form and chatbot-lead submissions are handled by the
-     `netlify/functions/contact-submit.js` serverless function. It calls the
-     **Resend** API to email `info@nasseralaligroup.com`.
-   - Sign up at <https://resend.com> (free tier: 100 emails/day, 3,000/month).
-   - Under **Site settings → Environment variables** add:
-     - `RESEND_API_KEY` — the API key from Resend's dashboard.
-     - `RESEND_FROM` (optional) — a verified sender address, e.g.
-       `"Nasser Al Ali Website <noreply@nasseralaligroup.com>"`.
-       If unset, the function uses Resend's `onboarding@resend.dev` sandbox sender
-       (works immediately without domain verification).
-   - Every submission is also written to Netlify function logs
-     (**Site → Functions → contact-submit**) as a backup, whether or not the
-     Resend send succeeds — nothing is ever lost.
-   - The visitor only ever sees a "Thank you" message; the email routing is
-     invisible to them.
-
-That's it — visit the site, click the gold chat bubble bottom-right, and ask away.
-
-## Local dev
+## Run locally
 
 ```bash
-npm install -g netlify-cli
-netlify dev
+npm install
+npm run dev            # http://localhost:5173 (hot reload)
+npm run build          # produces dist/
+npm run preview        # serves dist/ on http://localhost:4173
 ```
 
-`netlify dev` will serve `dist/` and expose the function at `/api/chat` with your env vars loaded from `.env` (or the linked Netlify site).
+## Deploy
 
-Without `netlify dev`, you can serve `dist/` with any static server; the chat button will render but calls to `/api/chat` will fail (function isn't running).
+The deployable artefact is the **`dist/`** folder produced by `npm run build`. Because this is an SPA, the host must rewrite unknown paths to `/index.html`. Ready-to-use configs are in `deploy/`:
 
-## How the chat works
+- **Apache / cPanel** → `deploy/.htaccess`
+- **Nginx / VPS**    → `deploy/nginx.conf`
+- **Vercel**         → `deploy/vercel.json`
 
-- **Frontend** (`dist/js/chat.js`): floating navy/gold widget. Keeps the conversation in `sessionStorage`, renders Markdown, streams a typing indicator, offers CTA buttons parsed from `[[CTA:...]]` tags in bot replies, and shows a lead-capture form when Gemini emits `[[LEAD_FORM]]`.
-- **Backend** (`netlify/functions/chat.js`): receives `{ messages, lang }`, calls Gemini's `generateContent` endpoint with the embedded `SYSTEM_PROMPT` (all NAA facts), handles 429 / 5xx with retries, returns `{ text }`.
-- **The Gemini API key never leaves the server.** It is read from `process.env.GEMINI_API_KEY` inside the function.
-- **Language**: automatic Arabic detection flips the widget to RTL and asks Gemini to reply in Arabic. Users can also toggle manually with the EN / ع pill in the header.
-- **Lead form**: when Gemini decides the visitor has buying/hiring intent, it appends `[[LEAD_FORM]]` and the widget renders a mini contact form that POSTs to the hidden Netlify Form `chatbot-lead`. Submissions appear in **Netlify → Forms**.
+Full instructions: **[`deploy/README.md`](deploy/README.md)**.
 
-## Editing the knowledge base / voice
+## Environment variables
 
-All company facts and the assistant's behaviour live in the `SYSTEM_PROMPT` constant at the top of `netlify/functions/chat.js`. Change it there and redeploy — no frontend changes required.
+Copy `.env.example` to `.env` and fill in:
 
-## Model
+| Variable | What it's for | Where to get it |
+| --- | --- | --- |
+| `VITE_WEB3FORMS_KEY` | Contact-form submissions to your email | Free key from https://web3forms.com |
+| `VITE_CHAT_API_URL`  | URL of the deployed AI chat endpoint    | See **[`README-CHATBOT.md`](README-CHATBOT.md)** |
 
-Currently `gemini-2.0-flash` (free tier). To switch, edit `MODEL` at the top of `netlify/functions/chat.js`.
+If either variable is missing at build time, that feature degrades gracefully - the chat button shows a "temporarily unavailable" state and the contact form surfaces a friendly error.
 
-## Security notes
+## Content updates
 
-- No API key is ever shipped to the browser.
-- The function performs light input shaping: trims message array to the last 16 turns and clamps individual messages to 4000 chars.
-- Safety settings passed to Gemini use `BLOCK_ONLY_HIGH` thresholds so normal business questions aren't filtered.
-- The `chatbot-lead` Netlify Form uses a `bot-field` honeypot to silently drop bot submissions.
+- Static content lives in `src/pages/*.jsx` and `src/components/*.jsx`.
+- All EN + AR translation strings are in `src/context/I18nContext.jsx`.
+- Images / videos / logos are served from `public/assets/` (referenced as `/assets/...`).
