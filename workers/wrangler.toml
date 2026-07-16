@@ -2,13 +2,10 @@ name = "naa-chat"
 main = "chat-worker.js"
 compatibility_date = "2024-11-06"
 
-# Restrict CORS to your production domain once you know it, e.g.:
-#   [vars]
-#   ALLOWED_ORIGIN = "https://nasseralaligroup.com"
-#
-# Until then, the worker accepts any origin ("*") which is fine for dev/staging.
+# CORS: restrict to the production domain.
+# For quick testing you can temporarily change this to "*".
 [vars]
-# ALLOWED_ORIGIN = "*"
+ALLOWED_ORIGIN = "https://alnassertest.sameem.com.np"
 
 # AI_API_KEY is a SECRET, not a plain var. Do NOT put it here.
 # Set it with:
