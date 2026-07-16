@@ -28,8 +28,6 @@ export default function AwardsGallery({ onOpen }) {
     return () => { cancelled = true; };
   }, []);
 
-  if (!urls.length) return null;
-
   return (
     <section className="awards" id="awards">
       <div className="container">
@@ -38,19 +36,37 @@ export default function AwardsGallery({ onOpen }) {
           <h2>{t("awards.title")}</h2>
           <p className="section-lede">{t("awards.lede")}</p>
         </div>
-        <div className="awards-grid">
-          {urls.map((src, i) => (
-            <figure
-              className="award-item"
-              key={src}
-              onClick={() => onOpen && onOpen(src, `Chairman presenting a recognition award (${i + 1})`)}
-            >
-              <div className="award-img-wrap">
-                <img src={src} alt={`Chairman presenting a recognition award to a team member (${i + 1})`} loading="lazy" />
-              </div>
-            </figure>
-          ))}
+
+        {/* CSR subsection - three short pillars */}
+        <div className="csr-block">
+          <h3 className="csr-title">{t("awards.csr.title")}</h3>
+          <div className="csr-grid">
+            <p>{t("awards.csr.p1")}</p>
+            <p>{t("awards.csr.p2")}</p>
+            <p>{t("awards.csr.p3")}</p>
+          </div>
         </div>
+
+        {urls.length > 0 && (
+          <>
+            <div className="section-subhead">
+              <span className="overline">{t("awards.galleryTitle")}</span>
+            </div>
+            <div className="awards-grid">
+              {urls.map((src, i) => (
+                <figure
+                  className="award-item"
+                  key={src}
+                  onClick={() => onOpen && onOpen(src, `Chairman presenting a recognition award (${i + 1})`)}
+                >
+                  <div className="award-img-wrap">
+                    <img src={src} alt={`Chairman presenting a recognition award to a team member (${i + 1})`} loading="lazy" />
+                  </div>
+                </figure>
+              ))}
+            </div>
+          </>
+        )}
       </div>
     </section>
   );

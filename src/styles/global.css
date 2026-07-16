@@ -3318,3 +3318,75 @@ html[dir="rtl"] .floating-cta { right: auto; left: 22px; align-items: flex-start
 .nav-link.is-active { color: var(--text); }
 .nav-link.is-active::after { transform: scaleX(1); transform-origin: left; }
 html[dir="rtl"] .nav-link.is-active::after { transform-origin: right; }
+
+/* ==========================================================================
+   CSR block inside Awards section (task 4)
+   ========================================================================== */
+.csr-block {
+  max-width: 960px;
+  margin: 0 auto var(--sp-64);
+  padding: var(--sp-32) var(--sp-32);
+  background: linear-gradient(180deg, var(--bg-card) 0%, var(--bg-elevated) 100%);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  text-align: center;
+}
+.csr-title {
+  font-family: var(--font-heading);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: var(--sp-24);
+}
+.csr-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--sp-24);
+  text-align: left;
+}
+html[dir="rtl"] .csr-grid { text-align: right; }
+.csr-grid p {
+  color: var(--text-muted);
+  font-size: 15px;
+  line-height: 1.7;
+  margin: 0;
+  max-width: none;
+  position: relative;
+  padding-left: 18px;
+  border-left: 2px solid var(--accent);
+}
+html[dir="rtl"] .csr-grid p {
+  padding-left: 0;
+  padding-right: 18px;
+  border-left: none;
+  border-right: 2px solid var(--accent);
+}
+@media (max-width: 900px) {
+  .csr-grid { grid-template-columns: 1fr; gap: var(--sp-16); }
+}
+
+.section-subhead {
+  text-align: center;
+  margin-bottom: var(--sp-32);
+}
+.section-subhead .overline { padding-left: 0; }
+.section-subhead .overline::before { display: none; }
+
+/* ==========================================================================
+   Route-page fade-in (feels smoother on navigation, especially for
+   image-heavy pages like /awards where lazy-loaded thumbs pop in later).
+   ========================================================================== */
+main { position: relative; }
+.route-page {
+  animation: routeFadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes routeFadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .route-page { animation: none; }
+  html { scroll-behavior: auto; }
+}
+/* Native smooth-scroll for #anchor jumps inside a route */
+html { scroll-behavior: smooth; }
