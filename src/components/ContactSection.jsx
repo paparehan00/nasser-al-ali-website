@@ -2,6 +2,12 @@ import { useState } from "react";
 import { useI18n } from "../context/I18nContext.jsx";
 import { EMAIL, PHONE_TEL, WHATSAPP_URL, MAP_EMBED, MAP_LINK } from "../lib/constants.js";
 
+// Web3Forms: free, host-independent form-to-email relay. Free access-key at
+// https://web3forms.com. The key is public - it only unlocks delivery to the
+// pre-registered email address, so shipping it in the client is safe.
+const WEB3FORMS_KEY = import.meta.env.VITE_WEB3FORMS_KEY || "";
+const WEB3FORMS_URL = "https://api.web3forms.com/submit";
+
 export default function ContactSection() {
   const { t } = useI18n();
   const [status, setStatus] = useState("idle"); // idle | sending | success | error
@@ -11,21 +17,52 @@ export default function ContactSection() {
     e.preventDefault();
     const form = e.currentTarget;
     if (!form.reportValidity()) return;
+
+    if (!WEB3FORMS_KEY) {
+      // Missing configuration - surface a real error rather than silently
+      // pretending it worked.
+      console.warn("[contact-form] VITE_WEB3FORMS_KEY is not set - form disabled.");
+      setStatus("error");
+      return;
+    }
+
     setStatus("sending");
+
     const fd = new FormData(form);
-    const body = new URLSearchParams();
-    for (const [k, v] of fd.entries()) body.append(k, typeof v === "string" ? v : "");
-    body.append("form-name", "contact");
+    const payload = {
+      access_key: WEB3FORMS_KEY,
+      subject: `New enquiry from ${fd.get("name") || "website visitor"}`,
+      from_name: fd.get("name") || "Website enquiry",
+      reply_to:  fd.get("email") || "",
+      name:      fd.get("name") || "",
+      company:   fd.get("company") || "",
+      email:     fd.get("email") || "",
+      phone:     fd.get("phone") || "",
+      service:   fd.get("service") || "",
+      message:   fd.get("message") || "",
+      // Web3Forms honeypot fields
+      botcheck: fd.get("bot-field") || "",
+    };
+
     try {
-      const resp = await fetch("/.netlify/functions/contact-submit", {
+      const resp = await fetch(WEB3FORMS_URL, {
         method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: body.toString(),
+        headers: {
+          "Content-Type": "application/json",
+          Accept:         "application/json",
+        },
+        body: JSON.stringify(payload),
       });
-      if (!resp.ok) throw new Error("HTTP " + resp.status);
+      const data = await resp.json().catch(() => ({}));
+      if (!resp.ok || data.success === false) {
+        console.warn("[contact-form] Web3Forms error:", resp.status, data);
+        setStatus("error");
+        return;
+      }
       setStatus("success");
       form.reset();
-    } catch (_) {
+    } catch (err) {
+      console.warn("[contact-form] network error:", err);
       setStatus("error");
     }
   };
