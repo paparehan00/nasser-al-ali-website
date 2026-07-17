@@ -1,9 +1,8 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { ContentOverrideContext } from "../contexts/ContentOverrideContext.jsx";
 
 // In-memory cache so a section fetched by one component is instantly
-// available to another mounted later in the same session. The `/api/content/*`
-// route sets Cache-Control: max-age=60 so this is just a small perf sugar
-// on top; edits made in the admin panel will still land on the next reload.
+// available to another mounted later in the same session.
 const cache = new Map();
 
 /**
@@ -14,15 +13,26 @@ const cache = new Map();
  *     section: { key, overline:{en,ar}, title:{en,ar}, lede:{en,ar}, extra:{...} },
  *     items:   [{ id, sortOrder, imagePath, data:{...} }]
  *   }
+ *
+ * If a ContentOverrideContext is present (e.g. inside LivePreview), the
+ * override data is returned directly without any fetch.
  */
 export function useContent(sectionKey) {
+  const overrideMap = useContext(ContentOverrideContext);
+  const override = overrideMap?.[sectionKey] ?? null;
+
   const [state, setState] = useState(() => ({
-    loading: !cache.has(sectionKey),
-    data: cache.get(sectionKey) || null,
+    loading: !override && !cache.has(sectionKey),
+    data: override ?? cache.get(sectionKey) ?? null,
     error: null,
   }));
 
   useEffect(() => {
+    if (override) {
+      setState({ loading: false, data: override, error: null });
+      return;
+    }
+
     if (!sectionKey) return;
 
     let cancelled = false;
@@ -50,13 +60,14 @@ export function useContent(sectionKey) {
       });
 
     return () => { cancelled = true; };
-  }, [sectionKey]);
+  }, [sectionKey, override]);
 
   const refresh = () => {
     cache.delete(sectionKey);
     setState({ loading: true, data: null, error: null });
   };
 
+  if (override) return { loading: false, data: override, error: null, refresh };
   return { ...state, refresh };
 }
 

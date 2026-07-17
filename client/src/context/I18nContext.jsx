@@ -280,3 +280,14 @@ export function I18nProvider({ children }) {
 export function useI18n() {
   return useContext(I18nContext);
 }
+
+// Wraps children with a local lang override without affecting the global
+// document lang/dir. Used by LivePreview to render the section in EN or AR.
+export function I18nOverride({ lang: overrideLang, children }) {
+  const { t } = useI18n();
+  const value = useMemo(
+    () => ({ lang: overrideLang, t, setLang: () => {} }),
+    [overrideLang, t]
+  );
+  return <I18nContext.Provider value={value}>{children}</I18nContext.Provider>;
+}

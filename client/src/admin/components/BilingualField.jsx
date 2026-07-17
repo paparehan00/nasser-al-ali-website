@@ -4,6 +4,7 @@ import { useRef } from "react";
 // the mutated object. Renders two inputs (or textareas) side-by-side.
 export default function BilingualField({
   label,
+  helper,
   value,
   onChange,
   multiline = false,
@@ -34,6 +35,7 @@ export default function BilingualField({
   return (
     <div className="naa-admin-bilingual">
       <div className="naa-admin-bilingual-label">{label}</div>
+      {helper && <div className="naa-admin-bilingual-helper">{helper}</div>}
       <div className="naa-admin-bilingual-row">
         <label className="naa-admin-bilingual-half">
           <span className="naa-admin-lang">EN</span>
