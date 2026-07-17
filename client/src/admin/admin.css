@@ -20,6 +20,36 @@
   --naa-warn:      #B58A18;
 }
 
+/* ── BUG-FIX: global.css sets all inputs to dark-theme colours
+   (color:#fff; background:#071427; focus-background: rgba dark).
+   Override everything inside the admin shell to the light theme.
+   The live-preview stage is excluded below so public inputs keep their look. ── */
+body.naa-admin-active input,
+body.naa-admin-active textarea,
+body.naa-admin-active select {
+  background: #fff !important;
+  color: var(--naa-ink) !important;
+}
+body.naa-admin-active input:focus,
+body.naa-admin-active textarea:focus,
+body.naa-admin-active select:focus {
+  background: #fff !important;
+  color: var(--naa-ink) !important;
+}
+/* Restore the public dark-theme inputs inside the live-preview stage */
+.naa-preview-stage input,
+.naa-preview-stage textarea,
+.naa-preview-stage select {
+  background: var(--bg-deep, #071427) !important;
+  color: var(--text, #fff) !important;
+}
+.naa-preview-stage input:focus,
+.naa-preview-stage textarea:focus,
+.naa-preview-stage select:focus {
+  background: rgba(11,31,58,0.6) !important;
+  color: var(--text, #fff) !important;
+}
+
 /* Hide the public site chrome when admin is mounted */
 body.naa-admin-active .naa-chat-launcher,
 body.naa-admin-active .naa-chat-panel,
@@ -401,12 +431,14 @@ body.naa-admin-active {
 }
 .naa-admin-split-left {
   overflow-y: auto;
+  min-height: 0;          /* allow grid child to shrink so overflow-y works */
   padding: 24px 28px 60px;
   border-right: 1px solid var(--naa-line);
 }
 .naa-admin-split-right {
   overflow: hidden;
   display: flex; flex-direction: column;
+  min-height: 0;
 }
 
 /* ═══════════════════════════════════════════════════════════
@@ -567,7 +599,10 @@ body.naa-admin-active {
    LIVE PREVIEW  (naa-preview-*)
    ═══════════════════════════════════════════════════════════ */
 .naa-preview-pane {
-  display: flex; flex-direction: column; height: 100%; overflow: hidden;
+  display: flex; flex-direction: column;
+  flex: 1;          /* fill the split-right flex column */
+  min-height: 0;    /* allow flex shrink so overflow works */
+  overflow: hidden;
   background: #F0EDE4;
 }
 .naa-preview-bar {
@@ -587,16 +622,23 @@ body.naa-admin-active {
 .naa-preview-toggle.is-active { background: rgba(201,162,75,0.25); color: var(--naa-gold); }
 
 .naa-preview-scroll {
-  flex: 1; overflow-y: auto; padding: 20px;
-  display: flex; justify-content: center;
+  flex: 1;
+  min-height: 0;    /* KEY: without this, flex won't shrink and overflow-y never scrolls */
+  overflow-y: auto;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; /* stage grows with content, not stretched to pane height */
 }
 .naa-preview-scroll.is-rtl { direction: rtl; }
 
 .naa-preview-stage {
-  width: 100%; min-height: 200px;
+  width: 100%;
+  min-height: 200px;
   background: #fff; border-radius: 6px;
   box-shadow: 0 2px 12px rgba(11,31,58,0.12);
   overflow: hidden;
+  /* no fixed height — grows to wrap full section content */
 }
 .naa-preview-stage.is-mobile {
   width: 390px; max-width: 100%; flex-shrink: 0;
@@ -616,6 +658,14 @@ body.naa-admin-active {
 .naa-preview-stage .hero        { font-size: 14px; }
 .naa-preview-stage .container   { padding-left: 20px; padding-right: 20px; }
 .naa-preview-stage section      { scroll-margin-top: 0; }
+
+/* Flash-highlight on auto-scroll to an edited item in preview */
+@keyframes naa-preview-flash {
+  0%   { outline: 3px solid var(--naa-gold); outline-offset: 3px; }
+  60%  { outline: 3px solid var(--naa-gold); outline-offset: 3px; }
+  100% { outline: 3px solid transparent;     outline-offset: 3px; }
+}
+.naa-preview-item-flash { animation: naa-preview-flash 1.4s ease-out forwards; }
 
 @media (max-width: 1100px) {
   .naa-admin-split { grid-template-columns: 1fr; }

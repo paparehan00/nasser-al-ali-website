@@ -458,7 +458,11 @@ export default function SectionEditor() {
 
       {/* ── Right pane: live preview ── */}
       <div className="naa-admin-split-right">
-        <LivePreview sectionKey={key} draft={previewDraft} />
+        <LivePreview
+          sectionKey={key}
+          draft={previewDraft}
+          editingIdx={editingId != null ? items.findIndex((i) => i.id === editingId) : null}
+        />
       </div>
 
       <ConfirmDialog
