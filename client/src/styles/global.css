@@ -422,7 +422,7 @@ section {
    Hero (Apple-style scroll sequence) - snappier pin
    ========================================================================== */
 .hero {
-  height: 250vh; /* 100vh viewport + 150vh of pinned scrub */
+  height: 140vh; /* 100vh viewport + 40vh of scroll buffer — quick exit to next section */
   position: relative;
   padding: 0;
   overflow: visible;
@@ -1525,7 +1525,11 @@ select {
   transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease, background 0.2s ease;
   position: relative;
 }
-.naa-chat-bubble svg { width: 20px; height: 20px; }
+.naa-chat-bubble-icon {
+  width: 28px; height: 28px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
 .naa-chat-bubble:hover {
   background: var(--accent-hover);
   transform: translateY(-2px);
@@ -1630,11 +1634,10 @@ select {
   min-width: 0;
 }
 .naa-chat-logo {
-  width: 36px; height: 36px;
+  width: 40px; height: 40px;
   border-radius: 50%;
-  background: var(--bg-deep);
-  padding: 6px;
-  border: 1px solid var(--accent);
+  background: transparent;
+  padding: 2px;
   object-fit: contain;
 }
 .naa-chat-brand-text { min-width: 0; }
