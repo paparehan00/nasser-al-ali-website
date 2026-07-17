@@ -1,0 +1,47 @@
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# Host tooling caches (Wrangler, Vercel, etc.)
+.wrangler/
+.vercel/
+
+# Node
+node_modules/
+node_modules.old*/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*~
+
+# Vite build output (rebuilt on every deploy)
+client/dist/
+dist/
+
+# Server-local SQLite (rebuilt via `npm run server:migrate && npm run server:seed`)
+server/data/*.db
+server/data/*.db-journal
+server/data/*.db-wal
+server/data/*.db-shm
+
+# Client-supplied source folders (post-processed into public/assets/ - originals not for publishing)
+assets/clientxlsx/
+assets/reviews/
+assets/services/
+assets/ourexpertise/
+assets/awards-gallery/
+assets/certifications/
+*.xlsx
+
+# Legacy site snapshot - kept for reference only, not for publishing
+_legacy-dist/

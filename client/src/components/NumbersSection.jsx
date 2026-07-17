@@ -20,8 +20,8 @@ function useInView(threshold = 0.35) {
   return [ref, inView];
 }
 
-// ── Count-up animation ───────────────────────────────────────────────────────
-function CountUp({ target, inView, duration = 1600 }) {
+// ── Count-up animation (proper custom hook) ──────────────────────────────────
+function useCountUp(target, inView, duration = 1600) {
   const [count, setCount] = useState(0);
   const rafRef = useRef(null);
   useEffect(() => {
@@ -29,7 +29,7 @@ function CountUp({ target, inView, duration = 1600 }) {
     const start = performance.now();
     const step = (ts) => {
       const t = Math.min((ts - start) / duration, 1);
-      const eased = 1 - Math.pow(1 - t, 3); // ease-out cubic
+      const eased = 1 - Math.pow(1 - t, 3);
       setCount(Math.floor(eased * target));
       if (t < 1) rafRef.current = requestAnimationFrame(step);
       else setCount(target);
@@ -45,9 +45,7 @@ export default function NumbersSection() {
   const { lang } = useI18n();
 
   const { data }        = useContent("numbers");
-  // Live counts from the actual DB sections
   const { data: cData } = useContent("clients");
-  const { data: pData } = useContent("projects");
 
   const [barRef,   barInView]   = useInView(0.35);
   const [donutRef, donutInView] = useInView(0.35);
@@ -59,9 +57,16 @@ export default function NumbersSection() {
   const donut   = extra.donut || [];
   const kpis    = extra.kpis  || [];
 
-  // Auto-derive live counts from the DB (fall back to seed value if not loaded yet)
-  const liveClientCount  = cData?.items?.length ?? kpis[0]?.value ?? 43;
-  const liveProjectCount = pData?.items?.length ?? kpis[2]?.value ?? 10;
+  // Live client count from DB; fall back to seed value in admin data
+  const liveClientCount = cData?.items?.length || kpis[0]?.value || 43;
+
+  const kpiTargets = kpis.map((k, i) => (i === 0 ? liveClientCount : k.value ?? 0));
+
+  // Three separate hook calls — hooks must never be inside a loop/conditional
+  const c0 = useCountUp(kpiTargets[0] ?? 0, kpiInView);
+  const c1 = useCountUp(kpiTargets[1] ?? 0, kpiInView);
+  const c2 = useCountUp(kpiTargets[2] ?? 0, kpiInView);
+  const animated = [c0, c1, c2];
 
   // Precompute donut segment offsets
   let cursor = 0;
@@ -71,17 +76,6 @@ export default function NumbersSection() {
     cursor += dash;
     return { ...seg, dash, offset };
   });
-
-  // KPI targets: index 0 = clients (auto), index 1 = fixed (group companies),
-  // index 2 = years in Qatar (fixed). Add project count as kpi[3] if present.
-  const kpiValues = kpis.map((k, i) => {
-    if (i === 0) return liveClientCount;
-    return k.value;
-  });
-
-  const clientCount  = CountUp({ target: liveClientCount, inView: kpiInView });
-  const kpi1Count    = CountUp({ target: kpiValues[1] ?? 0, inView: kpiInView });
-  const kpi2Count    = CountUp({ target: kpiValues[2] ?? 0, inView: kpiInView });
 
   return (
     <section className="numbers section-alt" id="numbers">
@@ -171,21 +165,18 @@ export default function NumbersSection() {
             </div>
           </div>
 
-          {/* ── KPI trio with count-up ──────────────────────────────────── */}
-          <div ref={kpiRef} style={{ display: "contents" }}>
-            {kpis.map((k, i) => {
-              const animated = i === 0 ? clientCount : i === 1 ? kpi1Count : kpi2Count;
-              return (
-                <div className="kpi-card" key={i}>
-                  <div className="kpi-value">
-                    {animated}
-                    <span className="kpi-plus">+</span>
-                  </div>
-                  <div className="kpi-label">{pickLang(k.label, lang)}</div>
-                  <div className="kpi-detail">{pickLang(k.detail, lang)}</div>
+          {/* ── KPI trio — real div so IntersectionObserver fires ─────── */}
+          <div className="kpi-trio" ref={kpiRef}>
+            {kpis.map((k, i) => (
+              <div className="kpi-card" key={i}>
+                <div className="kpi-value">
+                  {animated[i] ?? kpiTargets[i] ?? 0}
+                  <span className="kpi-plus">+</span>
                 </div>
-              );
-            })}
+                <div className="kpi-label">{pickLang(k.label, lang)}</div>
+                <div className="kpi-detail">{pickLang(k.detail, lang)}</div>
+              </div>
+            ))}
           </div>
         </div>
       </div>

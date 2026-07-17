@@ -1,0 +1,27 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl *)",
+      "Bash(pkill *)",
+      "Bash(nvm use *)",
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\('section:', d['section']['title']['en'][:20], '| items:', len\\(d['items']\\)\\)\")",
+      "Bash(kill %1)",
+      "Bash(git commit *)",
+      "Bash(git push *)",
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(json.dumps\\(d.get\\('scripts',{}\\), indent=2\\)\\)\")",
+      "Bash(fuser -k 4000/tcp)",
+      "Bash(fuser 4000/tcp)",
+      "Bash(python3 -c ' *)",
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(json.dumps\\(d, indent=2\\)\\)\")",
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\('login:', d.get\\('user',{}\\).get\\('email'\\)\\)\")",
+      "Bash(awk '/^input|^select|^textarea|input[^{]*\\\\{|select[^{]*\\\\{|textarea[^{]*\\\\{/ {p=1} p {print NR\": \"$0} /^}/ && p {p=0}' /mnt/c/Users/HP/.gemini/antigravity/scratch/NAA/client/src/styles/global.css)",
+      "Bash(git add *)",
+      "Bash(convert --versionx)",
+      "Bash(python3 -c \"from PIL import Image; print\\('PIL ok'\\)\")",
+      "Bash(python3 -c \"import cv2; print\\('cv2 ok'\\)\")",
+      "Bash(pip install *)",
+      "Bash(python3 *)",
+      "Bash(npx wrangler *)"
+    ]
+  }
+}

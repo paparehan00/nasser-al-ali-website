@@ -15,7 +15,19 @@
       "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(json.dumps\\(d, indent=2\\)\\)\")",
       "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\('login:', d.get\\('user',{}\\).get\\('email'\\)\\)\")",
       "Bash(awk '/^input|^select|^textarea|input[^{]*\\\\{|select[^{]*\\\\{|textarea[^{]*\\\\{/ {p=1} p {print NR\": \"$0} /^}/ && p {p=0}' /mnt/c/Users/HP/.gemini/antigravity/scratch/NAA/client/src/styles/global.css)",
-      "Bash(git add *)"
+      "Bash(git add *)",
+      "Bash(convert --versionx)",
+      "Bash(python3 -c \"from PIL import Image; print\\('PIL ok'\\)\")",
+      "Bash(python3 -c \"import cv2; print\\('cv2 ok'\\)\")",
+      "Bash(pip install *)",
+      "Bash(python3 *)",
+      "Bash(npx wrangler *)",
+      "Bash(diff -rq --exclude=\"*.old*\" --exclude=\"node_modules\" server/src/config/env.js ../../server/src/config/env.js)",
+      "Bash(diff -rq --exclude=\"*.old*\" --exclude=\"node_modules\" server/src/utils/translate.js ../../server/src/utils/translate.js)",
+      "Bash(diff -rq client/src/admin/api.js ../../client/src/admin/api.js)",
+      "Bash(diff -rq client/src/admin/pages/SectionEditor.jsx ../../client/src/admin/pages/SectionEditor.jsx)",
+      "Bash(diff -rq client/src/admin/components/StructuredEditor.jsx ../../client/src/admin/components/StructuredEditor.jsx)",
+      "Bash(npm run *)"
     ]
   }
 }

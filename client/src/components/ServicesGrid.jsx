@@ -44,7 +44,9 @@ export default function ServicesGrid() {
             return (
               <div className="service-card" key={s.id}>
                 <div className="service-media">
-                  <img src={s.imagePath} alt={d.alt} loading="lazy" />
+                  <div className="service-img-wrap">
+                    <img src={s.imagePath} alt={d.alt} loading="lazy" />
+                  </div>
                   <div className="service-icon">{ICONS[d.id]}</div>
                 </div>
                 <div className="service-body">
