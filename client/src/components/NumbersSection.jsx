@@ -4,40 +4,84 @@ import { useContent, pickLang } from "../hooks/useContent.js";
 
 const CIRC = 439.82;
 
+// ── Intersection helper ──────────────────────────────────────────────────────
 function useInView(threshold = 0.35) {
   const ref = useRef(null);
   const [inView, setInView] = useState(false);
   useEffect(() => {
     if (!("IntersectionObserver" in window)) { setInView(true); return; }
-    const obs = new IntersectionObserver((entries) => {
-      entries.forEach((e) => { if (e.isIntersecting) { setInView(true); obs.disconnect(); } });
-    }, { threshold });
+    const obs = new IntersectionObserver(
+      (entries) => { entries.forEach((e) => { if (e.isIntersecting) { setInView(true); obs.disconnect(); } }); },
+      { threshold }
+    );
     if (ref.current) obs.observe(ref.current);
     return () => obs.disconnect();
   }, [threshold]);
   return [ref, inView];
 }
 
+// ── Count-up animation ───────────────────────────────────────────────────────
+function CountUp({ target, inView, duration = 1600 }) {
+  const [count, setCount] = useState(0);
+  const rafRef = useRef(null);
+  useEffect(() => {
+    if (!inView || !target) return;
+    const start = performance.now();
+    const step = (ts) => {
+      const t = Math.min((ts - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - t, 3); // ease-out cubic
+      setCount(Math.floor(eased * target));
+      if (t < 1) rafRef.current = requestAnimationFrame(step);
+      else setCount(target);
+    };
+    rafRef.current = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(rafRef.current);
+  }, [inView, target, duration]);
+  return count;
+}
+
+// ── Component ─────────────────────────────────────────────────────────────────
 export default function NumbersSection() {
   const { lang } = useI18n();
-  const { data } = useContent("numbers");
-  const [barRef, barInView] = useInView(0.35);
+
+  const { data }        = useContent("numbers");
+  // Live counts from the actual DB sections
+  const { data: cData } = useContent("clients");
+  const { data: pData } = useContent("projects");
+
+  const [barRef,   barInView]   = useInView(0.35);
   const [donutRef, donutInView] = useInView(0.35);
+  const [kpiRef,   kpiInView]   = useInView(0.25);
 
   const section = data?.section;
-  const extra = section?.extra || {};
-  const bars = extra.bars || [];
-  const donut = extra.donut || [];
-  const kpis = extra.kpis || [];
+  const extra   = section?.extra || {};
+  const bars    = extra.bars  || [];
+  const donut   = extra.donut || [];
+  const kpis    = extra.kpis  || [];
 
-  // Precompute cumulative offset so donut segments start at the right rotation.
+  // Auto-derive live counts from the DB (fall back to seed value if not loaded yet)
+  const liveClientCount  = cData?.items?.length ?? kpis[0]?.value ?? 43;
+  const liveProjectCount = pData?.items?.length ?? kpis[2]?.value ?? 10;
+
+  // Precompute donut segment offsets
   let cursor = 0;
   const donutSegs = donut.map((seg) => {
-    const dash = (seg.pct / 100) * CIRC;
+    const dash   = (seg.pct / 100) * CIRC;
     const offset = -cursor;
     cursor += dash;
     return { ...seg, dash, offset };
   });
+
+  // KPI targets: index 0 = clients (auto), index 1 = fixed (group companies),
+  // index 2 = years in Qatar (fixed). Add project count as kpi[3] if present.
+  const kpiValues = kpis.map((k, i) => {
+    if (i === 0) return liveClientCount;
+    return k.value;
+  });
+
+  const clientCount  = CountUp({ target: liveClientCount, inView: kpiInView });
+  const kpi1Count    = CountUp({ target: kpiValues[1] ?? 0, inView: kpiInView });
+  const kpi2Count    = CountUp({ target: kpiValues[2] ?? 0, inView: kpiInView });
 
   return (
     <section className="numbers section-alt" id="numbers">
@@ -49,7 +93,7 @@ export default function NumbersSection() {
         </div>
 
         <div className="numbers-grid">
-          {/* Bar chart */}
+          {/* ── Bar chart ──────────────────────────────────────────────── */}
           <div className="chart-card" ref={barRef}>
             <div className="chart-head">
               <div className="chart-kicker">{pickLang(extra.workforceKicker, lang)}</div>
@@ -91,7 +135,7 @@ export default function NumbersSection() {
             </div>
           </div>
 
-          {/* Donut */}
+          {/* ── Donut ──────────────────────────────────────────────────── */}
           <div className="chart-card" ref={donutRef}>
             <div className="chart-head">
               <div className="chart-kicker">{pickLang(extra.mixKicker, lang)}</div>
@@ -119,21 +163,30 @@ export default function NumbersSection() {
               <ul className="donut-legend">
                 {donutSegs.map((s) => (
                   <li key={s.key}>
-                    <span className="dot" style={{ background: s.color }}></span> {pickLang(s.label, lang)} · <strong>{s.pct}%</strong>
+                    <span className="dot" style={{ background: s.color }}></span>
+                    {pickLang(s.label, lang)} · <strong>{s.pct}%</strong>
                   </li>
                 ))}
               </ul>
             </div>
           </div>
 
-          {/* KPI trio */}
-          {kpis.map((k, i) => (
-            <div className="kpi-card" key={i}>
-              <div className="kpi-value">{k.value}{i === 0 && <span className="kpi-plus">+</span>}</div>
-              <div className="kpi-label">{pickLang(k.label, lang)}</div>
-              <div className="kpi-detail">{pickLang(k.detail, lang)}</div>
-            </div>
-          ))}
+          {/* ── KPI trio with count-up ──────────────────────────────────── */}
+          <div ref={kpiRef} style={{ display: "contents" }}>
+            {kpis.map((k, i) => {
+              const animated = i === 0 ? clientCount : i === 1 ? kpi1Count : kpi2Count;
+              return (
+                <div className="kpi-card" key={i}>
+                  <div className="kpi-value">
+                    {animated}
+                    <span className="kpi-plus">+</span>
+                  </div>
+                  <div className="kpi-label">{pickLang(k.label, lang)}</div>
+                  <div className="kpi-detail">{pickLang(k.detail, lang)}</div>
+                </div>
+              );
+            })}
+          </div>
         </div>
       </div>
     </section>

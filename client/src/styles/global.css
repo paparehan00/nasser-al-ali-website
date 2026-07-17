@@ -952,6 +952,163 @@ section {
 }
 
 /* ==========================================================================
+   HorizontalCarousel — shared carousel shell
+   ========================================================================== */
+.hc {
+  position: relative;
+  width: 100%;
+  overflow: hidden; /* outer clip so controls don't extend past section */
+}
+
+/* Viewport — clips the scrolling track */
+.hc-viewport {
+  overflow: hidden;
+  width: 100%;
+  cursor: grab;
+  outline: none;
+}
+.hc-viewport:active { cursor: grabbing; }
+
+/* Track — wide flex row, never wraps, moved by transform */
+.hc-track {
+  display: flex;
+  flex-wrap: nowrap;
+  will-change: transform;
+}
+
+/* Individual slide wrapper — width is controlled by CSS below per carousel */
+.hc-slide {
+  flex-shrink: 0;
+}
+
+/* Controls row: ‹ [====scrubber====] › */
+.hc-controls {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 20px 24px 4px;
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+/* Gold arrow buttons */
+.hc-arrow {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: transparent;
+  border: 1.5px solid rgba(201, 162, 75, 0.35);
+  color: var(--accent);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
+  padding: 0;
+}
+.hc-arrow:hover {
+  background: rgba(201, 162, 75, 0.12);
+  border-color: var(--accent);
+  transform: scale(1.08);
+}
+.hc-arrow svg { width: 16px; height: 16px; pointer-events: none; }
+
+/* Gold scrubber */
+.hc-scrubber {
+  flex: 1;
+  height: 3px;
+  -webkit-appearance: none;
+  appearance: none;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 2px;
+  outline: none;
+  cursor: pointer;
+}
+.hc-scrubber::-webkit-slider-runnable-track {
+  height: 3px;
+  border-radius: 2px;
+}
+.hc-scrubber::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px; height: 18px;
+  margin-top: -7.5px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 2px solid rgba(201, 162, 75, 0.5);
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  box-shadow: 0 0 0 0 rgba(201, 162, 75, 0);
+}
+.hc-scrubber::-webkit-slider-thumb:hover,
+.hc-scrubber:focus::-webkit-slider-thumb {
+  transform: scale(1.25);
+  box-shadow: 0 0 0 5px rgba(201, 162, 75, 0.18);
+}
+.hc-scrubber::-moz-range-track {
+  height: 3px;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 2px;
+}
+.hc-scrubber::-moz-range-thumb {
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 2px solid rgba(201, 162, 75, 0.5);
+  cursor: pointer;
+}
+
+/* ── Clients carousel ──────────────────────────────────────────────────── */
+.clients-carousel .hc-viewport { padding: 16px 0 8px; }
+/* logo-item keeps its existing dimensions; slide just wraps it */
+.clients-carousel .hc-slide { width: 170px; }
+@media (max-width: 768px) {
+  .clients-carousel .hc-slide { width: 130px; }
+  .clients-carousel { --hc-sw: 130; }
+}
+
+/* ── Projects carousel ─────────────────────────────────────────────────── */
+.projects-carousel .hc-viewport { padding: 16px 24px 8px; }
+.projects-carousel .hc-slide { width: 360px; }
+/* project-card now fills the fixed slide width */
+.projects-carousel .project-card {
+  width: 360px;
+  height: 300px;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  transition: box-shadow 0.35s ease, transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  flex-shrink: 0;
+}
+.projects-carousel .project-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-4px); }
+.projects-carousel .project-card:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+/* "Latest" badge */
+.project-badge-latest {
+  position: absolute;
+  top: 12px; left: 12px;
+  z-index: 10;
+  background: var(--accent);
+  color: #0b1f3a;
+  font-family: var(--font-heading);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 20px;
+  pointer-events: none;
+}
+
+@media (max-width: 768px) {
+  .projects-carousel .hc-slide { width: 280px; }
+  .projects-carousel .project-card { width: 280px; height: 240px; }
+}
+@media (max-width: 480px) {
+  .projects-carousel .hc-slide { width: 240px; }
+  .projects-carousel .project-card { width: 240px; height: 200px; }
+}
+
+/* ==========================================================================
    Civil Gallery Carousel
    ========================================================================== */
 .gallery {
@@ -1527,7 +1684,8 @@ select {
 }
 .naa-chat-bubble-icon {
   width: 28px; height: 28px;
-  object-fit: contain;
+  object-fit: cover;
+  border-radius: 50%;
   flex-shrink: 0;
 }
 .naa-chat-bubble:hover {
@@ -1637,8 +1795,7 @@ select {
   width: 40px; height: 40px;
   border-radius: 50%;
   background: transparent;
-  padding: 2px;
-  object-fit: contain;
+  object-fit: cover;
 }
 .naa-chat-brand-text { min-width: 0; }
 .naa-chat-title {

@@ -22,7 +22,7 @@
   const LANG_KEY = "naa-chat-lang";
   const WA_URL = "https://wa.me/97466557728";
   const TEL_URL = "tel:+97466557728";
-  const LOGO_SRC = "assets/aichatbot.png";
+  const LOGO_SRC = "assets/chatbotlogo.jpg";
 
   const I18N = {
     en: {
@@ -240,7 +240,7 @@
   mount.setAttribute("data-lang", state.lang);
   mount.innerHTML = `
     <button class="naa-chat-bubble" type="button" aria-expanded="false" aria-controls="naa-chat-panel">
-      <img src="assets/aichatbot.png" alt="" class="naa-chat-bubble-icon" aria-hidden="true">
+      <img src="assets/chatbotlogo.jpg" alt="" class="naa-chat-bubble-icon" aria-hidden="true" onerror="this.style.display='none'">
       <span class="naa-chat-bubble-label"></span>
       <span class="naa-chat-bubble-dot" aria-hidden="true"></span>
     </button>
