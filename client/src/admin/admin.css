@@ -51,6 +51,8 @@ body.naa-admin-active select:focus {
 }
 
 /* Hide the public site chrome when admin is mounted */
+body.naa-admin-active .naa-chat,
+body.naa-admin-active .naa-chat-bubble,
 body.naa-admin-active .naa-chat-launcher,
 body.naa-admin-active .naa-chat-panel,
 body.naa-admin-active .naa-consent,
