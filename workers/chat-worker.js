@@ -105,10 +105,18 @@ When it would help the visitor, you MAY end your reply with one or two of these 
 LEAD CAPTURE
 When the visitor has shown clear buying or hiring intent AND you have exchanged at least two turns, you MAY end your message with the exact tag "[[LEAD_FORM]]" on its own line. Use this at most ONCE per conversation. Never pressure the visitor - if they decline, be gracious.`;
 
-function cors(env) {
-  const origin = (env && env.ALLOWED_ORIGIN) || "*";
+const ALLOWED_ORIGINS = new Set([
+  "http://localhost:5173",
+  "http://localhost:5174",
+  "http://localhost:4173",
+  "https://alnassertest.sameem.com.np",
+]);
+
+function cors(request) {
+  const origin = request ? request.headers.get("Origin") || "" : "";
+  const allowed = ALLOWED_ORIGINS.has(origin) ? origin : "";
   return {
-    "Access-Control-Allow-Origin": origin,
+    ...(allowed ? { "Access-Control-Allow-Origin": allowed } : {}),
     "Access-Control-Allow-Headers": "Content-Type",
     "Access-Control-Allow-Methods": "POST, OPTIONS",
     Vary: "Origin",
@@ -118,18 +126,18 @@ function cors(env) {
 export default {
   async fetch(request, env) {
     if (request.method === "OPTIONS") {
-      return new Response(null, { status: 204, headers: cors(env) });
+      return new Response(null, { status: 204, headers: cors(request) });
     }
     if (request.method !== "POST") {
-      return json({ error: "Method not allowed" }, 405, env);
+      return json({ error: "Method not allowed" }, 405, request);
     }
     if (!env.AI_API_KEY) {
-      return json({ error: "Worker not configured (AI_API_KEY missing)" }, 500, env);
+      return json({ error: "Worker not configured (AI_API_KEY missing)" }, 500, request);
     }
 
     let payload;
     try { payload = await request.json(); }
-    catch (_) { return json({ error: "Invalid JSON body" }, 400, env); }
+    catch (_) { return json({ error: "Invalid JSON body" }, 400, request); }
 
     const rawMessages = Array.isArray(payload.messages) ? payload.messages : [];
     const lang = payload.lang === "ar" ? "ar" : "en";
@@ -146,7 +154,7 @@ export default {
       }));
 
     if (!conversation.length) {
-      return json({ error: "No messages provided" }, 400, env);
+      return json({ error: "No messages provided" }, 400, request);
     }
 
     const langNote = lang === "ar"
@@ -177,7 +185,7 @@ export default {
           body: JSON.stringify(body),
         });
       } catch (netErr) {
-        if (attempt === 2) return json({ error: "Network error contacting the AI service." }, 502, env);
+        if (attempt === 2) return json({ error: "Network error contacting the AI service." }, 502, request);
         await sleep(400 * (attempt + 1));
         continue;
       }
@@ -191,7 +199,7 @@ export default {
       const friendly = resp.status === 429
         ? "We're getting a lot of questions right now - please try again in a moment."
         : "Sorry, I had trouble reaching my assistant. Please try again in a moment, or WhatsApp us at +974 6655 7728.";
-      return json({ error: friendly, status: resp.status }, resp.status, env);
+      return json({ error: friendly, status: resp.status }, resp.status, request);
     }
 
     // OpenAI / Groq response shape:
@@ -210,17 +218,17 @@ export default {
         text: lang === "ar"
           ? "عذرًا، لم أتمكن من صياغة رد. يرجى إعادة الصياغة أو التواصل معنا على واتساب +974 6655 7728."
           : "Sorry - I couldn't produce a reply just now. Could you rephrase, or WhatsApp us at +974 6655 7728?",
-      }, 200, env);
+      }, 200, request);
     }
 
-    return json({ text }, 200, env);
+    return json({ text }, 200, request);
   },
 };
 
-function json(body, status, env) {
+function json(body, status, request) {
   return new Response(JSON.stringify(body), {
     status,
-    headers: { "Content-Type": "application/json", ...cors(env) },
+    headers: { "Content-Type": "application/json", ...cors(request) },
   });
 }
 function sleep(ms) { return new Promise((r) => setTimeout(r, ms)); }

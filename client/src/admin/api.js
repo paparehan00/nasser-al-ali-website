@@ -70,4 +70,5 @@ export const adminApi = {
   saveItem:       (id, patch) => request("PATCH",  `/api/admin/items/${id}`, patch),
   deleteItem:     (id) => request("DELETE", `/api/admin/items/${id}`),
   reorderItems:   (k, orderIds) => request("POST", `/api/admin/sections/${k}/items/reorder`, { order: orderIds }),
+  translate:      (texts) => request("POST", "/api/admin/translate", { texts }),
 };

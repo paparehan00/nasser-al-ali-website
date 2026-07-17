@@ -291,4 +291,30 @@ router.get("/audit", (req, res) => {
   });
 });
 
+// -----------------------------------------------------------------------
+// Translation endpoint
+// -----------------------------------------------------------------------
+
+router.post("/translate", async (req, res, next) => {
+  try {
+    const { env } = await import("../config/env.js");
+    if (!env.groqApiKey) {
+      return res.status(501).json({ error: "Translation not configured (GROQ_API_KEY missing)" });
+    }
+    const texts = req.body?.texts;
+    if (!texts || typeof texts !== "object" || Array.isArray(texts)) {
+      return res.status(400).json({ error: "Body must be { texts: { key: 'English text', ... } }" });
+    }
+    const entries = Object.entries(texts);
+    if (entries.length > 100) return res.status(400).json({ error: "Too many fields (max 100)" });
+    for (const [k, v] of entries) {
+      if (typeof k !== "string" || k.length > 200) return res.status(400).json({ error: "Invalid key" });
+      if (typeof v !== "string" || v.length > 5000) return res.status(400).json({ error: `Value too long for key: ${k}` });
+    }
+    const { translateTexts } = await import("../utils/translate.js");
+    const translations = await translateTexts(env.groqApiKey, texts);
+    res.json({ translations });
+  } catch (err) { next(err); }
+});
+
 export default router;

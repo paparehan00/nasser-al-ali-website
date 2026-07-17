@@ -41,6 +41,7 @@ export const env = {
 
   adminSeedEmail: optional("ADMIN_EMAIL", ""),
   adminSeedPassword: optional("ADMIN_PASSWORD", ""),
+  groqApiKey: optional("GROQ_API_KEY", ""),
 
   serverRoot,
 };
