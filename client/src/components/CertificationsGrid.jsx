@@ -40,9 +40,9 @@ export default function CertificationsGrid({ onOpen }) {
                   <div className="cert-desc">{pickLang(d.desc, lang)}</div>
                   <div className="cert-meta">
                     <span>{pickLang(extra.certNoLabel, lang)} {d.certNo}</span>
-                    <span>{pickLang(extra.validLabel, lang)} {extra.validUntil}</span>
+                    <span>{pickLang(extra.validLabel, lang)} {d.validUntil ?? extra.validUntil}</span>
                   </div>
-                  <div className="cert-issuer">{pickLang(extra.issuer, lang)}</div>
+                  <div className="cert-issuer">{pickLang(d.issuer?.en ? d.issuer : extra.issuer, lang)}</div>
                 </div>
               </a>
             );

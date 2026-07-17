@@ -160,11 +160,13 @@ export const SECTION_SCHEMAS = {
       { key: "issuer",      type: "bilingual", label: "Issuing body",         helper: 'e.g. "Bureau Veritas"' },
     ],
     itemFields: [
-      { key: "code",   type: "text",               label: "Certificate code",    helper: "e.g. ISO 9001:2015" },
-      { key: "title",  type: "bilingual",           label: "Certificate title" },
-      { key: "desc",   type: "bilingual-textarea",  label: "Short description" },
-      { key: "certNo", type: "text",               label: "Certificate number" },
-      { key: "alt",    type: "text",               label: "Image alt text" },
+      { key: "code",       type: "text",               label: "Certificate code",    helper: "e.g. ISO 9001:2015" },
+      { key: "title",      type: "bilingual",           label: "Certificate title" },
+      { key: "desc",       type: "bilingual-textarea",  label: "Short description" },
+      { key: "certNo",     type: "text",               label: "Certificate number" },
+      { key: "validUntil", type: "text",               label: "Valid until",         helper: 'e.g. "09 Jan 2029"' },
+      { key: "issuer",     type: "bilingual",           label: "Issued by",           helper: 'e.g. "Bureau Veritas - UKAS accredited"' },
+      { key: "alt",        type: "text",               label: "Image alt text" },
     ],
   },
 
