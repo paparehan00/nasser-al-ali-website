@@ -5,7 +5,7 @@ export default function FloatingButtons() {
   const { t } = useI18n();
   return (
     <div className="floating-cta">
-      {/* Bottom-left: WhatsApp */}
+      {/* Top of stack: WhatsApp */}
       <a
         href={WHATSAPP_URL}
         className="floating-whatsapp"
@@ -16,7 +16,7 @@ export default function FloatingButtons() {
         <img src="/assets/whatsapplogo.png" alt="" aria-hidden="true" width="56" height="56" />
       </a>
 
-      {/* Bottom-right: Call */}
+      {/* Bottom of stack: Call */}
       <a
         href={PHONE_TEL}
         className="floating-call"
