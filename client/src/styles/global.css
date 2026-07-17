@@ -530,14 +530,6 @@ section {
   margin-bottom: var(--sp-32);
   flex-wrap: wrap;
 }
-.hero-phone a {
-  font-size: 22px;
-  font-weight: 700;
-  font-family: var(--font-heading);
-  color: var(--accent);
-  letter-spacing: 0.5px;
-}
-.hero-phone a:hover { color: var(--accent-hover); }
 
 @media (max-width: 768px) {
   .hero-buttons { flex-direction: column; }
@@ -3173,60 +3165,33 @@ html[dir="rtl"] .naa-lang-toggle { flex-direction: row-reverse; }
 
 /* ==========================================================================
    Floating CTA (React migration)
-   - WhatsApp: circular, official green, white glyph only.
-   - Call:     borderless / no box - phone icon + tappable number text.
+   - Bottom-LEFT:  WhatsApp circular green button
+   - Bottom-RIGHT: Call circular gold button
    ========================================================================== */
 .floating-cta {
   position: fixed;
-  right: 22px;
   bottom: 22px;
+  left: 22px;
+  right: 22px;
   display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 12px;
-  z-index: 2500;
-  pointer-events: none; /* let children opt in so text isn't a huge tap area */
-}
-html[dir="rtl"] .floating-cta { right: auto; left: 22px; align-items: flex-start; }
-
-/* Call - borderless, phone icon + number as plain tappable text */
-.floating-call {
-  pointer-events: auto;
-  display: inline-flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 8px;
-  padding: 10px 14px;              /* generous tap target */
-  border: none;
-  background: transparent;
-  color: var(--text);
-  font-family: var(--font-heading);
-  font-weight: 700;
-  font-size: 14px;
-  letter-spacing: 0.4px;
-  text-decoration: none;
-  border-radius: 999px;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
-  transition: color 0.2s ease, transform 0.2s ease;
-  min-height: 44px;                /* WCAG tap-target on mobile */
-}
-.floating-call-icon { color: var(--accent); flex-shrink: 0; }
-.floating-call:hover { color: var(--accent); }
-.floating-call:hover .floating-call-icon { transform: scale(1.05); }
-@media (max-width: 500px) {
-  .floating-call { font-size: 13px; padding: 10px 12px; }
+  z-index: 2500;
+  pointer-events: none;
 }
 
-/* WhatsApp - circular, WhatsApp green, white glyph only, no text */
+/* WhatsApp - bottom-left, circular, WhatsApp green, white glyph */
 .floating-whatsapp {
   pointer-events: auto;
-  width: 60px;
-  height: 60px;
+  width: 56px;
+  height: 56px;
   border-radius: 50%;
   background: #25D366;
   color: #fff;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  text-decoration: none;
   box-shadow: 0 10px 24px rgba(37, 211, 102, 0.35),
               0 2px 6px rgba(0, 0, 0, 0.25);
   transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
@@ -3240,14 +3205,45 @@ html[dir="rtl"] .floating-cta { right: auto; left: 22px; align-items: flex-start
               0 4px 10px rgba(0, 0, 0, 0.3);
 }
 .floating-whatsapp:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 3px;
+}
+
+/* Call - bottom-right, circular, gold accent, white icon */
+.floating-call {
+  pointer-events: auto;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  box-shadow: 0 10px 24px rgba(166, 124, 42, 0.4),
+              0 2px 6px rgba(0, 0, 0, 0.25);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.25s ease,
+              background 0.2s ease;
+}
+.floating-call:hover {
+  transform: scale(1.06);
+  background: var(--accent-hover);
+  box-shadow: 0 14px 32px rgba(166, 124, 42, 0.55),
+              0 4px 10px rgba(0, 0, 0, 0.3);
+}
+.floating-call:focus-visible {
   outline: 2px solid var(--text);
   outline-offset: 3px;
 }
+
 @media (max-width: 500px) {
-  .floating-whatsapp { width: 54px; height: 54px; }
+  .floating-whatsapp,
+  .floating-call { width: 52px; height: 52px; }
 }
 
-/* Chat widget sits above the floating CTA on the right - offset it up */
+/* Chat widget sits above the call button on the right */
 .naa-chat { bottom: 96px !important; }
 @media (max-width: 500px) {
   .naa-chat { bottom: 90px !important; }

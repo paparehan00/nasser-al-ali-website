@@ -1,7 +1,6 @@
 import { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { useI18n } from "../context/I18nContext.jsx";
-import { PHONE, PHONE_TEL } from "../lib/constants.js";
 import { useContent, pickLang } from "../hooks/useContent.js";
 
 /**
@@ -81,9 +80,6 @@ export default function Hero() {
                 <Link to="/projects" className="btn btn-outline btn-white btn-large">
                   {pickLang(extra.btnProjects, lang)}
                 </Link>
-              </div>
-              <div className="hero-phone">
-                <a href={PHONE_TEL} className="phone-link">{PHONE}</a>
               </div>
             </div>
           </div>
