@@ -43,5 +43,12 @@ export const env = {
   adminSeedPassword: optional("ADMIN_PASSWORD", ""),
   groqApiKey: optional("GROQ_API_KEY", ""),
 
+  smtpHost:     optional("SMTP_HOST", "smtp.gmail.com"),
+  smtpPort:     Number(optional("SMTP_PORT", "465")),
+  smtpUser:     optional("SMTP_USER", ""),
+  smtpPass:     optional("SMTP_PASS", ""),
+  mailFromName: optional("MAIL_FROM_NAME", "Nasser Al Ali Enterprises"),
+  notifyEmail:  optional("NOTIFY_EMAIL", ""),
+
   serverRoot,
 };

@@ -19,6 +19,7 @@ import healthRoutes from "./routes/health.js";
 import contentRoutes from "./routes/content.js";
 import adminRoutes from "./routes/admin.js";
 import uploadRoutes, { UPLOAD_ROOT } from "./routes/uploads.js";
+import bookingsRoutes from "./routes/bookings.js";
 
 export function createApp() {
   const app = express();
@@ -47,6 +48,7 @@ export function createApp() {
   app.use("/api/content", contentRoutes);
   app.use("/api/admin", adminRoutes);
   app.use("/api/admin/uploads", uploadRoutes);
+  app.use("/api/bookings", bookingsRoutes);
 
   // Serve uploaded images. Read-only static: express.static never executes
   // files, and we only ever write image bytes here from the upload pipeline

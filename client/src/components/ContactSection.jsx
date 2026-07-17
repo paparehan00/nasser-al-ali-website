@@ -2,68 +2,51 @@ import { useState } from "react";
 import { useI18n } from "../context/I18nContext.jsx";
 import { EMAIL, PHONE_TEL, WHATSAPP_URL, MAP_EMBED, MAP_LINK } from "../lib/constants.js";
 
-// Web3Forms: free, host-independent form-to-email relay. Free access-key at
-// https://web3forms.com. The key is public - it only unlocks delivery to the
-// pre-registered email address, so shipping it in the client is safe.
-const WEB3FORMS_KEY = import.meta.env.VITE_WEB3FORMS_KEY || "";
-const WEB3FORMS_URL = "https://api.web3forms.com/submit";
-
 export default function ContactSection() {
   const { t } = useI18n();
   const [status, setStatus] = useState("idle"); // idle | sending | success | error
   const [mapConsented, setMapConsented] = useState(false);
+
+  const [serverMsg, setServerMsg] = useState("");
 
   const onSubmit = async (e) => {
     e.preventDefault();
     const form = e.currentTarget;
     if (!form.reportValidity()) return;
 
-    if (!WEB3FORMS_KEY) {
-      // Missing configuration - surface a real error rather than silently
-      // pretending it worked.
-      console.warn("[contact-form] VITE_WEB3FORMS_KEY is not set - form disabled.");
-      setStatus("error");
-      return;
-    }
-
     setStatus("sending");
+    setServerMsg("");
 
     const fd = new FormData(form);
     const payload = {
-      access_key: WEB3FORMS_KEY,
-      subject: `New enquiry from ${fd.get("name") || "website visitor"}`,
-      from_name: fd.get("name") || "Website enquiry",
-      reply_to:  fd.get("email") || "",
-      name:      fd.get("name") || "",
-      company:   fd.get("company") || "",
-      email:     fd.get("email") || "",
-      phone:     fd.get("phone") || "",
-      service:   fd.get("service") || "",
-      message:   fd.get("message") || "",
-      // Web3Forms honeypot fields
-      botcheck: fd.get("bot-field") || "",
+      "bot-field":   fd.get("bot-field") || "",
+      name:          fd.get("name") || "",
+      company:       fd.get("company") || "",
+      email:         fd.get("email") || "",
+      phone:         fd.get("phone") || "",
+      service:       fd.get("service") || "",
+      preferredDate: fd.get("preferredDate") || "",
+      message:       fd.get("message") || "",
     };
 
     try {
-      const resp = await fetch(WEB3FORMS_URL, {
+      const resp = await fetch("/api/bookings", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept:         "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
       const data = await resp.json().catch(() => ({}));
-      if (!resp.ok || data.success === false) {
-        console.warn("[contact-form] Web3Forms error:", resp.status, data);
+      if (!resp.ok) {
+        setServerMsg(data.error || t("contact.form.error"));
         setStatus("error");
         return;
       }
       setStatus("success");
+      setServerMsg(data.message || t("contact.form.success"));
       form.reset();
-    } catch (err) {
-      console.warn("[contact-form] network error:", err);
+    } catch {
       setStatus("error");
+      setServerMsg(t("contact.form.error"));
     }
   };
 
@@ -108,9 +91,10 @@ export default function ContactSection() {
                   <input type="tel" id="c-phone" name="phone" placeholder={t("contact.form.phonePh")} required />
                 </div>
               </div>
-              <div className="form-group">
-                <label htmlFor="c-service">{t("contact.form.service")}</label>
-                <select id="c-service" name="service" required defaultValue="">
+              <div className="form-row">
+                <div className="form-group">
+                  <label htmlFor="c-service">{t("contact.form.service")}</label>
+                  <select id="c-service" name="service" required defaultValue="">
                   <option value="" disabled>{t("contact.form.servicePh")}</option>
                   <option value="manpower">{t("contact.form.serviceManpower")}</option>
                   <option value="equipment">{t("contact.form.serviceEquipment")}</option>
@@ -119,6 +103,11 @@ export default function ContactSection() {
                   <option value="cleaning">{t("contact.form.serviceCleaning")}</option>
                   <option value="business">{t("contact.form.serviceBusiness")}</option>
                 </select>
+                </div>
+                <div className="form-group">
+                  <label htmlFor="c-date">{t("contact.form.preferredDate")}</label>
+                  <input type="datetime-local" id="c-date" name="preferredDate" />
+                </div>
               </div>
               <div className="form-group">
                 <label htmlFor="c-message">{t("contact.form.message")}</label>
@@ -132,10 +121,10 @@ export default function ContactSection() {
                 {status === "sending" ? t("contact.form.sending") : t("contact.form.submit")}
               </button>
               {status === "success" && (
-                <p className="form-success active" role="status">{t("contact.form.success")}</p>
+                <p className="form-success active" role="status">{serverMsg || t("contact.form.success")}</p>
               )}
               {status === "error" && (
-                <p className="form-error" role="alert">{t("contact.form.error")}</p>
+                <p className="form-error" role="alert">{serverMsg || t("contact.form.error")}</p>
               )}
             </form>
           </div>

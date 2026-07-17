@@ -4,6 +4,7 @@ import { fileURLToPath } from "node:url";
 import { db } from "./db/connection.js";
 import { createApp } from "./app.js";
 import { env } from "./config/env.js";
+import { verifyMailer } from "./utils/mailer.js";
 
 // Auto-apply the schema on boot. Idempotent (all statements are IF NOT EXISTS).
 // This means a fresh Railway deploy with a fresh volume just works — no
@@ -24,4 +25,5 @@ app.listen(env.port, () => {
   console.log(`  DB:      ${env.dbPath}`);
   console.log(`  uploads: ${env.uploadRoot}`);
   console.log(`  origins: ${env.clientOrigins.join(", ")}`);
+  verifyMailer().catch(() => {});
 });

@@ -59,3 +59,20 @@ CREATE TABLE IF NOT EXISTS content_items (
 
 CREATE INDEX IF NOT EXISTS idx_items_section_order
   ON content_items(section_key, sort_order);
+
+-- Consultation / contact form submissions.
+CREATE TABLE IF NOT EXISTS bookings (
+  id            INTEGER PRIMARY KEY AUTOINCREMENT,
+  name          TEXT NOT NULL,
+  company       TEXT,
+  email         TEXT NOT NULL,
+  phone         TEXT,
+  service       TEXT,
+  preferred_date TEXT,
+  message       TEXT,
+  ip            TEXT,
+  email_sent    INTEGER NOT NULL DEFAULT 0,
+  created_at    INTEGER NOT NULL DEFAULT (unixepoch())
+);
+
+CREATE INDEX IF NOT EXISTS idx_bookings_created ON bookings(created_at DESC);
