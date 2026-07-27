@@ -20,7 +20,7 @@ export const SECTION_SCHEMAS = {
       { key: "scroll",       type: "bilingual", label: "Scroll hint text",       helper: "Small text below the scroll arrow" },
       { key: "video.webm",   type: "text",      label: "Video — WebM path",      helper: "/assets/hero-1080.webm", advanced: true },
       { key: "video.mp4",    type: "text",      label: "Video — MP4 path",       helper: "/assets/hero-1080.mp4", advanced: true },
-      { key: "video.poster", type: "text",      label: "Video — poster image",   helper: "/assets/hero-poster.jpg", advanced: true },
+      { key: "video.poster", type: "image",     label: "Video — poster image",   helper: "Shown before the video loads", advanced: true },
     ],
     itemFields: [],
   },
@@ -44,7 +44,7 @@ export const SECTION_SCHEMAS = {
     extraFields: [
       { key: "name",      type: "bilingual",          label: "Chairman's full name" },
       { key: "role",      type: "bilingual",          label: "Title / role",             helper: 'e.g. "Chairman & CEO"' },
-      { key: "imagePath", type: "text",               label: "Portrait photo path",      helper: "/assets/chairman.png or an uploaded path" },
+      { key: "imagePath", type: "image",               label: "Portrait photo" },
       { key: "p1",        type: "bilingual-textarea", label: "Quote — paragraph 1" },
       { key: "p2",        type: "bilingual-textarea", label: "Quote — paragraph 2" },
       { key: "signoff",   type: "bilingual",          label: "Quote sign-off",           helper: 'e.g. "— Nasser Al Ali, Chairman"' },
@@ -186,25 +186,56 @@ export const SECTION_SCHEMAS = {
     ],
   },
 
-  reviews: {
-    label: "Reviews",
+  careers: {
+    label: "Careers",
     singleton: false,
     hasImage: false,
-    extraFields: [
-      { key: "rating",      type: "number",  label: "Google rating",         helper: "e.g. 4.6" },
-      { key: "count",       type: "number",  label: "Number of reviews" },
-      { key: "gLabel",      type: "bilingual", label: '"Google Reviews" label' },
-      { key: "basedOn",     type: "bilingual", label: '"Based on" text',     helper: 'e.g. "Based on"' },
-      { key: "reviewsWord", type: "bilingual", label: '"Reviews" word',      helper: 'e.g. "reviews" / "تقييم"' },
-      { key: "readAll",     type: "bilingual", label: "Read-all link text",  helper: 'e.g. "Read all reviews on Google"' },
-    ],
+    extraFields: [],
     itemFields: [
-      { key: "name",  type: "text",     label: "Reviewer name" },
-      { key: "meta",  type: "text",     label: "Review metadata",      helper: 'e.g. "1 year ago · Local Guide"' },
-      { key: "init",  type: "text",     label: "Avatar initial(s)",    helper: "1–2 letters shown in the coloured circle" },
-      { key: "color", type: "color",    label: "Avatar background colour" },
-      { key: "quote", type: "textarea", label: "Review text" },
+      { key: "title",        type: "bilingual",          label: "Job title",   helper: 'e.g. "Site Engineer"' },
+      { key: "department",   type: "bilingual",          label: "Department",  helper: 'e.g. "Civil Contracting", leave blank to hide' },
+      { key: "location",     type: "bilingual",          label: "Location",    helper: 'e.g. "Doha, Qatar", leave blank to hide' },
+      { key: "type",         type: "bilingual",          label: "Employment type", helper: 'e.g. "Full time", "Contract"' },
+      { key: "description",  type: "bilingual-textarea", label: "Role description" },
+      { key: "requirements", type: "bilingual-textarea", label: "Requirements", helper: "One requirement per line, shown as a bulleted list" },
     ],
+  },
+
+  ads: {
+    label: "Promotions & Announcements",
+    singleton: false,
+    hasImage: true,
+    extraFields: [],
+    itemFields: [
+      { key: "title", type: "bilingual", label: "Poster title / alt text", helper: "Shown as a caption and used for accessibility" },
+      { key: "link",  type: "text",      label: "Link URL (optional)",     helper: "Where the poster goes if clicked, leave blank for a non-clickable poster" },
+    ],
+  },
+
+  "sister-concerns": {
+    label: "Sister Concerns",
+    singleton: false,
+    hasImage: true,
+    extraFields: [],
+    itemFields: [
+      { key: "name", type: "bilingual", label: "Company name" },
+    ],
+  },
+
+  "mission-vision": {
+    label: "Mission & Vision",
+    singleton: true,
+    hasImage: false,
+    extraFields: [
+      { key: "missionTitle", type: "bilingual",          label: "Mission — heading" },
+      { key: "missionBody",  type: "bilingual-textarea",  label: "Mission — body" },
+      { key: "visionTitle",  type: "bilingual",          label: "Vision — heading" },
+      { key: "visionBody",   type: "bilingual-textarea",  label: "Vision — body" },
+      { key: "video.poster", type: "image",  label: "Background image",     helper: "Shown behind the text (and while the video loads, if you add one)", advanced: true },
+      { key: "video.webm",   type: "text",   label: "Background video — WebM path", helper: "Optional. Leave blank to just use the background image.", advanced: true },
+      { key: "video.mp4",    type: "text",   label: "Background video — MP4 path",  helper: "Optional. Leave blank to just use the background image.", advanced: true },
+    ],
+    itemFields: [],
   },
 };
 

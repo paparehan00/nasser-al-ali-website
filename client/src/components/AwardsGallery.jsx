@@ -1,5 +1,6 @@
 import { useI18n } from "../context/I18nContext.jsx";
 import { useContent, pickLang } from "../hooks/useContent.js";
+import { tiltHandlers } from "../lib/tiltEffect.js";
 
 export default function AwardsGallery({ onOpen }) {
   const { lang } = useI18n();
@@ -41,7 +42,7 @@ export default function AwardsGallery({ onOpen }) {
                     key={it.id}
                     onClick={() => onOpen && onOpen(it.imagePath, `Chairman presenting a recognition award (${i + 1})`)}
                   >
-                    <div className="award-img-wrap">
+                    <div className="award-img-wrap tilt-frame" {...tiltHandlers}>
                       <img src={it.imagePath} alt={alt} loading="lazy" />
                     </div>
                   </figure>

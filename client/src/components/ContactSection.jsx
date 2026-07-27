@@ -1,23 +1,117 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useI18n } from "../context/I18nContext.jsx";
-import { EMAIL, PHONE_TEL, WHATSAPP_URL, MAP_EMBED, MAP_LINK } from "../lib/constants.js";
+import { EMAIL, PHONE, PHONE_TEL, PHONE_2, PHONE_2_TEL, WHATSAPP_URL, MAP_EMBED, MAP_LINK } from "../lib/constants.js";
+
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const PHONE_RE = /^[\d\s+()\-.]{7,25}$/;
+
+function validateFields(fd, lang) {
+  const errors = {};
+  const isAr = lang === "ar";
+  const currentYear = new Date().getFullYear();
+
+  const name          = (fd.get("name")          || "").trim();
+  const email         = (fd.get("email")         || "").trim();
+  const phone         = (fd.get("phone")         || "").trim();
+  const service       = (fd.get("service")       || "").trim();
+  const message       = (fd.get("message")       || "").trim();
+  const preferredDate = (fd.get("preferredDate") || "").trim();
+
+  if (!name)
+    errors.name = isAr ? "الاسم مطلوب." : "Name is required.";
+
+  if (!email)
+    errors.email = isAr ? "البريد الإلكتروني مطلوب." : "Email is required.";
+  else if (!EMAIL_RE.test(email))
+    errors.email = isAr ? "أدخل بريدًا إلكترونيًا صالحًا." : "Enter a valid email address.";
+
+  if (!phone)
+    errors.phone = isAr ? "رقم الهاتف مطلوب." : "Phone number is required.";
+  else if (!PHONE_RE.test(phone))
+    errors.phone = isAr ? "أدخل رقم هاتف صالحًا (أرقام وعلامات +/-)." : "Enter a valid phone number (digits, +, -, spaces).";
+
+  if (!service)
+    errors.service = isAr ? "يرجى اختيار خدمة." : "Please select a service.";
+
+  if (!message)
+    errors.message = isAr ? "يرجى وصف كيف يمكننا المساعدة." : "Please describe how we can help.";
+
+  const consent = fd.get("consent");
+  if (!consent)
+    errors.consent = isAr ? "يرجى قبول سياسة الخصوصية للمتابعة." : "Please accept the Privacy Policy to continue.";
+
+  if (preferredDate) {
+    const d = new Date(preferredDate);
+    const now = new Date();
+    // 4-digit-year check on the raw string before Date parsing can normalise it
+    const yearMatch = preferredDate.match(/^(\d{4})-/);
+    if (!yearMatch || isNaN(d.getTime())) {
+      errors.preferredDate = isAr ? "أدخل تاريخًا ووقتًا صالحين." : "Enter a valid date and time.";
+    } else {
+      const year = parseInt(yearMatch[1], 10);
+      if (year < currentYear || year > currentYear + 2) {
+        errors.preferredDate = isAr
+          ? `السنة يجب أن تكون بين ${currentYear} و${currentYear + 2}.`
+          : `Year must be between ${currentYear} and ${currentYear + 2}.`;
+      } else if (d <= now) {
+        errors.preferredDate = isAr
+          ? "يجب أن يكون التاريخ في المستقبل."
+          : "Preferred date must be in the future.";
+      }
+    }
+  }
+
+  return errors;
+}
+
+// Local datetime string for the min attribute (avoids UTC offset shifting date back)
+function localNow() {
+  const d = new Date();
+  const p = (n) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}`;
+}
 
 export default function ContactSection() {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
   const [status, setStatus] = useState("idle"); // idle | sending | success | error
-  const [mapConsented, setMapConsented] = useState(false);
-
+  // Read the real, site-wide consent choice — not a fresh local flag — so the
+  // map doesn't ask again if the user already accepted embeds via the main
+  // cookie banner, and stays in sync if they change it from Cookies page too.
+  const [mapConsented, setMapConsented] = useState(
+    () => typeof window !== "undefined" && !!window.NAAConsent?.has("embeds")
+  );
   const [serverMsg, setServerMsg] = useState("");
+  const [fieldErrors, setFieldErrors] = useState({});
+
+  useEffect(() => {
+    if (typeof window === "undefined" || !window.NAAConsent) return;
+    return window.NAAConsent.onChange((payload) => setMapConsented(!!payload?.choices?.embeds));
+  }, []);
+
+  const openConsentPrefs = () => {
+    if (typeof window !== "undefined" && window.NAAConsent) window.NAAConsent.reopen();
+  };
 
   const onSubmit = async (e) => {
     e.preventDefault();
     const form = e.currentTarget;
-    if (!form.reportValidity()) return;
+    const fd = new FormData(form);
 
+    // Client-side validation — show inline errors and abort
+    const errors = validateFields(fd, lang);
+    if (Object.keys(errors).length > 0) {
+      setFieldErrors(errors);
+      // Focus the first invalid field so keyboard users land in the right place
+      const firstKey = Object.keys(errors)[0];
+      const el = form.elements[firstKey];
+      if (el) el.focus();
+      return;
+    }
+
+    setFieldErrors({});
     setStatus("sending");
     setServerMsg("");
 
-    const fd = new FormData(form);
     const payload = {
       "bot-field":   fd.get("bot-field") || "",
       name:          fd.get("name") || "",
@@ -54,7 +148,9 @@ export default function ContactSection() {
     <section className="contact section-alt" id="contact">
       <div className="container">
         <div className="section-header center">
-          <span className="overline">{t("contact.overline")}</span>
+          {/* No overline here — "Get in Touch" as the heading alone already
+              says it; a "GET IN TOUCH" eyebrow above it just repeated the
+              same two words back at the reader. */}
           <h2>{t("contact.title")}</h2>
           <p className="section-lede">{t("contact.lede")}</p>
           <a href="#contact-form" className="btn btn-solid btn-gold btn-large contact-cta">{t("contact.book")}</a>
@@ -74,48 +170,96 @@ export default function ContactSection() {
               <div className="form-row">
                 <div className="form-group">
                   <label htmlFor="c-name">{t("contact.form.name")}</label>
-                  <input type="text" id="c-name" name="name" placeholder={t("contact.form.namePh")} required />
+                  <input
+                    type="text" id="c-name" name="name"
+                    placeholder={t("contact.form.namePh")}
+                    aria-invalid={!!fieldErrors.name}
+                    aria-describedby={fieldErrors.name ? "err-name" : undefined}
+                    onChange={() => fieldErrors.name && setFieldErrors(p => ({ ...p, name: "" }))}
+                  />
+                  {fieldErrors.name && <span id="err-name" className="field-error" role="alert">{fieldErrors.name}</span>}
                 </div>
                 <div className="form-group">
                   <label htmlFor="c-company">{t("contact.form.company")}</label>
-                  <input type="text" id="c-company" name="company" placeholder={t("contact.form.companyPh")} required />
+                  <input type="text" id="c-company" name="company" placeholder={t("contact.form.companyPh")} />
                 </div>
               </div>
               <div className="form-row">
                 <div className="form-group">
                   <label htmlFor="c-email">{t("contact.form.email")}</label>
-                  <input type="email" id="c-email" name="email" placeholder={t("contact.form.emailPh")} required />
+                  <input
+                    type="email" id="c-email" name="email"
+                    placeholder={t("contact.form.emailPh")}
+                    aria-invalid={!!fieldErrors.email}
+                    aria-describedby={fieldErrors.email ? "err-email" : undefined}
+                    onChange={() => fieldErrors.email && setFieldErrors(p => ({ ...p, email: "" }))}
+                  />
+                  {fieldErrors.email && <span id="err-email" className="field-error" role="alert">{fieldErrors.email}</span>}
                 </div>
                 <div className="form-group">
                   <label htmlFor="c-phone">{t("contact.form.phone")}</label>
-                  <input type="tel" id="c-phone" name="phone" placeholder={t("contact.form.phonePh")} required />
+                  <input
+                    type="tel" id="c-phone" name="phone"
+                    placeholder={t("contact.form.phonePh")}
+                    aria-invalid={!!fieldErrors.phone}
+                    aria-describedby={fieldErrors.phone ? "err-phone" : undefined}
+                    onChange={() => fieldErrors.phone && setFieldErrors(p => ({ ...p, phone: "" }))}
+                  />
+                  {fieldErrors.phone && <span id="err-phone" className="field-error" role="alert">{fieldErrors.phone}</span>}
                 </div>
               </div>
               <div className="form-row">
                 <div className="form-group">
                   <label htmlFor="c-service">{t("contact.form.service")}</label>
-                  <select id="c-service" name="service" required defaultValue="">
-                  <option value="" disabled>{t("contact.form.servicePh")}</option>
-                  <option value="manpower">{t("contact.form.serviceManpower")}</option>
-                  <option value="equipment">{t("contact.form.serviceEquipment")}</option>
-                  <option value="civil">{t("contact.form.serviceCivil")}</option>
-                  <option value="mep">{t("contact.form.serviceMep")}</option>
-                  <option value="cleaning">{t("contact.form.serviceCleaning")}</option>
-                  <option value="business">{t("contact.form.serviceBusiness")}</option>
-                </select>
+                  <select
+                    id="c-service" name="service" defaultValue=""
+                    aria-invalid={!!fieldErrors.service}
+                    aria-describedby={fieldErrors.service ? "err-service" : undefined}
+                    onChange={() => fieldErrors.service && setFieldErrors(p => ({ ...p, service: "" }))}
+                  >
+                    <option value="" disabled>{t("contact.form.servicePh")}</option>
+                    <option value="manpower">{t("contact.form.serviceManpower")}</option>
+                    <option value="equipment">{t("contact.form.serviceEquipment")}</option>
+                    <option value="civil">{t("contact.form.serviceCivil")}</option>
+                    <option value="mep">{t("contact.form.serviceMep")}</option>
+                    <option value="cleaning">{t("contact.form.serviceCleaning")}</option>
+                    <option value="business">{t("contact.form.serviceBusiness")}</option>
+                  </select>
+                  {fieldErrors.service && <span id="err-service" className="field-error" role="alert">{fieldErrors.service}</span>}
                 </div>
                 <div className="form-group">
                   <label htmlFor="c-date">{t("contact.form.preferredDate")}</label>
-                  <input type="datetime-local" id="c-date" name="preferredDate" />
+                  <input
+                    type="datetime-local" id="c-date" name="preferredDate"
+                    min={localNow()}
+                    aria-invalid={!!fieldErrors.preferredDate}
+                    aria-describedby={fieldErrors.preferredDate ? "err-date" : undefined}
+                    onChange={() => fieldErrors.preferredDate && setFieldErrors(p => ({ ...p, preferredDate: "" }))}
+                    onClick={(e) => e.target.showPicker?.()}
+                  />
+                  {fieldErrors.preferredDate && <span id="err-date" className="field-error" role="alert">{fieldErrors.preferredDate}</span>}
                 </div>
               </div>
               <div className="form-group">
                 <label htmlFor="c-message">{t("contact.form.message")}</label>
-                <textarea id="c-message" name="message" placeholder={t("contact.form.messagePh")} rows={5} required></textarea>
+                <textarea
+                  id="c-message" name="message"
+                  placeholder={t("contact.form.messagePh")} rows={5}
+                  aria-invalid={!!fieldErrors.message}
+                  aria-describedby={fieldErrors.message ? "err-message" : undefined}
+                  onChange={() => fieldErrors.message && setFieldErrors(p => ({ ...p, message: "" }))}
+                />
+                {fieldErrors.message && <span id="err-message" className="field-error" role="alert">{fieldErrors.message}</span>}
               </div>
               <div className="form-consent">
-                <input type="checkbox" id="c-consent" name="consent" required />
+                <input
+                  type="checkbox" id="c-consent" name="consent"
+                  aria-invalid={!!fieldErrors.consent}
+                  aria-describedby={fieldErrors.consent ? "err-consent" : undefined}
+                  onChange={() => fieldErrors.consent && setFieldErrors(p => ({ ...p, consent: "" }))}
+                />
                 <label htmlFor="c-consent">{t("contact.form.consent")}</label>
+                {fieldErrors.consent && <span id="err-consent" className="field-error" role="alert" style={{ display: "block", marginTop: "4px" }}>{fieldErrors.consent}</span>}
               </div>
               <button type="submit" className="btn btn-solid btn-gold btn-block" disabled={status === "sending"}>
                 {status === "sending" ? t("contact.form.sending") : t("contact.form.submit")}
@@ -137,15 +281,13 @@ export default function ContactSection() {
             </div>
             <div className="info-block">
               <h4>{t("contact.info.phone")}</h4>
-              <p><a href={PHONE_TEL}>+974 6655 7728</a> <span style={{ color: "var(--accent)", fontSize: 11, letterSpacing: 1 }}>(WhatsApp)</span></p>
-              <p><a href="tel:+97444354422">+974 4435 4422</a></p>
-              <p><a href="tel:+97444351112">+974 4435 1112</a></p>
-              <p>Fax: +974 4431 1474</p>
+              <p><a href={PHONE_TEL}>{PHONE}</a></p>
+              <p><a href={PHONE_2_TEL}>{PHONE_2}</a> <span style={{ color: "var(--accent)", fontSize: 11, letterSpacing: 1 }}>(WhatsApp)</span></p>
             </div>
             <div className="info-block">
               <h4>{t("contact.info.email")}</h4>
               <p><a href={`mailto:${EMAIL}`}>{EMAIL}</a></p>
-              <p><a href="https://www.nasseralaligroup.com" target="_blank" rel="noopener noreferrer">www.nasseralaligroup.com</a></p>
+              <p><a href="https://www.nasseralalienterprises.com" target="_blank" rel="noopener noreferrer">www.nasseralalienterprises.com</a></p>
             </div>
             <div className="contact-quick">
               <a href={PHONE_TEL} className="btn btn-solid btn-gold">
@@ -179,18 +321,17 @@ export default function ContactSection() {
             </>
           ) : (
             <div className="consent-gate-placeholder">
-              <div>
-                {t("contact.map.consent")}<br/>
-                <button type="button" className="btn btn-solid btn-gold" onClick={() => setMapConsented(true)}>
+              <svg className="consent-gate-icon" width="32" height="32" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="M20.5 10c0 6-8.5 12-8.5 12S3.5 16 3.5 10a8.5 8.5 0 0 1 17 0Z"/>
+                <circle cx="12" cy="10" r="3"/>
+              </svg>
+              <p className="consent-gate-text">{t("contact.map.consent")}</p>
+              <div className="consent-gate-actions">
+                <button type="button" className="btn btn-solid btn-gold" onClick={openConsentPrefs}>
                   {t("contact.map.manage")}
-                </button><br/>
-                <a
-                  className="map-link"
-                  style={{ position: "static", marginTop: 10, display: "inline-block" }}
-                  href={MAP_LINK}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
+                </button>
+                <a className="btn btn-outline btn-gold" href={MAP_LINK} target="_blank" rel="noopener noreferrer">
                   {t("contact.map.open")}
                 </a>
               </div>

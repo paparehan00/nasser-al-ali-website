@@ -22,12 +22,11 @@ function EnglishBody() {
       <ul>
         <li><strong>Office:</strong> Salwa Road, Building-155, Zone 43, Doha, State of Qatar</li>
         <li><strong>Postal:</strong> P.O. Box 13115, Doha, Qatar</li>
-        <li><strong>Email:</strong> <a href="mailto:info@nasseralaligroup.com">info@nasseralaligroup.com</a></li>
-        <li><strong>Phone / WhatsApp:</strong> +974 6655 7728</li>
-        <li><strong>Landlines:</strong> +974 4435 4422 · +974 4435 1112</li>
-        <li><strong>Fax:</strong> +974 4431 1474</li>
+        <li><strong>Email:</strong> <a href="mailto:info@nasseralalienterprises.com">info@nasseralalienterprises.com</a></li>
+        <li><strong>Mobile:</strong> +974 5586 1100 · +974 5559 6774</li>
+        <li><strong>WhatsApp:</strong> +974 5559 6774</li>
       </ul>
-      <div className="callout"><strong>Data-protection contact:</strong> <a href="mailto:info@nasseralaligroup.com">info@nasseralaligroup.com</a></div>
+      <div className="callout"><strong>Data-protection contact:</strong> <a href="mailto:info@nasseralalienterprises.com">info@nasseralalienterprises.com</a></div>
 
       <h2>2. Legal basis</h2>
       <p>We process personal data in accordance with <strong>Qatar Law No. 13 of 2016</strong> on the Protection of Personal Data Privacy (the "PDPPL") and its implementing decisions issued by the Compliance and Data Protection Department of the Ministry of Communications and Information Technology (MCIT). For visitors from other jurisdictions we also align with GDPR best practice.</p>
@@ -80,10 +79,10 @@ function EnglishBody() {
       <p>Some of the providers above (our website host, Google, Calendly, Meta) may process personal data outside Qatar. Where this happens, we require them to apply protections equivalent to Qatari standards, in line with Article 18 of the PDPPL, and to comply with their own applicable data-protection regimes (e.g. GDPR, EU-U.S. Data Privacy Framework).</p>
 
       <h2>8. How long we keep your data</h2>
-      <p>We keep data only for as long as we need it for the purpose we collected it, plus any period required by law. Contact us at <a href="mailto:info@nasseralaligroup.com">info@nasseralaligroup.com</a> for the current retention schedule.</p>
+      <p>We keep data only for as long as we need it for the purpose we collected it, plus any period required by law. Contact us at <a href="mailto:info@nasseralalienterprises.com">info@nasseralalienterprises.com</a> for the current retention schedule.</p>
 
       <h2>9. Your rights</h2>
-      <p>Under the PDPPL (and equivalent international regimes), you have the right to: be informed, access a copy of your data, request correction, object to processing, request deletion, and withdraw consent. Email <a href="mailto:info@nasseralaligroup.com">info@nasseralaligroup.com</a> with the subject line "Data request". We aim to respond within 30 days.</p>
+      <p>Under the PDPPL (and equivalent international regimes), you have the right to: be informed, access a copy of your data, request correction, object to processing, request deletion, and withdraw consent. Email <a href="mailto:info@nasseralalienterprises.com">info@nasseralalienterprises.com</a> with the subject line "Data request". We aim to respond within 30 days.</p>
 
       <h2>10. Cookies and analytics</h2>
       <p>We use a small number of first-party items and (with your consent) Google Analytics. See our <a href="/cookies">Cookie Policy</a> for details.</p>
@@ -98,7 +97,7 @@ function EnglishBody() {
       <p>We may update this policy from time to time. Material changes will be highlighted at the top of this page.</p>
 
       <h2>14. Contact us</h2>
-      <p>Nasser Al Ali Enterprises · Salwa Road, Building-155, Zone 43, Doha, State of Qatar · P.O. Box 13115, Doha, Qatar · <a href="mailto:info@nasseralaligroup.com">info@nasseralaligroup.com</a> · +974 6655 7728</p>
+      <p>Nasser Al Ali Enterprises · Salwa Road, Building-155, Zone 43, Doha, State of Qatar · P.O. Box 13115, Doha, Qatar · <a href="mailto:info@nasseralalienterprises.com">info@nasseralalienterprises.com</a> · +974 5586 1100</p>
     </>
   );
 }
@@ -112,12 +111,11 @@ function ArabicBody() {
       <ul>
         <li><strong>المكتب:</strong> طريق سلوى، مبنى 155، المنطقة 43، الدوحة، دولة قطر</li>
         <li><strong>البريدي:</strong> ص.ب 13115، الدوحة، قطر</li>
-        <li><strong>البريد الإلكتروني:</strong> <a href="mailto:info@nasseralaligroup.com">info@nasseralaligroup.com</a></li>
-        <li><strong>الهاتف / واتساب:</strong> +974 6655 7728</li>
-        <li><strong>الخطوط الأرضية:</strong> +974 4435 4422 · +974 4435 1112</li>
-        <li><strong>الفاكس:</strong> +974 4431 1474</li>
+        <li><strong>البريد الإلكتروني:</strong> <a href="mailto:info@nasseralalienterprises.com">info@nasseralalienterprises.com</a></li>
+        <li><strong>الجوال:</strong> +974 5586 1100 · +974 5559 6774</li>
+        <li><strong>واتساب:</strong> +974 5559 6774</li>
       </ul>
-      <div className="callout"><strong>جهة اتصال حماية البيانات:</strong> <a href="mailto:info@nasseralaligroup.com">info@nasseralaligroup.com</a></div>
+      <div className="callout"><strong>جهة اتصال حماية البيانات:</strong> <a href="mailto:info@nasseralalienterprises.com">info@nasseralalienterprises.com</a></div>
 
       <h2>2. الأساس القانوني</h2>
       <p>نُعالج البيانات الشخصية وفقًا لأحكام <strong>القانون القطري رقم 13 لسنة 2016</strong> بشأن حماية خصوصية البيانات الشخصية ("قانون حماية البيانات")، والقرارات التنفيذية الصادرة عن إدارة الامتثال وحماية البيانات في وزارة المواصلات والاتصالات وتقنية المعلومات. كما نلتزم بأفضل ممارسات اللائحة العامة لحماية البيانات (GDPR) للزائرين من الدول الأخرى.</p>
@@ -170,10 +168,10 @@ function ArabicBody() {
       <p>قد تُعالج بعض شركات الطرف الثالث المذكورة أعلاه (مزوّد الاستضافة، Google، Calendly، Meta) البيانات خارج قطر. في هذه الحالة، نطلب منهم تطبيق حماية مُكافئة للمعايير القطرية بما يتماشى مع المادة 18 من قانون حماية البيانات، والامتثال لأنظمتهم الخاصة (GDPR وإطار خصوصية البيانات بين الاتحاد الأوروبي والولايات المتحدة).</p>
 
       <h2>8. مدة الاحتفاظ بالبيانات</h2>
-      <p>نحتفظ بالبيانات فقط للفترة اللازمة للغرض الذي جُمعت لأجله، مضافًا إليها أي فترة يتطلبها القانون. للاطلاع على جدول الاحتفاظ الحالي، راسلنا على <a href="mailto:info@nasseralaligroup.com">info@nasseralaligroup.com</a>.</p>
+      <p>نحتفظ بالبيانات فقط للفترة اللازمة للغرض الذي جُمعت لأجله، مضافًا إليها أي فترة يتطلبها القانون. للاطلاع على جدول الاحتفاظ الحالي، راسلنا على <a href="mailto:info@nasseralalienterprises.com">info@nasseralalienterprises.com</a>.</p>
 
       <h2>9. حقوقك</h2>
-      <p>وفقًا لقانون حماية البيانات القطري (والأنظمة الدولية المعادلة)، يحق لك: الاطلاع، الحصول على نسخة من بياناتك، طلب التصحيح، الاعتراض على المعالجة، طلب الحذف، وسحب الموافقة. راسلنا على <a href="mailto:info@nasseralaligroup.com">info@nasseralaligroup.com</a> مع عنوان الرسالة "طلب بيانات". نستهدف الرد خلال 30 يومًا.</p>
+      <p>وفقًا لقانون حماية البيانات القطري (والأنظمة الدولية المعادلة)، يحق لك: الاطلاع، الحصول على نسخة من بياناتك، طلب التصحيح، الاعتراض على المعالجة، طلب الحذف، وسحب الموافقة. راسلنا على <a href="mailto:info@nasseralalienterprises.com">info@nasseralalienterprises.com</a> مع عنوان الرسالة "طلب بيانات". نستهدف الرد خلال 30 يومًا.</p>
 
       <h2>10. ملفات تعريف الارتباط والتحليلات</h2>
       <p>نستخدم عددًا محدودًا من العناصر الأساسية و(بموافقتك) Google Analytics. للتفاصيل، راجع <a href="/cookies">سياسة الكوكيز</a>.</p>
@@ -188,7 +186,7 @@ function ArabicBody() {
       <p>قد نُحدّث هذه السياسة من وقت لآخر. سيتم إبراز أي تغييرات جوهرية في أعلى الصفحة.</p>
 
       <h2>14. تواصل معنا</h2>
-      <p>ناصر العلي للمقاولات · طريق سلوى، مبنى 155، المنطقة 43، الدوحة، دولة قطر · ص.ب 13115، الدوحة، قطر · <a href="mailto:info@nasseralaligroup.com">info@nasseralaligroup.com</a> · +974 6655 7728</p>
+      <p>ناصر العلي للمقاولات · طريق سلوى، مبنى 155، المنطقة 43، الدوحة، دولة قطر · ص.ب 13115، الدوحة، قطر · <a href="mailto:info@nasseralalienterprises.com">info@nasseralalienterprises.com</a> · +974 5586 1100</p>
     </>
   );
 }

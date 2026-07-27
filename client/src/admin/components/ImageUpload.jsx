@@ -2,7 +2,7 @@ import { useCallback, useRef, useState } from "react";
 import { useToast } from "../ToastContext.jsx";
 
 // Sections whose policy is null on the server — image uploads disallowed.
-const NO_UPLOAD_SECTIONS = new Set(["stats", "numbers"]);
+const NO_UPLOAD_SECTIONS = new Set(["stats", "numbers", "careers"]);
 
 export default function ImageUpload({ sectionKey, value, onChange }) {
   const toast = useToast();

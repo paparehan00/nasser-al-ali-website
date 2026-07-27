@@ -76,3 +76,23 @@ CREATE TABLE IF NOT EXISTS bookings (
 );
 
 CREATE INDEX IF NOT EXISTS idx_bookings_created ON bookings(created_at DESC);
+
+-- Careers page job applications. job_id references content_items.id (the
+-- specific job the applicant applied to) but isn't a hard FK — if a job
+-- posting is later deleted, its past applications should stay on record
+-- rather than being cascade-deleted.
+CREATE TABLE IF NOT EXISTS applications (
+  id            INTEGER PRIMARY KEY AUTOINCREMENT,
+  job_id        INTEGER,
+  job_title     TEXT,
+  name          TEXT NOT NULL,
+  email         TEXT NOT NULL,
+  phone         TEXT,
+  message       TEXT,
+  cv_path       TEXT,
+  ip            TEXT,
+  email_sent    INTEGER NOT NULL DEFAULT 0,
+  created_at    INTEGER NOT NULL DEFAULT (unixepoch())
+);
+
+CREATE INDEX IF NOT EXISTS idx_applications_created ON applications(created_at DESC);

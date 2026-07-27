@@ -114,17 +114,30 @@ export default function SectionEditor() {
   const previewTimer = useRef(null);
 
   // ─── Load ──────────────────────────────────────────────────────
+  // Guards against an out-of-order response: if the user switches sections
+  // quickly (e.g. clicks a heavy section, then clicks Careers before that
+  // first request finishes), a slow response for the section they left can
+  // arrive after the fast response for the one they're now on and silently
+  // overwrite it with stale data — URL shows the new section, content shows
+  // the old one, and it only "fixes itself" on a full refresh. requestKeyRef
+  // tracks which key is actually still current so a late response for an
+  // abandoned key gets dropped instead of applied.
+  const requestKeyRef = useRef(null);
+
   const load = useCallback(async () => {
+    requestKeyRef.current = key;
     setLoading(true);
     try {
       const res = await adminApi.getSection(key);
+      if (requestKeyRef.current !== key) return; // superseded by a newer navigation
       setSection(res.section);
       setItems(res.items);
       setView("list");
     } catch (err) {
+      if (requestKeyRef.current !== key) return;
       toast.error(err instanceof ApiError ? err.message : "Failed to load section");
     } finally {
-      setLoading(false);
+      if (requestKeyRef.current === key) setLoading(false);
     }
   }, [key, toast]);
 

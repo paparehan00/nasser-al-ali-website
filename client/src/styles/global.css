@@ -2,20 +2,32 @@
    Design System & Variables
    ========================================================================== */
 :root {
-  --bg-base: #0B1F3A;
-  --bg-elevated: #0F2647;
-  --bg-card: #12294D;
-  --bg-deep: #071427;
-  --text: #FFFFFF;
-  --text-muted: #B8C4D6;
-  --border: rgba(255, 255, 255, 0.10);
-  --border-strong: rgba(255, 255, 255, 0.18);
-  --accent: #C9A24B;
-  --accent-hover: #D9B76A;
-  --accent-soft: rgba(201, 162, 75, 0.14);
+  /* Light theme — white/near-white content on a page, blue chrome (header,
+     mega menu, footer) for brand presence, matching the logo's own blue. */
+  --bg-base: #FFFFFF;
+  --bg-elevated: #F3F8FC;
+  --bg-card: #FFFFFF;
+  --bg-deep: #EAF2FA;
+  --text: #0B1F3A;
+  --text-muted: #52657A;
+  --border: rgba(11, 31, 58, 0.12);
+  --border-strong: rgba(11, 31, 58, 0.20);
+  /* Brand blue/green — sampled from the logo's skyline icon (blue) and
+     swoosh (green) so header/footer chrome reads as one identity with it. */
+  --accent: #1C8FD1;
+  --accent-hover: #14719F;
+  --accent-soft: rgba(28, 143, 209, 0.10);
+  --brand-green: #1E8853;
+  --brand-green-soft: rgba(30, 136, 83, 0.12);
   --wa: #25D366;
 
-  --font-heading: 'Montserrat', sans-serif;
+  /* Manrope for display/heading type — distinct geometric character at
+     large sizes without the "generic template" feel of Montserrat, which
+     shows up on countless stock designs. Inter stays for body copy: it's
+     genuinely excellent for long-form reading, and the generic feel came
+     from pairing it with an equally generic display face, not from Inter
+     itself. */
+  --font-heading: 'Manrope', sans-serif;
   --font-body: 'Inter', sans-serif;
 
   --sp-4: 4px;
@@ -24,26 +36,114 @@
   --sp-16: 16px;
   --sp-24: 24px;
   --sp-32: 32px;
+  --sp-40: 40px;
   --sp-48: 48px;
   --sp-64: 64px;
   --sp-96: 96px;
   --sp-128: 128px;
 
   --container: 1280px;
-  --radius: 6px;
-  --radius-lg: 12px;
+  /* Softer, larger radii read as more considered/premium than the sharper
+     6/12px pairing this replaces — every card, button, input, and badge
+     site-wide picks this up automatically since they all reach for these
+     two tokens rather than hardcoding their own radius. */
+  --radius: 10px;
+  --radius-lg: 18px;
 
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.15);
-  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.25);
-  --shadow-lg: 0 20px 48px rgba(0, 0, 0, 0.35);
-  --shadow-gold: 0 12px 28px rgba(201, 162, 75, 0.28);
+  /* Real fixed-header height (measured: 144px unscrolled desktop, 101px
+     mobile — the header is always at least this tall, sometimes a little
+     shorter once scrolled and the top bar collapses) plus a little
+     breathing room. Every anchor-scroll offset and the hero's own top
+     clearance derive from this single value, so if the header's height
+     ever changes, this is the one place to update. */
+  --header-height: 160px;
 
-  --section-pad: var(--sp-128);
+  /* Two-layer shadows — a tight, low-opacity contact shadow for definition
+     plus a soft, larger, diffuse one for depth — read as considerably more
+     refined than a single flat shadow at the same visual weight. */
+  --shadow-sm: 0 1px 2px rgba(16, 38, 64, 0.04), 0 3px 10px rgba(16, 38, 64, 0.06);
+  --shadow-md: 0 2px 6px rgba(16, 38, 64, 0.05), 0 14px 32px rgba(16, 38, 64, 0.10);
+  --shadow-lg: 0 4px 12px rgba(16, 38, 64, 0.06), 0 28px 64px rgba(16, 38, 64, 0.14);
+  --shadow-gold: 0 4px 10px rgba(28, 143, 209, 0.14), 0 14px 32px rgba(28, 143, 209, 0.20);
+
+  /* Single spacing rhythm for every top-level section, site-wide — the base
+     `section` rule below applies this as top+bottom padding so no page or
+     component should ever declare its own section-level padding/margin.
+     --section-pad / --section-header-gap are the working tokens (used
+     throughout this file, incl. calc() expressions below); --space-* are
+     the semantic names for the same values — reach for --space-* in new
+     code, both resolve identically so nothing already using the old names
+     needs to change. */
+  --section-pad: var(--sp-64);           /* --space-section-y: gap above/below every top-level section */
+  --section-header-gap: var(--sp-48);    /* --space-block: heading → content gap inside a section */
+  --space-section-y: var(--section-pad);
+  --space-block: var(--section-header-gap);
+  --space-inline: var(--sp-24);          /* horizontal side padding / gap between inline elements */
+
+  /* Glass system tokens — shared by every frosted surface on light content */
+  --glass-bg:      rgba(255, 255, 255, 0.78);  /* card glass on white/light bg */
+  --glass-bg-hero: rgba(255, 255, 255, 0.07);  /* glass over hero / photo — hero itself stays a dark-scrimmed photo */
+  --glass-bg-panel:rgba(255, 255, 255, 0.92);  /* panel / overlay glass on light content */
+  --glass-blur:    10px;
+  --glass-border:  rgba(11, 31, 58, 0.10);
+  --glass-inset:   inset 0 1px 0 rgba(255, 255, 255, 0.6);
+
+  /* Chrome zone — the fixed dark-blue tokens used by the header, mega menu,
+     and footer (see the `.top-bar, .main-nav, .mega-columns, .site-footer`
+     override below). Kept as named tokens so both "modes" stay adjustable
+     from one place instead of duplicating raw hex through the file. */
+  --chrome-bg-base: #0B1F3A;
+  --chrome-bg-elevated: #0F2647;
+  --chrome-bg-card: #12294D;
+  --chrome-bg-deep: #071427;
+  --chrome-text: #FFFFFF;
+  --chrome-text-muted: #B8C4D6;
+  --chrome-border: rgba(255, 255, 255, 0.10);
+  --chrome-border-strong: rgba(255, 255, 255, 0.18);
+  --chrome-glass-bg: rgba(18, 41, 77, 0.72);
+  --chrome-glass-bg-panel: rgba(15, 38, 71, 0.92);
+  --chrome-glass-border: rgba(255, 255, 255, 0.12);
+  --chrome-glass-inset: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+/* Chrome zone: the header (top bar + main nav, incl. its mobile drawer and
+   mega-menu panels) and the footer intentionally stay on the dark-blue
+   palette regardless of the light theme everywhere else — re-scoping the
+   same token names locally means every existing rule that already reads
+   var(--text-muted), var(--border) etc. inside these zones keeps resolving
+   to the correct dark-on-dark-blue values with no per-selector rewrites. */
+.site-header,
+.site-footer {
+  --bg-base: var(--chrome-bg-base);
+  --bg-elevated: var(--chrome-bg-elevated);
+  --bg-card: var(--chrome-bg-card);
+  --bg-deep: var(--chrome-bg-deep);
+  --text: var(--chrome-text);
+  --text-muted: var(--chrome-text-muted);
+  --border: var(--chrome-border);
+  --border-strong: var(--chrome-border-strong);
+  --glass-bg: var(--chrome-glass-bg);
+  --glass-bg-panel: var(--chrome-glass-bg-panel);
+  --glass-border: var(--chrome-glass-border);
+}
+/* The hero always sits on a photo/video background (not a flat page
+   color), so its own headline/body text needs to stay light regardless of
+   the surrounding theme — only the text tokens are re-scoped here, since
+   the hero doesn't otherwise rely on the bg-* surface tokens. */
+.hero {
+  --text: var(--chrome-text);
+  --text-muted: var(--chrome-text-muted);
+  --glass-inset: var(--chrome-glass-inset);
 }
 
 @media (max-width: 768px) {
   :root {
-    --section-pad: var(--sp-64);
+    /* Mobile header is shorter (no top bar — measured 101px) */
+    --header-height: 112px;
+    --section-pad: var(--sp-48);
+    --section-header-gap: var(--sp-32);
+    --space-section-y: var(--section-pad);
+    --space-block: var(--section-header-gap);
   }
 }
 
@@ -97,16 +197,17 @@ ul {
 h1, h2, h3, h4, .display {
   font-family: var(--font-heading);
   color: var(--text);
-  line-height: 1.15;
+  line-height: 1.12;
   margin-bottom: var(--sp-24);
-  letter-spacing: -0.01em;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
 }
 
 .display { font-size: 72px; font-weight: 800; }
 h1 { font-size: 60px; font-weight: 800; }
-h2 { font-size: 42px; font-weight: 700; }
+h2 { font-size: 42px; font-weight: 800; }
 h3 { font-size: 26px; font-weight: 700; }
-h4 { font-size: 20px; font-weight: 700; }
+h4 { font-size: 20px; font-weight: 700; letter-spacing: -0.01em; }
 
 @media (max-width: 768px) {
   .display { font-size: 40px; }
@@ -166,7 +267,7 @@ section {
 
 /* Subtle gold divider line between sections */
 .section-header {
-  margin-bottom: var(--sp-64);
+  margin-bottom: var(--section-header-gap);
   max-width: 800px;
 }
 .section-header.center {
@@ -265,7 +366,7 @@ section {
 .btn-solid.btn-gold {
   background-color: var(--accent);
   color: var(--bg-base);
-  box-shadow: 0 6px 16px rgba(201, 162, 75, 0.18);
+  box-shadow: 0 6px 16px rgba(28, 143, 209, 0.18);
 }
 .btn-solid.btn-gold:hover {
   background-color: var(--accent-hover);
@@ -287,7 +388,7 @@ section {
   background: transparent;
 }
 .btn-outline.btn-gold:hover {
-  background-color: rgba(201, 162, 75, 0.1);
+  background-color: rgba(28, 143, 209, 0.1);
   border-color: var(--accent-hover);
   color: var(--accent-hover);
 }
@@ -318,70 +419,365 @@ section {
 }
 
 /* ==========================================================================
-   Sticky Nav
+   Announcement bar — thin, dismissible strip above the header, shown only
+   when there's an active Promotions & Announcements item (see
+   AnnouncementBar.jsx). Sits above .site-header in both z-index and visual
+   position; the header's own `top` offset (see .site-header) is what makes
+   room for it, not stacking order.
    ========================================================================== */
-.site-header {
+.announce-bar {
   position: fixed;
   top: 0; left: 0; width: 100%;
+  z-index: 1001;
+  background: linear-gradient(90deg, var(--accent), var(--brand-green) 130%);
+  color: #fff;
+  animation: announceIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+}
+@keyframes announceIn {
+  from { opacity: 0; transform: translateY(-100%); }
+  to   { opacity: 1; transform: none; }
+}
+.announce-bar-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-12);
+  padding: 9px var(--sp-16);
+  font-size: 13px;
+  line-height: 1.4;
+}
+.announce-bar-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 600;
+}
+.announce-bar-link {
+  flex-shrink: 0;
+  color: #fff;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  white-space: nowrap;
+}
+.announce-bar-link:hover { opacity: 0.85; }
+.announce-bar-close {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  margin-left: var(--sp-8);
+  background: rgba(255,255,255,0.15);
+  border: none;
+  border-radius: 50%;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+.announce-bar-close:hover { background: rgba(255,255,255,0.28); }
+html[dir="rtl"] .announce-bar-close { margin-left: 0; margin-right: var(--sp-8); }
+@media (max-width: 600px) {
+  .announce-bar-inner { padding: 8px var(--sp-12); font-size: 12px; gap: var(--sp-8); }
+  .announce-bar-text { max-width: 55vw; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .announce-bar { animation: none; }
+}
+
+/* ==========================================================================
+   Sticky Nav
+   ========================================================================== */
+/* ── Top utility bar ─────────────────────────────────────────────────────── */
+.top-bar {
+  background: var(--bg-deep);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  padding: 7px 0;
+  /* Collapse smoothly when nav becomes sticky */
+  overflow: hidden;
+  max-height: 44px;
+  opacity: 1;
+  transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 0.2s ease,
+              padding 0.3s ease;
+}
+.site-header.scrolled .top-bar {
+  max-height: 0;
+  opacity: 0;
+  padding: 0;
+  pointer-events: none;
+}
+
+.top-bar-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-16);
+}
+
+.top-bar-contact {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.top-bar-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11.5px;
+  color: var(--text-muted);
+  text-decoration: none;
+  letter-spacing: 0.2px;
+  white-space: nowrap;
+  padding: 3px 4px;
+  border-radius: 4px;
+  transition: color 0.2s ease, background 0.2s ease;
+  min-height: 28px; /* accessible tap target */
+}
+.top-bar-link:hover { color: var(--accent); background: rgba(28, 143, 209, 0.08); }
+.top-bar-link:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; color: var(--accent); }
+
+.top-bar-sep {
+  color: rgba(255, 255, 255, 0.18);
+  font-size: 11px;
+  padding: 0 3px;
+  user-select: none;
+}
+
+.top-bar-socials {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.top-bar-social-btn {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.10);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  text-decoration: none;
+  transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+  flex-shrink: 0;
+}
+.top-bar-social-btn:hover {
+  color: var(--accent);
+  background: rgba(28, 143, 209, 0.15);
+  border-color: rgba(28, 143, 209, 0.45);
+}
+.top-bar-social-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  color: var(--accent);
+}
+
+/* Mobile: hide entire top bar — email/phone live in the navbar row on mobile */
+@media (max-width: 768px) {
+  .top-bar { display: none; }
+}
+
+/* ── Sticky nav ──────────────────────────────────────────────────────────── */
+.site-header {
+  position: fixed;
+  /* Slides down to clear the announcement bar when one is showing —
+     AnnouncementBar.jsx sets this custom property to its own measured
+     height, and falls back to 0px (i.e. the header sits at the very top)
+     whenever the bar is hidden or absent. */
+  top: var(--announce-height, 0px);
+  left: 0; width: 100%;
   z-index: 1000;
-  padding: var(--sp-16) 0;
-  transition: background-color 0.3s ease, backdrop-filter 0.3s ease, border-bottom 0.3s ease, padding 0.3s ease;
+  padding: 0; /* top-bar and header-container each own their vertical space */
+  transition: background-color 0.3s ease, backdrop-filter 0.3s ease, border-bottom 0.3s ease, top 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   border-bottom: 1px solid transparent;
+  /* The header is chrome, always dark, on every page — never fully
+     transparent. Most pages now have a white/light section directly under
+     it, so a fully see-through header would show white text on white the
+     instant the page loads, before `scrolled` has a chance to kick in.
+     This stays translucent enough to still read as "over the hero photo"
+     on Home, and gets more opaque + blurred once scrolled for legibility
+     over busy content. */
+  background-color: rgba(11, 31, 58, 0.55);
+  backdrop-filter: blur(8px);
 }
 .site-header.scrolled {
-  background-color: rgba(11, 31, 58, 0.85);
+  background-color: rgba(11, 31, 58, 0.92);
   backdrop-filter: blur(14px);
   border-bottom: 1px solid var(--border);
-  padding: var(--sp-12) 0;
 }
 .header-container {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  padding: var(--sp-16) 0;
+  transition: padding 0.3s ease;
 }
+.site-header.scrolled .header-container {
+  padding: var(--sp-12) 0;
+}
+
+/* RTL: mirror the top-bar layout */
+html[dir="rtl"] .top-bar-inner { flex-direction: row-reverse; }
+
+/* Mobile-only contact icons embedded in the navbar row */
+.nav-contact-icon {
+  display: none; /* desktop: top-bar handles contact info */
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  text-decoration: none;
+  flex-shrink: 0;
+  transition: color 0.2s ease;
+}
+.nav-contact-icon:hover    { color: var(--accent); }
+.nav-contact-icon:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  color: var(--accent);
+}
+@media (max-width: 768px) {
+  .nav-contact-icon { display: inline-flex; }
+
+  /* Strip glassmorphism panel from logo-area on mobile — it adds vertical
+     height to the fixed navbar and causes section eyebrow text to scroll
+     under the logo at 375–390 px viewports. */
+  .logo-area {
+    padding: 0;
+    background: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border: none;
+    box-shadow: none;
+  }
+}
+
 .logo-link {
   display: flex;
   align-items: center;
   gap: var(--sp-12);
 }
+
+/* Standard-size logo mark on a light chip — the blue/green mark pops far
+   harder on near-white than on the dark navy header. An animated brand-color
+   halo rings the chip for the "alive" professional touch. */
+.logo-glow-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background: linear-gradient(150deg, #ffffff 0%, #e9f4fc 100%);
+  padding: 5px 10px;
+  border-radius: 10px;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.30), inset 0 1px 0 rgba(255, 255, 255, 0.95);
+}
+.logo-glow {
+  position: absolute;
+  inset: -9px;
+  border-radius: 16px;
+  /* transparent center: the halo rings the chip instead of washing over it */
+  background: radial-gradient(ellipse at center,
+    transparent 42%,
+    rgba(28, 143, 209, 0.42) 63%,
+    rgba(30, 136, 83, 0.22) 80%,
+    transparent 94%);
+  filter: blur(6px);
+  animation: logoGlowPulse 4.5s ease-in-out infinite;
+  z-index: 0;
+  pointer-events: none;
+}
+@keyframes logoGlowPulse {
+  0%, 100% { opacity: 0.55; transform: scale(0.96); }
+  50%      { opacity: 1;    transform: scale(1.08); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .logo-glow { animation: none; opacity: 0.7; }
+}
 .logo-img {
-  height: 40px;
+  position: relative;
+  z-index: 1;
+  height: 44px;
+  width: auto;
+  display: block;
 }
-.logo-text {
-  font-family: var(--font-heading);
-  font-weight: 700;
-  font-size: 16px;
-  letter-spacing: 0.2px;
-  display: none;
+/* The wordmark text is baked into the logo mark itself; a separate text
+   node next to it is redundant and collides with the wider nav. */
+.logo-text { display: none; }
+
+/* ==========================================================================
+   Glass Utility — single source of truth; apply site-wide via variables
+   ========================================================================== */
+
+/* Explicit utility class for templates and future components */
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-md), var(--glass-inset);
+  border-radius: var(--radius-lg);
 }
-@media (min-width: 1100px) {
-  .logo-text { display: block; }
+
+/* Logo panel — hero glass (light, over photo backdrop) */
+.logo-area {
+  padding: 6px 14px;
+  background: var(--glass-bg-hero);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  border-radius: 12px;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.18), var(--glass-inset);
+  transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
-.main-nav ul {
+.site-header.scrolled .logo-area {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.09);
+  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.12);
+}
+
+.main-nav > ul {
   display: flex;
-  gap: var(--sp-32);
+  align-items: center;
+  gap: var(--sp-4);
 }
 .nav-link {
-  font-weight: 500;
-  font-size: 14px;
+  display: inline-block;
+  font-weight: 600;
+  font-size: 13.5px;
   color: var(--text-muted);
   position: relative;
-  padding: 4px 0;
+  padding: 11px 14px;
+  border-radius: 9px;
   letter-spacing: 0.3px;
+  white-space: nowrap;
+  transition: color 0.2s ease, background 0.2s ease;
 }
 .nav-link::after {
   content: '';
   position: absolute;
-  bottom: -2px;
-  left: 0;
-  width: 100%;
+  bottom: 3px;
+  left: 14px;
+  right: 14px;
   height: 2px;
-  background-color: var(--accent);
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--accent), var(--brand-green));
   transform: scaleX(0);
   transform-origin: right;
   transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
-.nav-link:hover { color: var(--text); }
+.nav-link:hover {
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.07);
+}
 .nav-link:hover::after {
   transform: scaleX(1);
   transform-origin: left;
@@ -411,12 +807,446 @@ section {
     padding: 100px var(--sp-24);
     transition: 0.4s ease;
     border-left: 1px solid var(--border);
+    overflow-y: auto;
   }
   .main-nav.active { right: 0; }
-  .main-nav ul { flex-direction: column; }
+  .main-nav > ul { flex-direction: column; }
   .mobile-menu-toggle { display: block; }
   .header-call { display: none; }
 }
+
+/* ==========================================================================
+   Mega menu nav — multi-column dropdown panels; the top-bar hides on scroll
+   but this nav (and its panels) stays fixed in place, per the "mega menu
+   stays fixed" requirement.
+   ========================================================================== */
+
+/* Row that holds the nav-link + chevron button side by side */
+.nav-link-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  position: relative;
+}
+
+/* Chevron toggle button — visible and clickable on every viewport size, not
+   just mobile. Hover already opens the panel for mouse users, but hover can
+   fail or feel imprecise (trackpads, hybrid touch laptops, fast pointer
+   movement), so there's always an explicit, generously-sized click target
+   too. min-width/min-height give a real ~36px hit box even though the
+   visible chevron glyph stays small. */
+.dropdown-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  min-width: 36px;
+  min-height: 36px;
+  padding: 4px;
+  color: var(--text-muted);
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  transition: color 0.2s ease, background 0.2s ease;
+}
+.dropdown-btn:hover { color: var(--text); background: rgba(255, 255, 255, 0.07); }
+.dropdown-chevron {
+  transition: transform 0.25s ease;
+}
+.dropdown-chevron.open {
+  transform: rotate(180deg);
+}
+
+.has-mega {
+  position: relative;
+}
+
+/* The dropdown panel — compact, anchored under its trigger and sized to its
+   content (a full-bleed bar under a four-link column read as a huge empty
+   box; shrink-wrapping looks intentional and modern). */
+.mega-panel {
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  /* padding-top provides the visual gap without creating a hover dead-zone —
+     kept generous so a diagonal mouse path from trigger to panel content
+     never crosses genuinely empty space. */
+  padding-top: var(--sp-16);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(-50%) translateY(-8px);
+  transition: opacity 0.15s ease, transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 200;
+}
+.mega-columns {
+  width: max-content;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sp-40);
+  background: linear-gradient(180deg, rgba(15, 38, 71, 0.97), rgba(11, 31, 58, 0.94));
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid var(--glass-border);
+  border-radius: 14px;
+  padding: 18px 22px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5), var(--glass-inset);
+  position: relative;
+  overflow: hidden;
+}
+/* Brand-gradient accent bar across the panel's top edge */
+.mega-columns::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent), var(--brand-green) 55%, transparent 90%);
+}
+html[dir="rtl"] .mega-columns::before {
+  background: linear-gradient(270deg, var(--accent), var(--brand-green) 55%, transparent 90%);
+}
+.mega-col {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: max-content;
+  min-width: 170px;
+}
+.mega-col-heading {
+  display: block;
+  font-family: var(--font-heading);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--accent);
+  text-align: left;
+  margin-bottom: var(--sp-8);
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+}
+html[dir="rtl"] .mega-col-heading { text-align: right; }
+/* align-items: stretch is explicit here (not just relying on the flex
+   default) because `.main-nav > ul` sets align-items: center for the
+   top-level horizontal nav — without this, a bug upstream in that rule
+   (or any future one like it) silently re-centers every item by its own
+   text width instead of a uniform left edge. */
+.mega-col ul {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 2px;
+}
+.mega-link {
+  display: block;
+  position: relative;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 8px 0;
+  font-size: 13.5px;
+  text-align: left;
+  color: var(--text-muted);
+  letter-spacing: 0.2px;
+  white-space: nowrap;
+  transition: color 0.2s ease, padding 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+/* Slide-in caret on hover */
+.mega-link::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 5px;
+  height: 5px;
+  border-right: 1.6px solid var(--accent);
+  border-top: 1.6px solid var(--accent);
+  transform: translateY(-50%) translateX(-8px) rotate(45deg);
+  opacity: 0;
+  transition: opacity 0.2s ease, transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.mega-link:hover {
+  color: var(--text);
+  padding-left: 15px;
+}
+.mega-link:hover::before {
+  opacity: 1;
+  transform: translateY(-50%) translateX(0) rotate(45deg);
+}
+html[dir="rtl"] .mega-link::before {
+  left: auto;
+  right: 0;
+  transform: translateY(-50%) translateX(8px) rotate(225deg);
+}
+html[dir="rtl"] .mega-link:hover { padding-left: 0; padding-right: 15px; }
+html[dir="rtl"] .mega-link:hover::before {
+  transform: translateY(-50%) translateX(0) rotate(225deg);
+}
+
+/* Desktop: visibility is driven entirely by the `.mega-open` class (JS
+   hover-intent with a close delay — see Header.jsx), NOT raw CSS :hover.
+   A pure-CSS :hover panel closes the instant the pointer crosses the small
+   gap between the trigger and the panel, before a click can land; the JS
+   state keeps it open through that gap and only closes after a delay. */
+@media (min-width: 993px) {
+  .has-mega.mega-open .mega-panel {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateX(-50%) translateY(0);
+  }
+  /* Chevron rotation is driven by the `.open` class applied directly in
+     JSX from the same `isOpen` state — no separate hover rule needed. */
+}
+
+/* Mobile: stack columns, show only when toggled open */
+@media (max-width: 992px) {
+  .dropdown-btn { display: flex; }
+  .mega-panel {
+    position: static;
+    opacity: 1;
+    pointer-events: auto;
+    transform: none;
+    padding-top: 0;
+    display: none;
+  }
+  .has-mega.mega-open .mega-panel { display: block; }
+  .mega-columns {
+    flex-direction: column;
+    gap: var(--sp-20);
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    backdrop-filter: none;
+    padding: var(--sp-8) 0 var(--sp-8) var(--sp-16);
+    border-left: 2px solid var(--border);
+    margin-top: var(--sp-4);
+  }
+  /* var(--sp-12) top+bottom plus line-height gives a ~44px tap target,
+     the standard minimum comfortable touch-target size. */
+  .mega-link { padding: var(--sp-12) 0; font-size: 14px; }
+  .dropdown-btn { min-width: 44px; min-height: 44px; }
+}
+
+/* ==========================================================================
+   Gallery page
+   ========================================================================== */
+.gallery-page {
+  padding-top: 0;
+}
+
+.gallery-hero {
+  /* Page-title banner directly under the fixed header — same role as
+     .legal-hero. Top padding must clear the fixed header itself (there's
+     no scrolling on initial load to compensate, unlike an in-page anchor
+     jump), so it uses --header-height rather than the section rhythm
+     token; it isn't part of the section-to-section rhythm below it
+     anyway (nothing precedes it to keep in sync with). */
+  padding: var(--header-height) 0 var(--sp-48);
+  background: var(--bg-deep);
+  border-bottom: 1px solid var(--border);
+  text-align: center;
+}
+.gallery-hero h1 {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  margin: var(--sp-12) 0 0;
+}
+.gallery-hero .section-lede {
+  margin-top: var(--sp-16);
+  max-width: 520px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Sticky section-jump tabs */
+.gallery-tabs {
+  position: sticky;
+  top: 64px; /* matches scrolled header height */
+  z-index: 100;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+}
+.gallery-tabs-inner {
+  display: flex;
+  gap: var(--sp-4);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.gallery-tabs-inner::-webkit-scrollbar { display: none; }
+.gallery-tab {
+  /* Was var(--sp-14) — that token was never defined in the spacing scale
+     (which jumps --sp-12 → --sp-16), so the whole padding shorthand
+     silently resolved to 0 and the tab labels collided into one run-on
+     string with no space between them. */
+  display: block;
+  padding: var(--sp-16) var(--sp-24);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color 0.2s, border-color 0.2s;
+}
+.gallery-tab:hover {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+/* Gallery sections — padding inherits the standard `section` rhythm; only
+   the anchor-scroll offset stays custom, since these sit below BOTH the
+   fixed header AND the sticky sub-nav tabs bar (~22px) beneath it. Derived
+   from --header-height so it can't drift out of sync with the real header
+   the way a standalone magic number would. */
+.gallery-section {
+  scroll-margin-top: calc(var(--header-height) + 22px + var(--sp-8));
+}
+
+/* Client logo grid */
+.gallery-logo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: var(--sp-16);
+  margin-top: var(--sp-48);
+}
+.gallery-logo-item {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: var(--sp-16);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 3 / 2;
+  transition: border-color 0.2s, transform 0.25s;
+}
+.gallery-logo-item:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+.gallery-logo-item img {
+  max-width: 100%;
+  max-height: 56px;
+  object-fit: contain;
+  filter: brightness(0.75) grayscale(0.15);
+  transition: filter 0.2s;
+}
+.gallery-logo-item:hover img {
+  filter: brightness(1) grayscale(0);
+}
+
+/* Photo grids (projects & awards) */
+.gallery-photo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--sp-16);
+  margin-top: var(--sp-48);
+}
+.gallery-photo-item {
+  position: relative;
+  cursor: pointer;
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  margin: 0;
+  transition: transform 0.25s, border-color 0.2s, box-shadow 0.25s;
+}
+.gallery-photo-item:hover {
+  transform: translateY(-4px);
+  border-color: var(--accent);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+.gallery-photo-wrap {
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+}
+.gallery-photo-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+.gallery-photo-item:hover .gallery-photo-wrap img {
+  transform: scale(1.05);
+}
+.gallery-photo-caption {
+  padding: var(--sp-12) var(--sp-16);
+}
+.gallery-photo-caption strong {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+}
+.gallery-photo-caption span {
+  display: block;
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.gallery-empty {
+  text-align: center;
+  color: var(--text-muted);
+  padding: var(--sp-48) 0;
+  font-size: 14px;
+}
+
+/* ==========================================================================
+   Footer — We Support charity logos
+   ========================================================================== */
+.footer-support {
+  background: var(--bg-deep);
+  border-bottom: 1px solid var(--border);
+  padding: var(--sp-28) 0;
+}
+.footer-support-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-16);
+  text-align: center;
+}
+.footer-support-label {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.footer-support-logos {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-40);
+  flex-wrap: wrap;
+}
+.footer-support-logos a {
+  display: flex;
+  align-items: center;
+  opacity: 1;
+  transition: transform 0.2s;
+}
+.footer-support-logos a:hover {
+  transform: translateY(-2px);
+}
+.footer-support-logos img {
+  height: 52px;
+  object-fit: contain;
+  /* full colour at full brightness — no greyscale */
+  filter: brightness(1.1);
+  transition: filter 0.2s, transform 0.2s;
+}
+.footer-support-logos a:hover img {
+  filter: brightness(1.25);
+}
+
+/* RTL adjustments for gallery / mega menu */
+html[dir="rtl"] .gallery-tabs-inner { direction: rtl; }
+html[dir="rtl"] .mega-col-heading,
+html[dir="rtl"] .mega-link { direction: rtl; text-align: right; }
 
 /* ==========================================================================
    Hero (Apple-style scroll sequence) - snappier pin
@@ -490,17 +1320,48 @@ section {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(1200px 700px at 20% 40%, rgba(201, 162, 75, 0.07), transparent 70%),
+    radial-gradient(1200px 700px at 20% 40%, rgba(28, 143, 209, 0.07), transparent 70%),
     linear-gradient(180deg, rgba(11, 31, 58, 0.35) 0%, rgba(11, 31, 58, 0.15) 40%, rgba(11, 31, 58, 0.9) 100%);
   pointer-events: none;
   z-index: 5;
 }
 .hero-overlay {
   position: absolute;
-  inset: 0;
+  /* Reserve room for the fixed header along the top edge so the vertically
+     centered hero copy is never drawn underneath it — the header is taller
+     before scroll (top bar + nav) than after (top bar collapses), so
+     without this the headline can sit under the header on shorter windows
+     until the user scrolls and the header shrinks out of the way. Derived
+     from --header-height (which already has its own mobile value, and
+     grows further when the announcement bar is showing) so all three stay
+     in sync automatically.
+     .hero-container and .scroll-indicator are laid out as a column flex
+     flow (below) rather than two independently-positioned/centered
+     elements, specifically so they can never overlap — see the comment on
+     .hero-container for why an earlier version of this rule (which just
+     reserved a fixed pixel gap at the bottom) still overlapped. */
+  inset: var(--header-height) 0 0 0;
   display: flex;
+  flex-direction: column;
   align-items: center;
   z-index: 10;
+}
+/* Grows to fill all space between the header and .scroll-indicator, then
+   centers the hero copy within itself — .scroll-indicator (a normal,
+   non-absolute flex sibling below it) always ends up pinned right at the
+   bottom of that remaining space, so the two can never collide regardless
+   of viewport height or how many lines the headline wraps to. Both used to
+   be independently absolute-positioned/centered within the same box,
+   which is what caused the actual overlap bug: shrinking that shared box
+   to "reserve" room at the bottom moved the vertically-centered content up
+   by only half as much as it moved the indicator's own bottom-anchor
+   point, so the gap between them didn't reliably grow at all. */
+.hero-container {
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
 }
 .hero-content {
   max-width: 720px;
@@ -537,11 +1398,27 @@ section {
   .hero-subtitle { font-size: 17px; }
 }
 
+/* Short BROWSER WINDOWS (not just narrow ones — e.g. a 1366x768 laptop
+   with extra browser chrome eating into the usable height) don't have
+   room for the full-size headline, subtitle, and scroll indicator all at
+   once. The flex layout above already guarantees they can't overlap, but
+   without this the headline can still be forced to shrink itself down to
+   almost nothing to make room. Scaling type/spacing down here instead
+   keeps it readable and properly proportioned. */
+@media (max-height: 700px) {
+  .hero-title { font-size: 44px; margin-bottom: var(--sp-16); }
+  .hero-subtitle { font-size: 16px; margin-bottom: var(--sp-16); }
+  .hero-buttons { margin-bottom: var(--sp-16); }
+  .hero-overline { margin-bottom: var(--sp-8); }
+  .scroll-indicator { margin: var(--sp-8) 0 var(--sp-16); }
+}
+
 .scroll-indicator {
-  position: absolute;
-  bottom: var(--sp-48);
-  left: 50%;
-  transform: translateX(-50%);
+  /* Normal flex-flow item now (see .hero-overlay/.hero-container above),
+     not absolutely positioned — flex-shrink:0 keeps it full-size even if
+     .hero-container ever has to compress on a very short viewport. */
+  flex-shrink: 0;
+  margin: var(--sp-16) 0 var(--sp-32);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -576,10 +1453,12 @@ section {
    Stats Bar
    ========================================================================== */
 .stat-bar {
+  /* Padding intentionally NOT set here — inherits the standard `section`
+     rhythm (--section-pad) like every other section, so the gap either
+     side of it matches the rest of the site. */
   background: linear-gradient(180deg, var(--bg-card) 0%, var(--bg-elevated) 100%);
   border-top: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
-  padding: var(--sp-64) 0;
   position: relative;
 }
 .stat-container {
@@ -706,9 +1585,12 @@ section {
   gap: var(--sp-24);
 }
 .service-card {
-  background: linear-gradient(180deg, var(--bg-card) 0%, var(--bg-elevated) 100%);
-  border: 1px solid var(--border);
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
   border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm), var(--glass-inset);
   transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease, box-shadow 0.35s ease;
   position: relative;
   overflow: hidden;
@@ -717,8 +1599,14 @@ section {
 }
 .service-card:hover {
   transform: translateY(-10px);
-  border-color: rgba(201, 162, 75, 0.4);
-  box-shadow: var(--shadow-lg);
+  border-color: rgba(28, 143, 209, 0.4);
+  box-shadow: var(--shadow-lg), var(--glass-inset);
+}
+/* Cards now link through to a full service detail page */
+.service-card-link {
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
 }
 
 /* Image banner at top */
@@ -811,16 +1699,19 @@ section {
   gap: var(--sp-24);
 }
 .fleet-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
   border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm), var(--glass-inset);
   overflow: hidden;
   transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease, box-shadow 0.3s ease;
 }
 .fleet-card:hover {
   transform: translateY(-8px);
-  border-color: rgba(201, 162, 75, 0.4);
-  box-shadow: var(--shadow-lg);
+  border-color: rgba(28, 143, 209, 0.4);
+  box-shadow: var(--shadow-lg), var(--glass-inset);
 }
 .fleet-illus {
   position: relative;
@@ -851,8 +1742,8 @@ section {
 .placeholder-badge {
   position: absolute;
   bottom: 12px; right: 12px;
-  background: rgba(201, 162, 75, 0.15);
-  border: 1px solid rgba(201, 162, 75, 0.35);
+  background: rgba(28, 143, 209, 0.15);
+  border: 1px solid rgba(28, 143, 209, 0.35);
   color: var(--accent);
   font-size: 11px;
   padding: 4px 10px;
@@ -922,7 +1813,9 @@ section {
   position: absolute;
   bottom: 0; left: 0; width: 100%;
   padding: var(--sp-32) var(--sp-24) var(--sp-24);
-  background: linear-gradient(to top, rgba(7, 20, 39, 0.95) 20%, rgba(11,31,58, 0.4) 70%, transparent);
+  background: linear-gradient(to top, rgba(7, 20, 39, 0.96) 20%, rgba(11,31,58, 0.55) 70%, transparent);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
   transform: translateY(20px);
   opacity: 0;
   transition: 0.4s ease;
@@ -986,78 +1879,109 @@ section {
   flex-shrink: 0;
 }
 
-/* Controls row: ‹ [====scrubber====] › */
+/* Controls row — a slim, informative progress rail (video-scrubber style)
+   instead of a chunky pill-track-plus-circle, with ghost icon buttons at
+   each end. The rail fills to show position instead of relying on a big
+   draggable dot; the small thumb only appears on hover/focus/drag. */
 .hc-controls {
   display: flex;
   align-items: center;
-  gap: 14px;
-  padding: 20px 24px 4px;
+  gap: 10px;
+  padding: 18px 24px 4px;
   max-width: 640px;
   margin: 0 auto;
 }
 
-/* Gold arrow buttons */
 .hc-arrow {
-  width: 36px; height: 36px;
+  width: 32px; height: 32px;
   border-radius: 50%;
   background: transparent;
-  border: 1.5px solid rgba(201, 162, 75, 0.35);
-  color: var(--accent);
+  border: none;
+  color: var(--text-muted);
   cursor: pointer;
   display: flex; align-items: center; justify-content: center;
   flex-shrink: 0;
-  transition: background 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.15s ease;
   padding: 0;
 }
 .hc-arrow:hover {
-  background: rgba(201, 162, 75, 0.12);
-  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent);
   transform: scale(1.08);
 }
+.hc-arrow:active { transform: scale(0.92); }
 .hc-arrow svg { width: 16px; height: 16px; pointer-events: none; }
 
-/* Gold scrubber */
+/* Slim fill-as-you-go rail. --hc-progress is written from JS every frame
+   (cheap: it's already updating .value there) so the filled segment always
+   matches the visible portion of the track, like a video seek bar. */
 .hc-scrubber {
+  --hc-progress: 0%;
   flex: 1;
-  height: 3px;
+  height: 20px; /* generous hit-area; the visible line is thin */
   -webkit-appearance: none;
   appearance: none;
-  background: rgba(255, 255, 255, 0.12);
-  border-radius: 2px;
+  background: transparent;
   outline: none;
   cursor: pointer;
 }
 .hc-scrubber::-webkit-slider-runnable-track {
   height: 3px;
   border-radius: 2px;
+  background: linear-gradient(
+    to right,
+    var(--accent) var(--hc-progress),
+    var(--border) var(--hc-progress)
+  );
 }
 .hc-scrubber::-webkit-slider-thumb {
   -webkit-appearance: none;
-  width: 18px; height: 18px;
-  margin-top: -7.5px;
+  width: 11px; height: 11px;
+  margin-top: -4px;
   border-radius: 50%;
   background: var(--accent);
-  border: 2px solid rgba(201, 162, 75, 0.5);
+  border: none;
   cursor: pointer;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
-  box-shadow: 0 0 0 0 rgba(201, 162, 75, 0);
+  opacity: 0;
+  transform: scale(0.6);
+  transition: opacity 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 0 0 0 rgba(28, 143, 209, 0);
 }
-.hc-scrubber::-webkit-slider-thumb:hover,
-.hc-scrubber:focus::-webkit-slider-thumb {
-  transform: scale(1.25);
-  box-shadow: 0 0 0 5px rgba(201, 162, 75, 0.18);
+.hc-scrubber:hover::-webkit-slider-thumb,
+.hc-scrubber:focus::-webkit-slider-thumb,
+.hc-scrubber:active::-webkit-slider-thumb {
+  opacity: 1;
+  transform: scale(1);
+  box-shadow: 0 0 0 6px rgba(28, 143, 209, 0.16);
 }
 .hc-scrubber::-moz-range-track {
   height: 3px;
-  background: rgba(255, 255, 255, 0.12);
   border-radius: 2px;
+  background: var(--border);
+}
+.hc-scrubber::-moz-range-progress {
+  height: 3px;
+  border-radius: 2px;
+  background: var(--accent);
 }
 .hc-scrubber::-moz-range-thumb {
-  width: 18px; height: 18px;
+  width: 11px; height: 11px;
   border-radius: 50%;
   background: var(--accent);
-  border: 2px solid rgba(201, 162, 75, 0.5);
+  border: none;
   cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+.hc-scrubber:hover::-moz-range-thumb,
+.hc-scrubber:focus::-moz-range-thumb,
+.hc-scrubber:active::-moz-range-thumb {
+  opacity: 1;
+}
+@media (hover: none), (pointer: coarse) {
+  /* No hover on touch — keep the thumb subtly visible instead of invisible-until-hover */
+  .hc-scrubber::-webkit-slider-thumb { opacity: 0.85; transform: scale(0.85); }
+  .hc-scrubber::-moz-range-thumb { opacity: 0.85; }
 }
 
 /* ── Clients carousel ──────────────────────────────────────────────────── */
@@ -1171,12 +2095,33 @@ section {
 .about-content .overline { padding-left: 36px; }
 .about-image {
   position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
   border-radius: var(--radius-lg);
 }
 .about-image img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
   border-radius: var(--radius-lg);
   border: 1px solid var(--border);
   box-shadow: var(--shadow-lg);
+}
+
+/* Slow, continuous Ken Burns zoom/pan — keeps the photo feeling alive even
+   when no one's hovering it. Runs on the <img> itself so it never fights
+   the .tilt-frame wrapper's own hover-driven rotate transform. */
+.about-image-kenburns {
+  animation: aboutKenBurns 16s ease-in-out infinite alternate;
+  transform-origin: 60% 40%;
+}
+@keyframes aboutKenBurns {
+  0%   { transform: scale(1) translate3d(0, 0, 0); }
+  100% { transform: scale(1.12) translate3d(-1.5%, -1%, 0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .about-image-kenburns { animation: none; }
 }
 .about-btn { margin-top: var(--sp-16); }
 @media (max-width: 1024px) {
@@ -1184,11 +2129,24 @@ section {
 }
 
 /* ==========================================================================
+   Company Profile page — brief intro + brochure download, above the
+   (relocated) Chairman's Message.
+   ========================================================================== */
+.company-profile-intro {
+  background: var(--bg-base);
+}
+.company-profile-cta {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--sp-32);
+}
+
+/* ==========================================================================
    Chairman's Message
    ========================================================================== */
 .chairman {
   background:
-    radial-gradient(1200px 600px at 80% 20%, rgba(201, 162, 75, 0.06), transparent 70%),
+    radial-gradient(1200px 600px at 80% 20%, rgba(28, 143, 209, 0.06), transparent 70%),
     var(--bg-elevated);
 }
 .chairman-container {
@@ -1244,22 +2202,32 @@ section {
 .chairman-quote {
   position: relative;
 }
+/* Both marks sit in normal document flow (not absolutely positioned over
+   the text) so they can never overlap or collide with it regardless of
+   how the paragraphs reflow at any viewport width. */
 .quote-mark {
-  position: absolute;
-  top: -12px;
-  left: -6px;
-  width: 40px;
-  height: 40px;
+  display: block;
+  width: 30px;
+  height: 30px;
   color: var(--accent);
   opacity: 0.4;
-  background: var(--bg-elevated);
-  padding: 4px;
+}
+.quote-mark-open {
+  margin-bottom: var(--sp-8);
+}
+.quote-mark-close {
+  /* Same left edge as the opening mark (not pushed to the right) — the
+     vertical gap already matches, but a mark on the far side reads as
+     disconnected from the line it's meant to follow. */
+  margin-top: var(--sp-8);
+  transform: rotate(180deg);
 }
 .chairman-quote p {
   font-size: 17px;
   color: var(--text);
   line-height: 1.75;
   font-style: italic;
+  text-align: justify;
   max-width: none;
   margin-bottom: var(--sp-16);
 }
@@ -1300,8 +2268,8 @@ section {
 }
 .leader-chair {
   max-width: 320px;
-  border-color: rgba(201, 162, 75, 0.35);
-  background: linear-gradient(180deg, rgba(201, 162, 75, 0.06), var(--bg-card));
+  border-color: rgba(28, 143, 209, 0.35);
+  background: linear-gradient(180deg, rgba(28, 143, 209, 0.06), var(--bg-card));
 }
 .leader-chair .leader-role {
   color: var(--accent);
@@ -1324,17 +2292,20 @@ section {
   width: 100%;
 }
 .leader-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
   border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm), var(--glass-inset);
   padding: var(--sp-24);
   text-align: center;
   transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease, box-shadow 0.3s ease;
 }
 .leader-card:hover {
   transform: translateY(-6px);
-  border-color: rgba(201, 162, 75, 0.4);
-  box-shadow: var(--shadow-md);
+  border-color: rgba(28, 143, 209, 0.4);
+  box-shadow: var(--shadow-md), var(--glass-inset);
 }
 .leader-photo {
   width: 96px;
@@ -1441,20 +2412,44 @@ input, select, textarea {
   transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
 }
 input::placeholder, textarea::placeholder {
-  color: rgba(184, 196, 214, 0.5);
+  color: rgba(82, 101, 122, 0.6);
 }
 input:focus, select:focus, textarea:focus {
   outline: none;
   border-color: var(--accent);
-  background: rgba(11, 31, 58, 0.6);
-  box-shadow: 0 0 0 3px rgba(201, 162, 75, 0.15);
+  background: var(--bg-card);
+  box-shadow: 0 0 0 3px rgba(28, 143, 209, 0.15);
 }
 select {
   appearance: none;
-  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3e%3cpath d='M1 1l5 5 5-5' stroke='%23C9A24B' stroke-width='2' fill='none' stroke-linecap='round'/%3e%3c/svg%3e");
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3e%3cpath d='M1 1l5 5 5-5' stroke='%231C8FD1' stroke-width='2' fill='none' stroke-linecap='round'/%3e%3c/svg%3e");
   background-repeat: no-repeat;
   background-position: right 16px center;
   padding-right: 40px;
+}
+
+/* Native date/time inputs render browser-chrome (the popup calendar, text)
+   that defaults to a light-on-light look — `color-scheme: dark` tells the
+   browser to draw that chrome for a dark surface. The picker indicator
+   icon itself is swapped for the brand calendar glyph so it's never at the
+   mercy of the browser's default icon color again. */
+input[type="date"],
+input[type="time"],
+input[type="datetime-local"] {
+  color-scheme: dark;
+}
+input[type="date"]::-webkit-calendar-picker-indicator,
+input[type="time"]::-webkit-calendar-picker-indicator,
+input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+  background-image: url("/assets/calendar-icon.svg");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  width: 26px;
+  height: 26px;
+  opacity: 1;
+  filter: none;
+  cursor: pointer;
 }
 .form-success {
   color: var(--accent);
@@ -1462,8 +2457,8 @@ select {
   margin-top: var(--sp-16);
   display: none;
   padding: var(--sp-12) var(--sp-16);
-  background: rgba(201, 162, 75, 0.1);
-  border: 1px solid rgba(201, 162, 75, 0.3);
+  background: rgba(28, 143, 209, 0.1);
+  border: 1px solid rgba(28, 143, 209, 0.3);
   border-radius: var(--radius);
 }
 .form-success.active { display: block; }
@@ -1553,72 +2548,171 @@ select {
   background: var(--bg-deep);
   border-top: 1px solid var(--border);
 }
-.footer-bottom {
-  padding: var(--sp-32) 0;
+
+/* ── Main grid: brand / About Us / Our Services / Contact ───────────────── */
+.footer-main {
+  padding: var(--sp-64) 0 var(--sp-48);
 }
-.footer-bottom-flex {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: var(--sp-24);
-  gap: var(--sp-24);
-  flex-wrap: wrap;
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr 1fr 1.2fr;
+  gap: var(--sp-32);
 }
+.footer-col-brand { padding-right: var(--sp-16); }
 .footer-logo {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: var(--sp-12);
 }
-.footer-logo img {
-  height: 36px;
-  opacity: 0.7;
-}
-.footer-logo span {
-  font-family: var(--font-heading);
-  font-weight: 700;
-  font-size: 14px;
+.footer-logo-glow-wrap { transform: scale(0.9); transform-origin: left center; }
+html[dir="rtl"] .footer-logo-glow-wrap { transform-origin: right center; }
+.footer-logo img { height: 44px; width: auto; display: block; }
+.footer-blurb {
+  margin-top: var(--sp-16);
+  font-size: 13.5px;
+  line-height: 1.7;
   color: var(--text-muted);
-  letter-spacing: 0.3px;
+  max-width: 320px;
 }
-.footer-links {
+.footer-col-socials {
   display: flex;
-  gap: var(--sp-24);
-  flex-wrap: wrap;
+  gap: var(--sp-8);
+  margin-top: var(--sp-20);
 }
-.footer-links a {
-  font-size: 13px;
-  color: var(--text-muted);
-  letter-spacing: 0.5px;
+.footer-social-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
 }
-.footer-links a:hover {
+.footer-social-btn:hover {
   color: var(--accent);
+  background: var(--accent-soft);
+  border-color: rgba(28, 143, 209, 0.4);
+  transform: translateY(-2px);
 }
-.footer-social .divider { margin: 0 8px; color: var(--border); }
-.btn-text {
-  font-weight: 600;
+
+.footer-col-heading {
+  font-family: var(--font-heading);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
   color: var(--text);
-  font-size: 13px;
-  letter-spacing: 0.5px;
+  margin: 0 0 var(--sp-16);
+  padding-bottom: var(--sp-12);
+  position: relative;
 }
-.btn-text:hover { color: var(--accent); }
-.green-text { color: var(--wa); }
-.green-text:hover { color: #20b858; }
+.footer-col-heading::after {
+  content: '';
+  position: absolute;
+  left: 0; bottom: 0;
+  width: 32px; height: 2px;
+  background: linear-gradient(90deg, var(--accent), var(--brand-green));
+}
+html[dir="rtl"] .footer-col-heading::after { left: auto; right: 0; }
+
+.footer-col-links {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-10);
+}
+.footer-col-links a {
+  font-size: 13.5px;
+  color: var(--text-muted);
+  letter-spacing: 0.2px;
+  transition: color 0.2s ease, padding-left 0.2s ease;
+}
+.footer-col-links a:hover {
+  color: var(--accent);
+  padding-left: 4px;
+}
+html[dir="rtl"] .footer-col-links a:hover { padding-left: 0; padding-right: 4px; }
+
+.footer-cert-badges {
+  display: flex;
+  gap: var(--sp-12);
+  margin-top: var(--sp-20);
+}
+.footer-cert-badge {
+  display: block;
+  padding: 4px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+.footer-cert-badge:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+.footer-cert-badge img {
+  height: 34px;
+  width: auto;
+  display: block;
+  object-fit: contain;
+}
+
+.footer-contact-list li {
+  font-size: 13.5px;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+.footer-contact-list a { color: var(--text-muted); transition: color 0.2s ease; }
+.footer-contact-list a:hover { color: var(--accent); }
+.footer-address { padding-bottom: var(--sp-4); }
+.footer-office-hours {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--sp-8) 0;
+  margin: var(--sp-4) 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+.footer-office-hours-label {
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--brand-green);
+}
+
+@media (max-width: 992px) {
+  .footer-grid {
+    grid-template-columns: 1fr 1fr;
+    row-gap: var(--sp-40);
+  }
+  .footer-col-brand { grid-column: 1 / -1; padding-right: 0; }
+}
+@media (max-width: 640px) {
+  .footer-grid { grid-template-columns: 1fr; text-align: center; }
+  .footer-col-heading::after { left: 50%; transform: translateX(-50%); }
+  html[dir="rtl"] .footer-col-heading::after { right: 50%; transform: translateX(50%); }
+  .footer-blurb { max-width: none; margin-left: auto; margin-right: auto; }
+  .footer-col-socials { justify-content: center; }
+  .footer-cert-badges { justify-content: center; }
+}
+
+/* ── Legal / copyright bar ───────────────────────────────────────────── */
+.footer-bottom {
+  padding: var(--sp-16) 0 var(--sp-24);
+}
 .copyright {
   display: block;
   width: 100%;
   text-align: center;
-  border-top: 1px solid var(--border);
-  padding-top: var(--sp-24);
 }
 .copyright p {
-  margin: 0;
+  margin: var(--sp-8) 0 0;
   font-size: 12px;
   color: var(--text-muted);
   letter-spacing: 0.4px;
   text-align: center;
-}
-@media (max-width: 768px) {
-  .footer-bottom-flex { flex-direction: column; text-align: center; gap: var(--sp-16); }
 }
 
 /* ==========================================================================
@@ -1661,11 +2755,376 @@ select {
 }
 
 /* ==========================================================================
+   Scroll-reveal — shared by Careers job cards and Promotions posters.
+   Fires once via the useInView hook (IntersectionObserver), staggered per
+   card through the --reveal-delay custom property set inline per item.
+   ========================================================================== */
+.reveal-up {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+.careers-grid.is-in-view .reveal-up,
+.promo-grid.is-in-view .reveal-up,
+.sister-grid.is-in-view .reveal-up,
+.mv-grid.is-in-view .reveal-up,
+.mv-page-inner.is-in-view .reveal-up {
+  opacity: 1;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .reveal-up { opacity: 1; transform: none; transition: none; }
+}
+
+/* ==========================================================================
+   Careers
+   ========================================================================== */
+.careers-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--sp-24);
+}
+.job-card {
+  display: flex;
+  flex-direction: column;
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm), var(--glass-inset);
+  padding: var(--sp-32);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease, box-shadow 0.35s ease;
+}
+.job-card:hover {
+  transform: translateY(-8px);
+  border-color: rgba(28, 143, 209, 0.4);
+  box-shadow: var(--shadow-lg), var(--glass-inset);
+}
+.job-card-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--sp-12);
+  margin-bottom: var(--sp-16);
+}
+.job-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--accent-soft);
+  color: var(--accent);
+  flex-shrink: 0;
+}
+.job-icon svg { width: 26px; height: 26px; }
+.job-type-badge {
+  flex-shrink: 0;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: var(--brand-green);
+  background: var(--brand-green-soft);
+  border-radius: 999px;
+  padding: 5px 12px;
+  margin-top: 6px;
+}
+.job-title {
+  margin-bottom: var(--sp-8);
+}
+.job-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  font-size: 13.5px;
+  color: var(--text-muted);
+  margin-bottom: var(--sp-16);
+}
+.job-meta-sep { opacity: 0.5; }
+.job-desc {
+  font-size: 14.5px;
+  color: var(--text-muted);
+  line-height: 1.65;
+  margin-bottom: var(--sp-16);
+}
+.job-requirements {
+  list-style: none;
+  margin: 0 0 var(--sp-24);
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.job-requirements li {
+  position: relative;
+  padding-left: 22px;
+  font-size: 14px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+.job-requirements li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 7px;
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  background: var(--accent);
+  opacity: 0.55;
+  transform: rotate(45deg);
+}
+.job-apply-btn {
+  margin-top: auto;
+  align-self: flex-start;
+}
+@media (max-width: 900px) {
+  .careers-grid { grid-template-columns: 1fr; }
+}
+
+.careers-empty {
+  max-width: 480px;
+  margin: 0 auto;
+  text-align: center;
+  padding: var(--sp-48) var(--sp-32);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm), var(--glass-inset);
+  animation: careersEmptyIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.careers-empty-icon {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto var(--sp-16);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+.careers-empty-icon svg { width: 30px; height: 30px; }
+.careers-empty h3 { margin-bottom: var(--sp-8); }
+.careers-empty p {
+  margin-bottom: var(--sp-24);
+  color: var(--text-muted);
+}
+@keyframes careersEmptyIn {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .careers-empty { animation: none; }
+}
+
+/* ==========================================================================
+   Apply modal (Careers)
+   ========================================================================== */
+.apply-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(7, 20, 39, 0.72);
+  backdrop-filter: blur(8px);
+  z-index: 2100;
+  /* Plain block flow, not flex-centered: the backdrop scrolls and the
+     modal is horizontal-centered via its own margin, so it always starts
+     exactly at padding-top (which reserves the fixed header's height) and
+     just flows further down if it's taller than the viewport. A flex
+     `align-items/margin:auto` centering scheme was tried here first, but
+     centering an item taller than its container pushes its top edge to a
+     *negative* offset with no way to scroll up to it — worse than the
+     original bug. Plain top-down flow can't do that: whatever doesn't fit
+     is simply reached by scrolling the backdrop down, never up. */
+  overflow-y: auto;
+  padding: calc(var(--header-height) + var(--sp-24)) var(--sp-24) var(--sp-24);
+  animation: applyBackdropIn 0.25s ease both;
+}
+@keyframes applyBackdropIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+.apply-modal {
+  position: relative;
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  padding: var(--sp-40) var(--sp-32) var(--sp-32);
+  animation: applyModalIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes applyModalIn {
+  from { opacity: 0; transform: translateY(16px) scale(0.98); }
+  to   { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .apply-modal-backdrop, .apply-modal { animation: none; }
+}
+.apply-modal h3 {
+  margin-bottom: var(--sp-24);
+}
+.apply-modal-close {
+  position: absolute;
+  top: var(--sp-16);
+  right: var(--sp-16);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--bg-elevated);
+  color: var(--text-muted);
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+  transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+.apply-modal-close:hover {
+  color: var(--accent);
+  border-color: rgba(28, 143, 209, 0.4);
+}
+html[dir="rtl"] .apply-modal-close { right: auto; left: var(--sp-16); }
+
+/* display:none (not unmounting) is what matters here — a hidden file input
+   still keeps its FileList and is still included in FormData(form) on
+   submit; removing the node from the DOM entirely would lose the file. */
+.apply-cv-input-hidden { display: none; }
+.apply-cv-hint {
+  margin: 6px 0 0;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+.apply-cv-picked {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-12);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 10px 14px;
+}
+.apply-cv-filename {
+  font-size: 13.5px;
+  color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.apply-cv-remove {
+  flex-shrink: 0;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  color: var(--text-muted);
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+.apply-cv-remove:hover {
+  color: #C13B3B;
+  border-color: currentColor;
+}
+
+/* ==========================================================================
+   Promotions / Ads
+   ========================================================================== */
+.promo-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--sp-24);
+}
+.promo-card {
+  display: block;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease, border-color 0.3s ease;
+}
+a.promo-card:hover {
+  transform: translateY(-8px);
+  border-color: rgba(28, 143, 209, 0.4);
+  box-shadow: var(--shadow-lg);
+}
+.promo-card-img {
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  background: var(--bg-deep);
+}
+.promo-card-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+a.promo-card:hover .promo-card-img img {
+  transform: scale(1.05);
+}
+.promo-card-title {
+  padding: var(--sp-16);
+  font-weight: 600;
+  font-size: 14.5px;
+  color: var(--text);
+}
+@media (max-width: 900px) {
+  .promo-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 600px) {
+  .promo-grid { grid-template-columns: 1fr; }
+}
+
+.promotions-empty {
+  max-width: 480px;
+  margin: 0 auto;
+  text-align: center;
+  padding: var(--sp-48) var(--sp-32);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm), var(--glass-inset);
+  animation: careersEmptyIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.promotions-empty-icon {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto var(--sp-16);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+.promotions-empty-icon svg { width: 30px; height: 30px; }
+.promotions-empty h3 { margin-bottom: var(--sp-8); }
+.promotions-empty p { color: var(--text-muted); margin-bottom: 0; }
+@media (prefers-reduced-motion: reduce) {
+  .promotions-empty { animation: none; }
+}
+
+/* ==========================================================================
    Chat Widget (naa-chat)
    ========================================================================== */
 .naa-chat {
   position: fixed;
   right: 24px; bottom: 24px;
+  /* Kept in sync with the actual `bottom` value (including the !important
+     override further down that lifts the widget above the stacked
+     WhatsApp/Call buttons) so .naa-chat-panel's height calc always knows
+     the real vertical offset instead of a hardcoded number that can drift
+     out of sync with it. */
+  --naa-chat-bottom-gap: 24px;
   z-index: 3000;
   font-family: var(--font-body);
   color: var(--text);
@@ -1686,7 +3145,7 @@ select {
   font-size: 15px;
   letter-spacing: 0.2px;
   cursor: pointer;
-  box-shadow: 0 10px 30px rgba(201, 162, 75, 0.35), 0 2px 6px rgba(0,0,0,0.35);
+  box-shadow: 0 10px 30px rgba(28, 143, 209, 0.35), 0 2px 6px rgba(0,0,0,0.35);
   transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease, background 0.2s ease;
   position: relative;
 }
@@ -1699,7 +3158,7 @@ select {
 .naa-chat-bubble:hover {
   background: var(--accent-hover);
   transform: translateY(-2px);
-  box-shadow: 0 14px 36px rgba(201, 162, 75, 0.5), 0 4px 10px rgba(0,0,0,0.4);
+  box-shadow: 0 14px 36px rgba(28, 143, 209, 0.5), 0 4px 10px rgba(0,0,0,0.4);
 }
 .naa-chat-bubble:focus-visible {
   outline: 2px solid var(--text);
@@ -1724,8 +3183,8 @@ select {
   animation: naaChatPulse 2.4s ease-in-out 2;
 }
 @keyframes naaChatPulse {
-  0%, 100% { transform: translateY(0); box-shadow: 0 10px 30px rgba(201, 162, 75, 0.35), 0 2px 6px rgba(0,0,0,0.35); }
-  50%      { transform: translateY(-4px); box-shadow: 0 18px 44px rgba(201, 162, 75, 0.6), 0 6px 12px rgba(0,0,0,0.45); }
+  0%, 100% { transform: translateY(0); box-shadow: 0 10px 30px rgba(28, 143, 209, 0.35), 0 2px 6px rgba(0,0,0,0.35); }
+  50%      { transform: translateY(-4px); box-shadow: 0 18px 44px rgba(28, 143, 209, 0.6), 0 6px 12px rgba(0,0,0,0.45); }
 }
 @media (prefers-reduced-motion: reduce) {
   .naa-attention .naa-chat-bubble { animation: none; }
@@ -1743,11 +3202,23 @@ select {
   right: 0;
   width: 380px;
   max-width: calc(100vw - 32px);
-  height: min(620px, calc(100vh - 120px));
-  background: var(--bg-card);
-  border: 1px solid var(--border-strong);
+  /* Must subtract the SAME offsets that actually push the panel up from the
+     real viewport bottom (--naa-chat-bottom-gap, currently 150px/138px,
+     plus this panel's own 72px `bottom` above), plus a little breathing
+     room at the top. The old hardcoded "100vh - 120px" under-subtracted
+     once .naa-chat's bottom offset was bumped to clear the WhatsApp/Call
+     buttons, so on any viewport shorter than ~840px (most laptops at
+     100% browser zoom — 1366x768, 1280x800, 1024x768...) the panel's
+     header/close button rendered above the top of the screen entirely.
+     Zooming out "fixed" it only because it inflates the effective
+     viewport height. */
+  height: min(620px, calc(100vh - var(--naa-chat-bottom-gap) - 72px - 16px));
+  background: var(--glass-bg-panel);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
   border-radius: 16px;
-  box-shadow: 0 30px 60px rgba(0,0,0,0.5), 0 8px 24px rgba(0,0,0,0.35);
+  box-shadow: 0 30px 60px rgba(0,0,0,0.45), 0 8px 24px rgba(0,0,0,0.3), var(--glass-inset);
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -1869,7 +3340,7 @@ select {
   overflow-y: auto;
   padding: 16px;
   background:
-    radial-gradient(600px 400px at 100% 0%, rgba(201, 162, 75, 0.05), transparent 70%),
+    radial-gradient(600px 400px at 100% 0%, rgba(28, 143, 209, 0.05), transparent 70%),
     var(--bg-card);
   scroll-behavior: smooth;
 }
@@ -1989,14 +3460,14 @@ select {
 .naa-cta:hover {
   background: var(--accent-hover);
   transform: translateY(-1px);
-  box-shadow: 0 6px 16px rgba(201, 162, 75, 0.3);
+  box-shadow: 0 6px 16px rgba(28, 143, 209, 0.3);
 }
 .naa-cta-outline {
   background: transparent;
   color: var(--accent);
 }
 .naa-cta-outline:hover {
-  background: rgba(201, 162, 75, 0.1);
+  background: rgba(28, 143, 209, 0.1);
   color: var(--accent-hover);
 }
 .naa-cta-wa {
@@ -2050,7 +3521,7 @@ select {
 .naa-chat-chip:hover {
   border-color: var(--accent);
   color: var(--accent);
-  background: rgba(201, 162, 75, 0.08);
+  background: rgba(28, 143, 209, 0.08);
 }
 
 /* Input */
@@ -2075,7 +3546,7 @@ select {
 .naa-chat-input input:focus {
   outline: none;
   border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(201, 162, 75, 0.15);
+  box-shadow: 0 0 0 3px rgba(28, 143, 209, 0.15);
 }
 .naa-chat-send {
   width: 44px; height: 44px;
@@ -2122,7 +3593,7 @@ select {
 /* Lead form card */
 .naa-lead-card {
   background: linear-gradient(180deg, var(--bg-elevated), var(--bg-card));
-  border: 1px solid rgba(201, 162, 75, 0.4);
+  border: 1px solid rgba(28, 143, 209, 0.4);
   border-radius: 12px;
   padding: 14px;
 }
@@ -2175,7 +3646,7 @@ select {
 /* ==========================================================================
    Legal pages (privacy / terms / cookies)
    ========================================================================== */
-.legal-page main { padding-top: 140px; }
+.legal-page main { padding-top: var(--header-height); }
 .legal-hero {
   padding: var(--sp-64) 0 var(--sp-48);
   background: linear-gradient(180deg, var(--bg-elevated), var(--bg-base));
@@ -2235,14 +3706,14 @@ select {
 .legal-body a { color: var(--accent); border-bottom: 1px solid transparent; transition: border-color 0.2s ease; }
 .legal-body a:hover { border-bottom-color: var(--accent); }
 .legal-body .callout {
-  background: rgba(201, 162, 75, 0.06);
+  background: rgba(28, 143, 209, 0.06);
   padding: var(--sp-16) var(--sp-24);
   border-radius: var(--radius);
   margin: var(--sp-24) 0;
 }
 .legal-body .placeholder-token {
   display: inline-block;
-  background: rgba(201, 162, 75, 0.15);
+  background: rgba(28, 143, 209, 0.15);
   border: 1px dashed var(--accent);
   color: var(--accent);
   padding: 2px 8px;
@@ -2429,23 +3900,41 @@ select {
 }
 .naa-consent-prefs-actions .btn { font-size: 13px; padding: 10px 16px; }
 
-/* Consent-gated placeholders (map / calendly) */
+/* Consent-gated placeholders (map / calendly) — same 420px height as the
+   loaded iframe so accepting consent doesn't reflow the card, and no
+   dashed/"stub" styling: it should read as a deliberate card state, not a
+   broken box. .contact-map already supplies the outer border/radius/shadow,
+   this just fills that frame. */
 .consent-gate-placeholder {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 240px;
-  padding: var(--sp-24);
-  background: var(--bg-deep);
-  border: 1px dashed var(--border-strong);
-  border-radius: var(--radius);
+  gap: var(--sp-12);
+  height: 420px;
+  padding: var(--sp-32);
+  background: linear-gradient(180deg, var(--bg-elevated) 0%, var(--bg-deep) 100%);
   color: var(--text-muted);
   text-align: center;
   font-size: 14px;
   line-height: 1.6;
 }
-.consent-gate-placeholder .btn {
-  margin-top: 12px;
+.consent-gate-icon {
+  color: var(--accent);
+  opacity: 0.8;
+}
+.consent-gate-text {
+  max-width: 320px;
+}
+.consent-gate-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-12);
+  margin-top: var(--sp-8);
+}
+.consent-gate-actions .btn {
   font-size: 13px;
   padding: 10px 18px;
 }
@@ -2478,8 +3967,8 @@ select {
   gap: 10px;
   align-items: flex-start;
   padding: 12px 14px;
-  background: rgba(201, 162, 75, 0.05);
-  border: 1px solid rgba(201, 162, 75, 0.25);
+  background: rgba(28, 143, 209, 0.05);
+  border: 1px solid rgba(28, 143, 209, 0.25);
   border-radius: var(--radius);
   margin-bottom: var(--sp-16);
 }
@@ -2542,8 +4031,8 @@ select {
   align-items: flex-start;
   padding: 10px 12px;
   margin-bottom: 12px;
-  background: rgba(201, 162, 75, 0.08);
-  border: 1px solid rgba(201, 162, 75, 0.25);
+  background: rgba(28, 143, 209, 0.08);
+  border: 1px solid rgba(28, 143, 209, 0.25);
   border-radius: 8px;
   font-size: 12px;
   line-height: 1.45;
@@ -2583,8 +4072,8 @@ select {
 }
 .form-success {
   color: var(--accent);
-  background: rgba(201, 162, 75, 0.1);
-  border: 1px solid rgba(201, 162, 75, 0.3);
+  background: rgba(28, 143, 209, 0.1);
+  border: 1px solid rgba(28, 143, 209, 0.3);
 }
 .form-error {
   color: #ff8080;
@@ -2593,6 +4082,22 @@ select {
 }
 .form-success.active { display: block; }
 .form-error:not([hidden]) { display: block; }
+
+/* Inline per-field validation errors */
+.field-error {
+  display: block;
+  margin-top: 4px;
+  font-size: 12px;
+  line-height: 1.4;
+  color: #ff8080;
+}
+/* Highlight the invalid field itself */
+input[aria-invalid="true"],
+select[aria-invalid="true"],
+textarea[aria-invalid="true"] {
+  border-color: rgba(255, 92, 92, 0.6) !important;
+  outline-color: rgba(255, 92, 92, 0.4);
+}
 
 /* ==========================================================================
    Performance: defer rendering of below-fold sections until near viewport
@@ -2643,15 +4148,18 @@ select {
   margin: 0;
   border-radius: var(--radius-lg);
   overflow: hidden;
-  border: 1px solid var(--border);
-  background: var(--bg-card);
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  box-shadow: var(--shadow-sm), var(--glass-inset);
   cursor: pointer;
   transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease, border-color 0.3s ease;
 }
 .award-item:hover {
   transform: translateY(-4px);
-  border-color: rgba(201, 162, 75, 0.4);
-  box-shadow: var(--shadow-lg);
+  border-color: rgba(28, 143, 209, 0.4);
+  box-shadow: var(--shadow-lg), var(--glass-inset);
 }
 .award-img-wrap {
   aspect-ratio: 4 / 3;
@@ -2683,16 +4191,19 @@ select {
 
 /* Chart cards (bar + donut) span two grid columns each on wide screens */
 .chart-card {
-  background: linear-gradient(180deg, var(--bg-card) 0%, var(--bg-elevated) 100%);
-  border: 1px solid var(--border);
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
   border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm), var(--glass-inset);
   padding: var(--sp-32);
   min-height: 300px;
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 .chart-card:hover {
-  border-color: rgba(201, 162, 75, 0.35);
-  box-shadow: var(--shadow-lg);
+  border-color: rgba(28, 143, 209, 0.35);
+  box-shadow: var(--shadow-lg), var(--glass-inset);
 }
 .chart-head { margin-bottom: var(--sp-24); }
 .chart-kicker {
@@ -2722,7 +4233,7 @@ select {
   transform-origin: center bottom;
   transform: scaleY(0);
   transition: transform 1.1s cubic-bezier(0.16, 1, 0.3, 1);
-  filter: drop-shadow(0 2px 4px rgba(201, 162, 75, 0.3));
+  filter: drop-shadow(0 2px 4px rgba(28, 143, 209, 0.3));
 }
 .bar-chart.is-visible .bar { transform: scaleY(1); }
 .bar-chart .bar:nth-child(1) { transition-delay: 0.05s; }
@@ -2810,16 +4321,19 @@ select {
 }
 
 .kpi-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm), var(--glass-inset);
   padding: var(--sp-24);
   transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease, box-shadow 0.3s ease;
 }
 .kpi-card:hover {
   transform: translateY(-4px);
-  border-color: rgba(201, 162, 75, 0.4);
-  box-shadow: var(--shadow-md);
+  border-color: rgba(28, 143, 209, 0.4);
+  box-shadow: var(--shadow-md), var(--glass-inset);
 }
 .kpi-value {
   font-family: var(--font-heading);
@@ -2932,119 +4446,28 @@ select {
 .reviews {
   background: var(--bg-base);
 }
-.reviews-layout {
-  display: grid;
-  grid-template-columns: 340px 1fr;
-  gap: var(--sp-48);
-  align-items: start;
-}
-@media (max-width: 1024px) {
-  .reviews-layout { grid-template-columns: 1fr; gap: var(--sp-32); }
-}
 
-/* --- Big rating summary card --- */
-.rating-summary {
-  background: linear-gradient(180deg, var(--bg-card) 0%, var(--bg-elevated) 100%);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: var(--sp-32);
-  position: sticky;
-  top: 100px;
-  text-align: center;
-}
-@media (max-width: 1024px) {
-  .rating-summary { position: static; }
-}
-.rating-google {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 11px;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  font-weight: 700;
-  margin-bottom: var(--sp-24);
-  padding: 6px 14px;
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  background: var(--bg-deep);
-}
-.rating-value {
-  font-family: var(--font-heading);
-  font-weight: 800;
-  font-size: 96px;
-  line-height: 1;
-  color: var(--accent);
-  letter-spacing: -0.03em;
-  margin-bottom: var(--sp-12);
-}
-.rating-of {
-  font-size: 32px;
-  color: var(--text-muted);
-  font-weight: 600;
-  letter-spacing: 1px;
-}
-.rating-stars {
-  font-size: 26px;
-  color: var(--accent);
-  letter-spacing: 4px;
-  margin-bottom: var(--sp-16);
-  line-height: 1;
-}
-.rating-stars .star {
-  display: inline-block;
-  position: relative;
-}
-.rating-stars .star-partial {
-  background: linear-gradient(90deg, var(--accent) var(--fill, 50%), rgba(201, 162, 75, 0.25) var(--fill, 50%));
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  color: transparent;
-}
-.rating-count {
-  color: var(--text-muted);
-  font-size: 14px;
-  margin-bottom: var(--sp-24);
-}
-.rating-count strong {
-  color: var(--text);
-  font-weight: 600;
-}
-.rating-cta {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 12px 22px;
-  background: transparent;
-  color: var(--accent);
-  border: 1px solid var(--accent);
-  border-radius: var(--radius);
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 0.4px;
-  transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
-}
-.rating-cta:hover {
-  background: var(--accent);
-  color: var(--bg-base);
-  transform: translateY(-2px);
-}
-
-/* --- Review cards grid --- */
+/* --- Review cards grid — balanced 3-up now that the rating panel that used
+   to sit alongside it is gone; falls back the same way certs/awards grids
+   do at the same breakpoints. --- */
 .reviews-cards {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: var(--sp-16);
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--sp-24);
+}
+@media (max-width: 900px) {
+  .reviews-cards { grid-template-columns: repeat(2, 1fr); }
 }
 @media (max-width: 600px) {
   .reviews-cards { grid-template-columns: 1fr; }
 }
 .review-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
+  /* No backdrop-filter here — continuous float animation + backdrop-filter
+     cause GPU layer conflicts. Use opaque glass-bg color + inset highlight. */
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
   border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm), var(--glass-inset);
   padding: var(--sp-24);
   display: flex;
   flex-direction: column;
@@ -3061,7 +4484,7 @@ select {
 .review-card:nth-child(6n+5) { animation-duration: 6.1s; animation-delay: -3.4s; }
 .review-card:nth-child(6n+6) { animation-duration: 5.9s; animation-delay: -1.8s; }
 .review-card:hover {
-  border-color: rgba(201, 162, 75, 0.35);
+  border-color: rgba(28, 143, 209, 0.35);
   box-shadow: var(--shadow-md);
   animation-play-state: paused;
 }
@@ -3166,9 +4589,12 @@ select {
 .cert-card {
   display: flex;
   flex-direction: column;
-  background: var(--bg-card);
-  border: 1px solid var(--border);
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
   border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm), var(--glass-inset);
   overflow: hidden;
   color: var(--text);
   transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
@@ -3177,8 +4603,8 @@ select {
 }
 .cert-card:hover {
   transform: translateY(-6px);
-  border-color: rgba(201, 162, 75, 0.4);
-  box-shadow: var(--shadow-lg);
+  border-color: rgba(28, 143, 209, 0.4);
+  box-shadow: var(--shadow-lg), var(--glass-inset);
 }
 .cert-thumb {
   aspect-ratio: 3 / 4;
@@ -3302,13 +4728,16 @@ html[dir="rtl"] {
   --text-line-arabic: 1.75;
 }
 html[dir="rtl"] body { font-family: 'Tajawal', 'Cairo', 'Noto Sans Arabic', var(--font-body); }
+/* Headings set their own font-family (the Latin display face), which
+   overrides the inherited body font — without this, Arabic headings would
+   silently fall back to a generic system sans-serif instead of Tajawal,
+   since Manrope has no Arabic glyphs of its own. */
+html[dir="rtl"] h1, html[dir="rtl"] h2, html[dir="rtl"] h3, html[dir="rtl"] h4, html[dir="rtl"] .display {
+  font-family: 'Tajawal', 'Cairo', 'Noto Sans Arabic', var(--font-body);
+}
 
 /* Nav order stays natural in RTL; flex handles it. Only need to flip a few
    specific asymmetric decorations. */
-html[dir="rtl"] .chairman-quote .quote-mark {
-  left: auto;
-  right: -6px;
-}
 html[dir="rtl"] .chairman-name-plate {
   right: auto;
   left: -24px;
@@ -3317,7 +4746,6 @@ html[dir="rtl"] .cert-card,
 html[dir="rtl"] .review-card {
   text-align: right;
 }
-html[dir="rtl"] .rating-summary,
 html[dir="rtl"] .section-header.center {
   text-align: center; /* keep centred layouts centred */
 }
@@ -3334,7 +4762,7 @@ html[dir="rtl"] .contact-quick,
 html[dir="rtl"] .reviews-head {
   flex-direction: row-reverse;
 }
-html[dir="rtl"] .footer-bottom-flex {
+html[dir="rtl"] .footer-grid {
   direction: rtl;
 }
 
@@ -3420,10 +4848,159 @@ html[dir="rtl"] .floating-cta { right: auto; left: 22px; align-items: flex-start
   .floating-call { width: 52px; height: 52px; }
 }
 
-/* Chat widget sits above the stacked floating buttons on the right */
-.naa-chat { bottom: 150px !important; }
+/* Back to top — opposite corner from the WhatsApp/Call stack so it never
+   crowds them; only appears once there's meaningful scroll to undo. */
+.back-to-top {
+  position: fixed;
+  left: 22px;
+  bottom: 22px;
+  z-index: 2500;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 1px solid var(--glass-border);
+  background: var(--bg-card);
+  color: var(--accent);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
+  opacity: 0;
+  transform: translateY(12px);
+  pointer-events: none;
+  transition: opacity 0.25s ease, transform 0.25s ease, background 0.2s ease, box-shadow 0.2s ease;
+}
+.back-to-top.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+.back-to-top:hover {
+  background: var(--accent);
+  color: #fff;
+  box-shadow: 0 12px 28px rgba(28, 143, 209, 0.4);
+}
+.back-to-top:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+html[dir="rtl"] .back-to-top { left: auto; right: 22px; }
 @media (max-width: 500px) {
-  .naa-chat { bottom: 138px !important; }
+  .back-to-top { width: 44px; height: 44px; left: 16px; bottom: 16px; }
+  html[dir="rtl"] .back-to-top { left: auto; right: 16px; }
+}
+
+/* ==========================================================================
+   Social Sidebar — right-edge vertical strip (desktop only)
+   ========================================================================== */
+.social-sidebar {
+  position: fixed;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 900;           /* below header (1000), above page content */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 8px;
+  background: var(--glass-bg-panel);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  border-right: none;     /* flush against the viewport edge */
+  border-radius: 10px 0 0 10px;
+  box-shadow: -4px 0 20px rgba(0, 0, 0, 0.3), var(--glass-inset);
+}
+
+.social-sidebar-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  transition: color 0.2s ease, background 0.2s ease, transform 0.2s ease,
+              box-shadow 0.2s ease, border-color 0.2s ease;
+  text-decoration: none;
+}
+.social-sidebar-btn:hover {
+  color: var(--accent);
+  background: rgba(28, 143, 209, 0.12);
+  border-color: rgba(28, 143, 209, 0.4);
+  transform: translateX(-3px);           /* subtle leftward lift from edge */
+  box-shadow: 0 0 12px rgba(28, 143, 209, 0.25);
+}
+.social-sidebar-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  color: var(--accent);
+}
+
+/* Hide sidebar on mobile — icons appear in footer instead */
+@media (max-width: 768px) {
+  .social-sidebar { display: none; }
+}
+
+/* Reduced-transparency: solid fallback */
+@supports not (backdrop-filter: blur(1px)) {
+  .social-sidebar { background: rgba(11, 31, 58, 0.97); }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .social-sidebar {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: rgba(11, 31, 58, 0.97);
+  }
+}
+
+/* ==========================================================================
+   Social Icons — mobile footer row (hidden on desktop)
+   ========================================================================== */
+.social-footer-icons {
+  display: none;           /* hidden on desktop; sidebar handles it */
+}
+.social-footer-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+  text-decoration: none;
+}
+.social-footer-btn:hover {
+  color: var(--accent);
+  background: rgba(28, 143, 209, 0.12);
+  border-color: rgba(28, 143, 209, 0.4);
+}
+.social-footer-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  color: var(--accent);
+}
+
+@media (max-width: 768px) {
+  .social-footer-icons {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: 8px;       /* sits after the Email link in the footer-social row */
+  }
+}
+
+/* Chat widget sits above the stacked floating buttons on the right */
+.naa-chat { bottom: 150px !important; --naa-chat-bottom-gap: 150px; }
+@media (max-width: 500px) {
+  .naa-chat { bottom: 138px !important; --naa-chat-bottom-gap: 138px; }
 }
 
 /* Legacy header call/whatsapp buttons no longer used in React header */
@@ -3431,7 +5008,10 @@ html[dir="rtl"] .floating-cta { right: auto; left: 22px; align-items: flex-start
 .site-header .header-wa { display: none !important; }
 
 /* Active NavLink accent line stays lit */
-.nav-link.is-active { color: var(--text); }
+.nav-link.is-active {
+  color: var(--text);
+  background: var(--accent-soft);
+}
 .nav-link.is-active::after { transform: scaleX(1); transform-origin: left; }
 html[dir="rtl"] .nav-link.is-active::after { transform-origin: right; }
 
@@ -3483,8 +5063,27 @@ html[dir="rtl"] .csr-grid { text-align: right; }
    image-heavy pages like /awards where lazy-loaded thumbs pop in later).
    ========================================================================== */
 main { position: relative; }
+/* fill-mode: backwards (not "both") deliberately — it still holds the
+   "from" keyframe during the pre-start delay so there's no flash of
+   unanimated content, but critically it does NOT keep holding the "to"
+   keyframe once the animation finishes. A held transform (even a
+   resolved identity matrix visually identical to none) makes this
+   element a new containing block for any position:fixed descendant —
+   which silently broke every fixed-position element rendered inside a
+   route page (this modal, and the pre-existing Lightbox), positioning
+   them relative to this element's own box instead of the real viewport. */
 .route-page {
-  animation: routeFadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation: routeFadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+}
+/* The first section on any route page sits directly under the fixed
+   header with no scrolling involved on initial load — scroll-margin-top
+   can't help here (there's nothing above it to scroll past), so its own
+   top padding has to clear the header instead. Only the top side is
+   boosted; the bottom keeps the standard section rhythm. `.hero` is
+   excluded — it manages its own header clearance internally (see
+   .hero-overlay) since it's a full-bleed background, not a padded box. */
+.route-page > section:first-child:not(.hero) {
+  padding-top: var(--header-height);
 }
 @keyframes routeFadeIn {
   from { opacity: 0; transform: translateY(8px); }
@@ -3517,4 +5116,611 @@ html { scroll-behavior: smooth; }
   color: var(--accent);
   font-style: italic;
   letter-spacing: 0.5px;
+}
+
+/* ==========================================================================
+   Glass Performance & Accessibility Guards
+   — must be at end so they override individual glass rules above
+   ========================================================================== */
+
+/* Mobile: halve the global blur radius to cut GPU cost on small screens */
+@media (max-width: 600px) {
+  :root { --glass-blur: 6px; }
+  .naa-chat-panel { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+}
+
+/* Browsers without backdrop-filter (older Firefox): restore solid card bg */
+@supports not (backdrop-filter: blur(1px)) {
+  .glass,
+  .service-card,
+  .fleet-card,
+  .cert-card,
+  .kpi-card,
+  .chart-card,
+  .award-item,
+  .leader-card,
+  .review-card { background: var(--bg-card); }
+
+  .logo-area                { background: rgba(11, 31, 58, 0.55); }
+  .site-header.scrolled .logo-area { background: rgba(11, 31, 58, 0.40); }
+  .mega-columns             { background: rgba(11, 31, 58, 0.98); }
+  .naa-chat-panel           { background: var(--bg-elevated); }
+  .project-caption          { backdrop-filter: none; -webkit-backdrop-filter: none; }
+}
+
+/* prefers-reduced-transparency: remove all blur, use opaque surfaces */
+@media (prefers-reduced-transparency: reduce) {
+  .glass,
+  .logo-area,
+  .service-card,
+  .fleet-card,
+  .cert-card,
+  .kpi-card,
+  .chart-card,
+  .award-item,
+  .leader-card,
+  .naa-chat-panel,
+  .mega-columns,
+  .project-caption {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+  .glass,
+  .service-card,
+  .fleet-card,
+  .cert-card,
+  .kpi-card,
+  .chart-card,
+  .award-item,
+  .leader-card,
+  .review-card { background: var(--bg-card); }
+  .logo-area        { background: rgba(11, 31, 58, 0.55); }
+  .mega-columns     { background: rgba(11, 31, 58, 0.98); }
+  .naa-chat-panel   { background: var(--bg-elevated); }
+}
+
+/* ==========================================================================
+   Animated photo frame — subtle mouse-driven 3D tilt + glare, applied to the
+   site's photo galleries (chairman portrait, projects, civil works, awards,
+   certifications, gallery page). Pairs with lib/tiltEffect.js.
+   ========================================================================== */
+.tilt-frame {
+  --tilt-x: 0deg;
+  --tilt-y: 0deg;
+  --glare-x: 50%;
+  --glare-y: 50%;
+  --glare-opacity: 0;
+  position: relative;
+  perspective: 800px;
+  transform: perspective(800px) rotateX(var(--tilt-x)) rotateY(var(--tilt-y));
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
+  will-change: transform;
+}
+.tilt-frame:hover {
+  box-shadow: 0 20px 44px rgba(0, 0, 0, 0.4), 0 0 0 1px var(--accent-soft);
+}
+.tilt-frame::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at var(--glare-x) var(--glare-y), rgba(255, 255, 255, 0.30), transparent 55%);
+  opacity: var(--glare-opacity);
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: 2;
+}
+@media (prefers-reduced-motion: reduce) {
+  .tilt-frame { transition: box-shadow 0.3s ease; transform: none !important; }
+}
+/* Touch devices have no hover/pointer-move — don't leave a stuck tilt.
+   Resetting `transform` alone isn't enough: `perspective` and
+   `will-change: transform` each independently force the browser to
+   composite the image on its own GPU layer, which on many mobile GPUs
+   rasterizes at a mismatched texture resolution — so the photo renders
+   soft/blurred until some other interaction (e.g. a tap) invalidates and
+   re-rasterizes the layer at full sharpness. Fully opting out of the 3D
+   context (not just zeroing the rotation) is what actually fixes it. */
+@media (hover: none), (pointer: coarse) {
+  .tilt-frame {
+    perspective: none;
+    transform: none !important;
+    will-change: auto;
+  }
+  .tilt-frame::after { display: none; }
+}
+
+/* ==========================================================================
+   Hash-anchor scroll offset — lets ScrollToTop.jsx use plain
+   el.scrollIntoView() and have the browser respect the fixed header height
+   automatically, instead of hand-computing pixel offsets per page in JS.
+   Derived from --header-height (+ a little breathing room) so this can
+   never drift out of sync with the header's real, measured height again.
+   ========================================================================== */
+#about, #chairman, #leadership, #numbers, #certifications,
+#services, #fleet, #projects, #gallery, #reviews, #awards,
+#contact, #contact-form, #sister-concerns, #mission-vision {
+  scroll-margin-top: calc(var(--header-height) + var(--sp-16));
+}
+
+/* ==========================================================================
+   Sister Concerns page
+   ========================================================================== */
+.sister-concerns {
+  background: var(--bg-base);
+}
+.sister-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--sp-24);
+}
+.sister-card {
+  position: relative;
+  overflow: hidden;
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm), var(--glass-inset);
+  padding: var(--sp-32) var(--sp-24);
+  text-align: center;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease, box-shadow 0.3s ease;
+}
+/* Top accent bar — hidden until hover, brand blue/green alternating with
+   the icon badge below so the two colors read as one deliberate system. */
+.sister-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.sister-card:nth-child(even)::before { background: var(--brand-green); }
+.sister-card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(28, 143, 209, 0.4);
+  box-shadow: var(--shadow-md), var(--glass-inset);
+}
+.sister-card:hover::before { transform: scaleX(1); }
+/* Fixed-size logo plate — object-fit:contain keeps every logo's own aspect
+   ratio and full mark visible (no cropping) regardless of source shape, on
+   a consistent white card so ten differently-styled logos read as one set. */
+.sister-logo {
+  width: 100%;
+  height: 96px;
+  margin: 0 auto var(--sp-20);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--sp-8) var(--sp-12);
+  background: #fff;
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius);
+}
+.sister-logo img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+.sister-name {
+  font-size: 16px;
+  margin: 0;
+  color: var(--text);
+  line-height: 1.4;
+}
+.sister-empty {
+  text-align: center;
+  color: var(--text-muted);
+  padding: var(--sp-48) var(--sp-24);
+  font-size: 14.5px;
+  line-height: 1.7;
+  max-width: 520px;
+  margin: 0 auto;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+}
+@media (max-width: 900px) {
+  .sister-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 600px) {
+  .sister-grid { grid-template-columns: 1fr; }
+}
+
+/* ==========================================================================
+   Mission & Vision (Home page only) — full-bleed dark band, same "chrome"
+   navy as the header/footer so it reads as a deliberate break in the page
+   rhythm rather than just another white section. Background is an image by
+   default (slow Ken Burns drift); an optional video layers on top the same
+   way Hero's does, once real footage exists — see mv-video below.
+   ========================================================================== */
+.mission-vision {
+  position: relative;
+  overflow: hidden;
+  background: var(--chrome-bg-base);
+  padding: var(--sp-96) 0;
+}
+.mv-bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  animation: mvKenBurns 24s ease-in-out infinite alternate;
+}
+/* Full-bleed background video, full brightness — the .mv-overlay gradient
+   above it (not element opacity here) is what keeps the card text readable,
+   so the footage itself still reads clearly where the overlay is lightest. */
+.mv-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+}
+@keyframes mvKenBurns {
+  from { transform: scale(1); }
+  to   { transform: scale(1.08); }
+}
+/* Dark navy wash at ~50% opacity, feathered slightly darker at the very top
+   and bottom so the section blends into the chrome-navy header/footer tone
+   instead of showing a hard video edge. */
+.mv-overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(11, 31, 58, 0.6) 0%, rgba(11, 31, 58, 0.5) 50%, rgba(11, 31, 58, 0.6) 100%);
+}
+.mv-container {
+  position: relative;
+  z-index: 1;
+}
+.mv-overline { color: var(--accent); }
+.mv-heading {
+  color: #fff;
+  text-shadow: 0 4px 24px rgba(0,0,0,0.4);
+}
+.mv-lede { color: rgba(255,255,255,0.78); }
+
+.mv-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--sp-32);
+  margin-top: var(--sp-48);
+}
+/* No backdrop-filter / translucent fill here on purpose — a frosted glass
+   panel would blur the video showing through it. Legibility instead comes
+   from the .mv-overlay gradient (dims the whole video) plus text-shadow on
+   the type itself, so the footage stays sharp right up to the letters. */
+.mv-card {
+  position: relative;
+}
+.mv-card-num {
+  display: block;
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: 15px;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+  margin-bottom: var(--sp-16);
+  text-shadow: 0 2px 12px rgba(0,0,0,0.5);
+}
+.mv-card h3 {
+  color: #fff;
+  font-size: 24px;
+  margin-bottom: var(--sp-16);
+  text-shadow: 0 2px 16px rgba(0,0,0,0.55);
+}
+.mv-card p {
+  color: rgba(255,255,255,0.92);
+  line-height: 1.75;
+  font-size: 15.5px;
+  margin: 0;
+  text-shadow: 0 1px 10px rgba(0,0,0,0.55);
+}
+/* The component itself never mounts <video> for prefers-reduced-motion (so
+   it's never fetched at all) — this is just a belt-and-suspenders
+   guarantee at the CSS layer in case that setting changes after mount. */
+@media (prefers-reduced-motion: reduce) {
+  .mv-bg { animation: none; }
+  .mv-video { display: none; }
+}
+@media (max-width: 900px) {
+  .mv-grid { grid-template-columns: 1fr; }
+  .mission-vision { padding: var(--sp-64) 0; }
+}
+
+/* ==========================================================================
+   Mission & Vision — standalone page (/mission-vision). Plain editorial
+   layout (no video) — the home page's video-background teaser is a
+   deliberately punchier summary; this is the full, thorough version.
+   ========================================================================== */
+.mv-page-block { background: var(--bg-base); }
+.mv-page-heading {
+  text-align: center;
+  margin-bottom: var(--sp-32);
+}
+.mv-page-copy {
+  max-width: 70ch;
+  margin: 0 auto;
+}
+.mv-page-copy p {
+  font-size: 16.5px;
+  line-height: 1.85;
+  color: var(--text-muted);
+  margin-bottom: var(--sp-20);
+}
+.mv-page-copy p:last-child { margin-bottom: 0; }
+
+/* ==========================================================================
+   Service detail pages (/services/:slug) — hero banner (reuses the service's
+   own card photo), overview, scope checklist, why-us, and a closing CTA.
+   Shares .mv-page-heading / .mv-page-copy / .mv-page-inner / .reveal-up with
+   the Mission & Vision page for a consistent look and the same scroll-in
+   animation across every long-form content page.
+   ========================================================================== */
+.service-detail-hero {
+  position: relative;
+  overflow: hidden;
+  padding: calc(var(--header-height) + var(--sp-64)) 0 var(--sp-64);
+  background-size: cover;
+  background-position: center;
+  background-color: var(--chrome-bg-base);
+  text-align: center;
+  animation: serviceHeroIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+}
+@keyframes serviceHeroIn {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: none; }
+}
+.service-detail-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(11, 31, 58, 0.82), rgba(11, 31, 58, 0.72));
+}
+.service-detail-hero-inner {
+  position: relative;
+  z-index: 1;
+  max-width: 760px;
+  margin: 0 auto;
+}
+.service-detail-hero-inner .overline { color: var(--accent); }
+.service-detail-hero-inner h1 {
+  color: #fff;
+  font-size: clamp(2rem, 4.5vw, 3rem);
+  margin: var(--sp-12) 0 var(--sp-16);
+  text-shadow: 0 4px 20px rgba(0,0,0,0.4);
+}
+.service-detail-tagline {
+  color: rgba(255,255,255,0.85);
+  font-size: 17px;
+  line-height: 1.6;
+  max-width: 60ch;
+  margin: 0 auto;
+}
+.service-detail-block { background: var(--bg-base); }
+.service-detail-desc {
+  max-width: 70ch;
+  margin: 0 auto;
+  font-size: 16.5px;
+  line-height: 1.85;
+  color: var(--text-muted);
+  text-align: center;
+}
+/* Split feature — full-bleed photo one side, solid brand-navy panel the
+   other. Deliberately no overlay/translucency anywhere: image and text
+   never occupy the same pixels, so legibility never depends on a scrim. */
+.service-detail-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 480px;
+}
+.service-detail-split-media { position: relative; overflow: hidden; }
+.service-detail-split-media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.08);
+  transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.service-detail-split:has(.service-detail-split-inner.is-in-view) .service-detail-split-media img {
+  transform: scale(1);
+}
+.service-detail-split-panel {
+  display: flex;
+  align-items: center;
+  background: var(--chrome-bg-base);
+}
+.service-detail-split-inner {
+  max-width: 440px;
+  margin: 0 auto;
+  padding: var(--sp-64) var(--sp-32);
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.service-detail-split-inner.is-in-view { opacity: 1; transform: none; }
+.service-detail-split-inner .mv-page-heading { color: #fff; text-align: left; }
+.service-detail-split-text {
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 16px;
+  line-height: 1.8;
+}
+html[dir="rtl"] .service-detail-split-inner .mv-page-heading { text-align: right; }
+@media (max-width: 900px) {
+  .service-detail-split { grid-template-columns: 1fr; min-height: 0; }
+  .service-detail-split-media { aspect-ratio: 4 / 3; }
+  .service-detail-split-inner { padding: var(--sp-48) var(--sp-24); text-align: center; margin: 0; max-width: none; }
+  .service-detail-split-inner .mv-page-heading { text-align: center; }
+  html[dir="rtl"] .service-detail-split-inner .mv-page-heading { text-align: center; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .service-detail-split-media img { transition: none; transform: none; }
+  .service-detail-split-inner { transition: none; opacity: 1; transform: none; }
+}
+.service-detail-scope-list {
+  list-style: none;
+  margin: 0 auto;
+  padding: 0;
+  max-width: 640px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-16);
+}
+.service-detail-scope-list li {
+  position: relative;
+  padding-left: 26px;
+  font-size: 15.5px;
+  color: var(--text);
+  line-height: 1.6;
+}
+.service-detail-scope-list li::before {
+  content: '';
+  position: absolute;
+  left: 2px;
+  top: 7px;
+  width: 9px;
+  height: 9px;
+  border-radius: 2px;
+  background: var(--accent);
+  opacity: 0.65;
+  transform: rotate(45deg);
+}
+html[dir="rtl"] .service-detail-scope-list li { padding-left: 0; padding-right: 26px; text-align: right; }
+html[dir="rtl"] .service-detail-scope-list li::before { left: auto; right: 2px; }
+.service-detail-cta {
+  background: var(--chrome-bg-base);
+  padding: var(--sp-64) 0;
+}
+.service-detail-cta-inner {
+  text-align: center;
+  max-width: 640px;
+  margin: 0 auto;
+}
+.service-detail-cta-inner h2 {
+  color: #fff;
+  margin-bottom: var(--sp-24);
+}
+@media (prefers-reduced-motion: reduce) {
+  .service-detail-hero { animation: none; }
+}
+
+/* ==========================================================================
+   Interactive 3D model viewer (Model3DViewer.jsx) — currently used on the
+   Equipment Support service page. Wraps Google's <model-viewer> web
+   component, loaded on demand so its runtime never ships to pages that
+   don't use it.
+   ========================================================================== */
+.model3d-wrap {
+  max-width: 640px;
+  margin: 0 auto;
+}
+/* Smaller, square presentation for decorative accent models (e.g. the
+   certification badge) rather than a full product-viewer showcase. */
+.model3d-wrap-compact {
+  max-width: 280px;
+  margin: 0 auto var(--sp-32);
+}
+.model3d-wrap-compact .model3d-stage { aspect-ratio: 1 / 1; }
+.model3d-stage {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: radial-gradient(120% 100% at 50% 20%, var(--bg-card) 0%, var(--bg-deep) 100%);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-md);
+}
+.model3d-el {
+  display: block;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  --poster-color: transparent;
+}
+.model3d-stage.is-loaded .model3d-el { opacity: 1; }
+.model3d-loading {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.model3d-spinner {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 3px solid var(--border);
+  border-top-color: var(--accent);
+  animation: model3dSpin 0.8s linear infinite;
+}
+@keyframes model3dSpin { to { transform: rotate(360deg); } }
+.model3d-hint {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-8);
+  margin-top: var(--sp-16);
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+.model3d-hint svg { color: var(--accent); flex-shrink: 0; }
+.model3d-credit {
+  text-align: center;
+  margin-top: var(--sp-8);
+  font-size: 11px;
+  color: var(--text-muted);
+  opacity: 0.75;
+}
+.model3d-credit a { color: var(--text-muted); text-decoration: underline; text-underline-offset: 2px; }
+.model3d-credit a:hover { color: var(--accent); }
+@media (prefers-reduced-motion: reduce) {
+  .model3d-spinner { animation-duration: 1.6s; }
+}
+
+/* ==========================================================================
+   Home page — "view all" teaser links between condensed sections
+
+   This sits BETWEEN two top-level sections, so its own top+bottom padding
+   plus the flanking sections' padding must still add up to the same total
+   gap (2 × --section-pad) used everywhere else on the site — otherwise
+   these particular section boundaries read as tighter/looser than every
+   other one, which is exactly the inconsistency this was meant to fix.
+   Each of the four contributors (previous section's bottom padding, this
+   element's own top+bottom padding, next section's top padding) is set to
+   exactly half of --section-pad, so they sum to the standard total with
+   the "view all" link sitting seamlessly inside that whitespace instead of
+   adding an extra, differently-sized slab.
+   ========================================================================== */
+section:has(+ .home-viewall) {
+  padding-bottom: calc(var(--section-pad) / 2);
+}
+.home-viewall {
+  text-align: center;
+  padding: calc(var(--section-pad) / 2) 0;
+}
+.home-viewall + section {
+  padding-top: calc(var(--section-pad) / 2);
+}
+.home-viewall-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.4px;
+  color: var(--accent);
+  transition: gap 0.2s ease, color 0.2s ease;
+}
+.home-viewall-link:hover {
+  gap: 10px;
+  color: var(--accent-hover);
 }

@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import { useI18n } from "../context/I18nContext.jsx";
 import { useContent, pickLang } from "../hooks/useContent.js";
+import { tiltHandlers } from "../lib/tiltEffect.js";
 
 export default function CivilGallery({ onOpen }) {
   const { lang } = useI18n();
@@ -60,9 +61,10 @@ export default function CivilGallery({ onOpen }) {
         <div className="carousel-track" ref={trackRef}>
           {doubled.map((it, i) => (
             <div
-              className="carousel-item"
+              className="carousel-item tilt-frame"
               key={i}
               onClick={() => onOpen && onOpen(it.imagePath, `Civil work ${(i % items.length) + 1}`)}
+              {...tiltHandlers}
             >
               <img src={it.imagePath} alt={it.data?.alt || "Civil Work"} loading="lazy" />
             </div>

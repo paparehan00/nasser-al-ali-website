@@ -20,8 +20,8 @@
   const API_ENDPOINT = /^https?:\/\//i.test(rawEndpoint) ? rawEndpoint : "";
   const STORAGE_KEY = "naa-chat-session-v1";
   const LANG_KEY = "naa-chat-lang";
-  const WA_URL = "https://wa.me/97466557728";
-  const TEL_URL = "tel:+97466557728";
+  const WA_URL = "https://wa.me/97455596774";
+  const TEL_URL = "tel:+97455861100";
   const LOGO_SRC = "assets/chatbotlogo.jpg";
 
   const I18N = {
@@ -43,9 +43,9 @@
       ],
       typing: "Assistant is typing",
       offline:
-        "I couldn't reach the assistant. Please try again, or WhatsApp us at +974 6655 7728.",
+        "I couldn't reach the assistant. Please try again, or WhatsApp us at +974 5559 6774.",
       unavailable:
-        "Assistant temporarily unavailable - WhatsApp us at +974 6655 7728.",
+        "Assistant temporarily unavailable - WhatsApp us at +974 5559 6774.",
       rateLimit: "One moment - we're a bit busy. Trying again…",
       leadTitle: "Would you like our team to reach out?",
       leadBody: "Share your contact and we'll be in touch shortly.",
@@ -60,7 +60,7 @@
         quote: "Request a Quote",
         consultation: "Book a Consultation",
         whatsapp: "Chat on WhatsApp",
-        call: "Call +974 6655 7728",
+        call: "Call +974 5586 1100",
         projects: "View Projects",
         services: "View Services",
         fleet: "View Fleet",
@@ -89,8 +89,8 @@
         "أين يقع مقركم؟",
       ],
       typing: "المساعد يكتب",
-      offline: "تعذّر الوصول إلى المساعد. حاول لاحقًا أو راسلنا على واتساب +974 6655 7728.",
-      unavailable: "المساعد غير متاح مؤقتًا - راسلنا على واتساب +974 6655 7728.",
+      offline: "تعذّر الوصول إلى المساعد. حاول لاحقًا أو راسلنا على واتساب +974 5559 6774.",
+      unavailable: "المساعد غير متاح مؤقتًا - راسلنا على واتساب +974 5559 6774.",
       rateLimit: "لحظة من فضلك - النظام مشغول قليلًا…",
       leadTitle: "هل تودّ أن يتواصل معك فريقنا؟",
       leadBody: "شارك بيانات التواصل وسنعاود الاتصال بك قريبًا.",
@@ -105,7 +105,7 @@
         quote: "اطلب عرض سعر",
         consultation: "احجز استشارة",
         whatsapp: "تواصل عبر واتساب",
-        call: "اتصل بنا +974 6655 7728",
+        call: "اتصل بنا +974 5586 1100",
         projects: "عرض المشاريع",
         services: "عرض الخدمات",
         fleet: "عرض الأسطول",
@@ -191,6 +191,17 @@
   const scrollBottom = (el) => {
     requestAnimationFrame(() => {
       el.scrollTop = el.scrollHeight;
+    });
+  };
+
+  // Scroll so the TOP of a new message element is visible (reading position).
+  // Uses getBoundingClientRect so it works regardless of CSS positioning.
+  const scrollToMsgTop = (msgEl) => {
+    requestAnimationFrame(() => {
+      const bodyRect = $body.getBoundingClientRect();
+      const msgRect  = msgEl.getBoundingClientRect();
+      const delta    = msgRect.top - bodyRect.top - 8; // 8px top breathing room
+      if (delta > 0) $body.scrollTop += delta;
     });
   };
 
@@ -359,6 +370,8 @@
   const renderMessage = (msg, opts = {}) => {
     const wrap = document.createElement("div");
     wrap.className = `naa-msg naa-msg-${msg.role}`;
+    // Explicit dir so RTL is correct even if CSS direction is overridden
+    wrap.setAttribute("dir", state.lang === "ar" ? "rtl" : "ltr");
     if (msg.role === "assistant") {
       const parsed = parseActions(msg.content);
       const ctaHtml = parsed.ctas.length
@@ -405,7 +418,14 @@
     });
 
     $body.appendChild(wrap);
-    scrollBottom($body);
+    if (!opts.noScroll) {
+      if (msg.role === "assistant") {
+        // Scroll so the start of the new reply is visible — user reads top-down.
+        scrollToMsgTop(wrap);
+      } else {
+        scrollBottom($body);
+      }
+    }
   };
 
   const renderTyping = () => {
@@ -448,7 +468,9 @@
     if (!state.messages.length) {
       renderGreeting();
     } else {
-      state.messages.forEach((m) => renderMessage(m, { skipLead: true }));
+      // Replay history without per-message scroll jumps, then land at the bottom.
+      state.messages.forEach((m) => renderMessage(m, { skipLead: true, noScroll: true }));
+      scrollBottom($body);
     }
     renderChips();
   };

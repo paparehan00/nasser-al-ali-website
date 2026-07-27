@@ -20,6 +20,7 @@ import contentRoutes from "./routes/content.js";
 import adminRoutes from "./routes/admin.js";
 import uploadRoutes, { UPLOAD_ROOT } from "./routes/uploads.js";
 import bookingsRoutes from "./routes/bookings.js";
+import applicationsRoutes from "./routes/applications.js";
 
 export function createApp() {
   const app = express();
@@ -33,6 +34,14 @@ export function createApp() {
       origin(origin, cb) {
         if (!origin) return cb(null, true);
         if (env.clientOrigins.includes(origin)) return cb(null, true);
+        // Vite falls back to :5174, :5175, etc. whenever :5173 is already
+        // taken (common with more than one dev server running locally) —
+        // accept any localhost port in development instead of hard-failing
+        // every API call the moment the port drifts from .env's fixed value.
+        // Production keeps the strict allowlist.
+        if (!env.isProd && /^https?:\/\/(localhost|127\.0\.0\.1):\d+$/.test(origin)) {
+          return cb(null, true);
+        }
         return cb(new Error(`Origin ${origin} not allowed`));
       },
       credentials: true,
@@ -49,6 +58,7 @@ export function createApp() {
   app.use("/api/admin", adminRoutes);
   app.use("/api/admin/uploads", uploadRoutes);
   app.use("/api/bookings", bookingsRoutes);
+  app.use("/api/applications", applicationsRoutes);
 
   // Serve uploaded images. Read-only static: express.static never executes
   // files, and we only ever write image bytes here from the upload pipeline

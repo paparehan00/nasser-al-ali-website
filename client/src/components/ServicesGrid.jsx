@@ -1,27 +1,18 @@
+import { Link } from "react-router-dom";
+import { Users, Truck, Building2, Zap, Sparkles, Briefcase } from "lucide-react";
 import { useI18n } from "../context/I18nContext.jsx";
 import { useContent, pickLang } from "../hooks/useContent.js";
+import { SERVICE_SLUGS_BY_ID } from "../lib/serviceDetails.js";
 
 // Icon glyphs are per-service-id UI, not editable content — kept inline
 // and looked up by the item's data.id.
 const ICONS = {
-  manpower: (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-  ),
-  equipment: (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="16" x2="8" y2="16.01"/><line x1="16" y1="16" x2="16" y2="16.01"/></svg>
-  ),
-  civil: (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 22H2M16 22V6l-6-4-6 4v16M16 10h6v12M6 14h4M6 10h4M6 18h4"/></svg>
-  ),
-  mep: (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-  ),
-  cleaning: (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 12l2-2 4 4 8-8 4 4M3 20h18"/></svg>
-  ),
-  business: (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 9h.01M9 13h.01M9 17h.01M14 9h.01M14 13h.01M14 17h.01"/></svg>
-  ),
+  manpower: <Users size={22} strokeWidth={2} aria-hidden="true" />,
+  equipment: <Truck size={22} strokeWidth={2} aria-hidden="true" />,
+  civil: <Building2 size={22} strokeWidth={2} aria-hidden="true" />,
+  mep: <Zap size={22} strokeWidth={2} aria-hidden="true" />,
+  cleaning: <Sparkles size={22} strokeWidth={2} aria-hidden="true" />,
+  business: <Briefcase size={22} strokeWidth={2} aria-hidden="true" />,
 };
 
 export default function ServicesGrid() {
@@ -41,8 +32,9 @@ export default function ServicesGrid() {
         <div className="services-grid">
           {items.map((s) => {
             const d = s.data || {};
-            return (
-              <div className="service-card" key={s.id}>
+            const slug = SERVICE_SLUGS_BY_ID[d.id];
+            const card = (
+              <>
                 <div className="service-media">
                   <div className="service-img-wrap">
                     <img src={s.imagePath} alt={d.alt} loading="lazy" />
@@ -54,7 +46,14 @@ export default function ServicesGrid() {
                   <div className="card-line" />
                   <p>{pickLang(d.body, lang)}</p>
                 </div>
-              </div>
+              </>
+            );
+            return slug ? (
+              <Link className="service-card service-card-link" to={`/services/${slug}`} key={s.id}>
+                {card}
+              </Link>
+            ) : (
+              <div className="service-card" key={s.id}>{card}</div>
             );
           })}
         </div>

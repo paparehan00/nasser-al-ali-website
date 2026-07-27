@@ -2,21 +2,32 @@ import { useEffect, useRef, useState } from "react";
 import { useI18n } from "../context/I18nContext.jsx";
 import { useContent, pickLang } from "../hooks/useContent.js";
 
+function parseNum(v) {
+  if (typeof v === "number") return Number.isFinite(v) ? Math.round(v) : 0;
+  if (typeof v === "string") {
+    const n = parseInt(v.replace(/\D/g, ""), 10);
+    return Number.isFinite(n) ? n : 0;
+  }
+  return 0;
+}
+
 function useCountUp(target, active, duration = 2000) {
+  const safeTarget = parseNum(target);
   const [value, setValue] = useState(0);
   useEffect(() => {
-    if (!active) return;
+    if (!active || safeTarget <= 0) return;
     let raf;
     const start = performance.now();
     const tick = (now) => {
       const t = Math.min(1, (now - start) / duration);
       const eased = 1 - Math.pow(1 - t, 3);
-      setValue(Math.round(target * eased));
+      setValue(Math.round(safeTarget * eased));
       if (t < 1) raf = requestAnimationFrame(tick);
+      else setValue(safeTarget);
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, [target, active, duration]);
+  }, [safeTarget, active, duration]);
   return value;
 }
 

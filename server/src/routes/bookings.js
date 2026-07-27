@@ -36,8 +36,24 @@ router.post("/", bookingLimiter, async (req, res) => {
   if (!name)                         return bad(res, "Name is required.");
   if (!EMAIL_RE.test(email))         return bad(res, "A valid email address is required.");
   if (!phone)                        return bad(res, "Phone number is required.");
+  if (!/\d{7}/.test(phone.replace(/\D/g, "")))
+                                     return bad(res, "Please enter a valid phone number.");
   if (!VALID_SERVICES.has(service))  return bad(res, "Please select a service.");
   if (!message)                      return bad(res, "Please describe how we can help.");
+
+  // Validate preferred date if provided: must be a real future date with a 4-digit year
+  if (preferredDate) {
+    const yearMatch = preferredDate.match(/^(\d{4})-/);
+    if (!yearMatch) return bad(res, "Invalid date format.");
+    const d = new Date(preferredDate);
+    if (isNaN(d.getTime())) return bad(res, "Please provide a valid date and time.");
+    const now = new Date();
+    if (d <= now) return bad(res, "Preferred date must be in the future.");
+    const year = parseInt(yearMatch[1], 10);
+    const currentYear = now.getFullYear();
+    if (year < currentYear || year > currentYear + 2)
+      return bad(res, `Please select a date between ${currentYear} and ${currentYear + 2}.`);
+  }
 
   const ip = req.ip ?? req.socket?.remoteAddress ?? null;
 

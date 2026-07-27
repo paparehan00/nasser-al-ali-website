@@ -48,6 +48,9 @@ export const env = {
   smtpUser:     optional("SMTP_USER", ""),
   smtpPass:     optional("SMTP_PASS", ""),
   mailFromName: optional("MAIL_FROM_NAME", "Nasser Al Ali Enterprises"),
+  // Address shown in "From". Falls back to the SMTP login (required for Gmail;
+  // relay providers like Brevo use a separate login, so set this explicitly there).
+  mailFromEmail: optional("MAIL_FROM_EMAIL", ""),
   notifyEmail:  optional("NOTIFY_EMAIL", ""),
 
   serverRoot,

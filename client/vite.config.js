@@ -31,6 +31,12 @@ export default defineConfig({
         "**/*.~tmp",              // Windows temp-save lock files
         "**/*.tmp",
       ],
+      // The repo lives under /mnt/c (a Windows drive mounted into WSL2 via
+      // 9p/DrvFs) — native inotify events don't reliably cross that
+      // boundary, so edits can silently fail to trigger HMR/reload. Polling
+      // is slightly heavier but actually detects every change.
+      usePolling: true,
+      interval: 300,
     },
   },
 });

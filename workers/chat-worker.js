@@ -9,7 +9,7 @@
  *   AI_API_KEY   - the provider API key
  *   ALLOWED_ORIGIN (optional) - a specific origin to allow via CORS
  *                              (default: "*"). Set this to your domain
- *                              in production, e.g. "https://nasseralaligroup.com".
+ *                              in production, e.g. "https://nasseralalienterprises.com".
  *
  * Deploy:
  *   cd workers/
@@ -23,10 +23,24 @@
 
 // AI provider endpoint - Groq (OpenAI-compatible chat-completions API).
 // Auth uses `Authorization: Bearer ${AI_API_KEY}` header, NOT a ?key= query param.
+//
+// Arabic reliability note: llama-3.3-70b-versatile can drift to English even when
+// instructed to use Arabic. If Arabic replies remain unreliable after the prompt
+// hardening below, switch AI_MODEL to a model with stronger multilingual support:
+//   "mistral-saba-24b"             – Mistral's Arabic/Middle-East optimised model
+//   "qwen/qwen3-32b"               – Qwen 3, excellent Arabic + multilingual
+//   "meta-llama/llama-4-maverick-17b-128e-instruct" – Llama 4, better multilingual
 const AI_MODEL = "llama-3.3-70b-versatile";
 const AI_ENDPOINT = "https://api.groq.com/openai/v1/chat/completions";
 
-const SYSTEM_PROMPT = `You are the official AI assistant for Nasser Al Ali Enterprises, a Qatar-based heavy-construction and contracting company. Be professional, helpful, concise, and warm.
+const SYSTEM_PROMPT = `LANGUAGE RULE — READ THIS FIRST, HIGHEST PRIORITY, NO EXCEPTIONS:
+• If the visitor's selected language is Arabic (ar) OR they write any Arabic text, you MUST reply ENTIRELY in Arabic (Modern Standard Arabic فصحى). Every word — including greetings, bullet labels, linking words, and markdown text — must be in Arabic. Company names may appear as-is, but ALL surrounding text must be Arabic. NEVER switch to English mid-reply.
+• If the visitor's selected language is English (en) AND they write in English, reply fully in English.
+• This rule OVERRIDES everything else in this prompt. Verify the language before every sentence.
+
+---
+
+You are the official AI assistant for Nasser Al Ali Enterprises, a Qatar-based heavy-construction and contracting company. Be professional, helpful, concise, and warm.
 
 ABOUT
 - A premier, multi-disciplinary construction, engineering, and manpower support conglomerate headquartered in Doha, Qatar.
@@ -63,16 +77,15 @@ LANDMARK PROJECTS
 - Twin Tower (Abdul Aziz)
 
 CONTACT
-- Primary phone / WhatsApp: +974 6655 7728
-- Landlines: +974 4435 4422 · +974 4435 1112
-- Fax: +974 4431 1474
-- Email: info@nasseralaligroup.com
+- Mobile: +974 5586 1100 · +974 5559 6774
+- WhatsApp: +974 5559 6774
+- Email: info@nasseralalienterprises.com
 - P.O. Box: 13115, Doha, Qatar
-- Group website: www.nasseralaligroup.com
+- Group website: www.nasseralalienterprises.com
 
 OFFICE
 - Corporate Headquarters: Salwa Road, Building-155, Zone 43, Doha, State of Qatar.
-- Working hours: Sunday-Friday, 9 AM - 6 PM.
+- Working hours: Sunday-Thursday, 8:00 AM - 6:00 PM.
 - Service coverage: all of Qatar and the wider GCC.
 
 CERTIFICATIONS
@@ -83,7 +96,7 @@ Nasser Al Ali Group, Nasser Al Ali Contracting, Nasser Bin Ali Trading Est, Nass
 
 STYLE
 - Answer ONLY from the provided company information above. If you don't know something, say so plainly and offer to connect the visitor via WhatsApp/contact - never guess or invent facts, names, or prices.
-- Reply in the visitor's language (English or Arabic). If they write in Arabic, reply fully in Arabic.
+- Reply language is controlled by the LANGUAGE RULE at the top of this prompt — always Arabic when lang=ar or visitor writes Arabic.
 - Keep answers concise (2-5 short paragraphs max), professional, warm.
 - Use light Markdown when helpful: **bold** for key terms, "-" bullet lists, [links](https://…) for URLs. Do NOT use headings (# ##).
 - Never quote a price. Direct pricing questions to the enquiry form or a consultation.
@@ -95,8 +108,8 @@ ACTION TAGS (very important - the widget parses these)
 When it would help the visitor, you MAY end your reply with one or two of these tags on their own line at the very end:
 - [[CTA:quote]]           - offer to open the Request-a-Quote form
 - [[CTA:consultation]]    - offer to book a consultation
-- [[CTA:whatsapp]]        - offer to chat on WhatsApp (+974 6655 7728)
-- [[CTA:call]]            - offer a phone call (+974 6655 7728)
+- [[CTA:whatsapp]]        - offer to chat on WhatsApp (+974 5559 6774)
+- [[CTA:call]]            - offer a phone call (+974 5586 1100)
 - [[CTA:projects]]        - link to the Projects section
 - [[CTA:services]]        - link to the Services section
 - [[CTA:fleet]]           - link to the Fleet section
@@ -107,14 +120,26 @@ When the visitor has shown clear buying or hiring intent AND you have exchanged 
 
 const ALLOWED_ORIGINS = new Set([
   "http://localhost:5173",
-  "http://localhost:5174",
+  "http://localhost:5175",
   "http://localhost:4173",
+  "https://www.nasseralalienterprises.com",
+  "https://nasseralalienterprises.com",
   "https://alnassertest.sameem.com.np",
 ]);
 
+function isAllowedOrigin(origin) {
+  if (ALLOWED_ORIGINS.has(origin)) return true;
+  try {
+    const u = new URL(origin);
+    return u.protocol === "https:" && u.hostname.endsWith(".devtunnels.ms");
+  } catch {
+    return false;
+  }
+}
+
 function cors(request) {
   const origin = request ? request.headers.get("Origin") || "" : "";
-  const allowed = ALLOWED_ORIGINS.has(origin) ? origin : "";
+  const allowed = isAllowedOrigin(origin) ? origin : "";
   return {
     ...(allowed ? { "Access-Control-Allow-Origin": allowed } : {}),
     "Access-Control-Allow-Headers": "Content-Type",
@@ -158,8 +183,8 @@ export default {
     }
 
     const langNote = lang === "ar"
-      ? "\n\nThe current visitor is writing in Arabic. Reply entirely in Arabic (Modern Standard or Gulf Arabic), including all Markdown labels."
-      : "\n\nReply in English unless the visitor writes in Arabic in a later turn.";
+      ? "\n\n⚠️ MANDATORY — ARABIC ONLY: The visitor's language is set to Arabic. Your ENTIRE reply must be in Arabic (Modern Standard Arabic فصحى). Not a single English word is permitted — not in greetings, bullet points, markdown labels, transitions, or any part of the response. Re-read your reply before sending and replace any English with Arabic. This requirement cannot be overridden."
+      : "\n\nReply in English. If the visitor switches to Arabic in a later message, switch your reply to Arabic immediately.";
 
     const body = {
       model: AI_MODEL,
@@ -198,7 +223,7 @@ export default {
     if (!resp.ok) {
       const friendly = resp.status === 429
         ? "We're getting a lot of questions right now - please try again in a moment."
-        : "Sorry, I had trouble reaching my assistant. Please try again in a moment, or WhatsApp us at +974 6655 7728.";
+        : "Sorry, I had trouble reaching my assistant. Please try again in a moment, or WhatsApp us at +974 5559 6774.";
       return json({ error: friendly, status: resp.status }, resp.status, request);
     }
 
@@ -216,8 +241,8 @@ export default {
     if (!text) {
       return json({
         text: lang === "ar"
-          ? "عذرًا، لم أتمكن من صياغة رد. يرجى إعادة الصياغة أو التواصل معنا على واتساب +974 6655 7728."
-          : "Sorry - I couldn't produce a reply just now. Could you rephrase, or WhatsApp us at +974 6655 7728?",
+          ? "عذرًا، لم أتمكن من صياغة رد. يرجى إعادة الصياغة أو التواصل معنا على واتساب +974 5559 6774."
+          : "Sorry - I couldn't produce a reply just now. Could you rephrase, or WhatsApp us at +974 5559 6774?",
       }, 200, request);
     }
 

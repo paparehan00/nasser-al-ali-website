@@ -53,7 +53,7 @@ function EnglishBody() {
       <p>We may update these Terms from time to time. Continued use of the Site after changes are posted constitutes acceptance of the revised Terms.</p>
 
       <h2>13. Contact</h2>
-      <p>For questions about these Terms: <a href="mailto:info@nasseralaligroup.com">info@nasseralaligroup.com</a> · +974 6655 7728 · Salwa Road, Building-155, Zone 43, Doha, State of Qatar · P.O. Box 13115, Doha, Qatar.</p>
+      <p>For questions about these Terms: <a href="mailto:info@nasseralalienterprises.com">info@nasseralalienterprises.com</a> · +974 5586 1100 · Salwa Road, Building-155, Zone 43, Doha, State of Qatar · P.O. Box 13115, Doha, Qatar.</p>
     </>
   );
 }
@@ -98,7 +98,7 @@ function ArabicBody() {
       <p>قد نُحدّث هذه الشروط من وقت لآخر. الاستمرار في استخدام الموقع بعد نشر التغييرات يُعدّ قبولًا لها.</p>
 
       <h2>13. تواصل معنا</h2>
-      <p>للاستفسار حول هذه الشروط: <a href="mailto:info@nasseralaligroup.com">info@nasseralaligroup.com</a> · +974 6655 7728 · طريق سلوى، مبنى 155، المنطقة 43، الدوحة، دولة قطر · ص.ب 13115، الدوحة، قطر.</p>
+      <p>للاستفسار حول هذه الشروط: <a href="mailto:info@nasseralalienterprises.com">info@nasseralalienterprises.com</a> · +974 5586 1100 · طريق سلوى، مبنى 155، المنطقة 43، الدوحة، دولة قطر · ص.ب 13115، الدوحة، قطر.</p>
     </>
   );
 }

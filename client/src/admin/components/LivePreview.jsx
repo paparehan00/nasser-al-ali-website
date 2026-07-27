@@ -13,7 +13,10 @@ const PREVIEW_MAP = {
   gallery:        lazy(() => import("../../components/CivilGallery.jsx")),
   certifications: lazy(() => import("../../components/CertificationsGrid.jsx")),
   awards:         lazy(() => import("../../components/AwardsGallery.jsx")),
-  reviews:        lazy(() => import("../../components/ReviewsSection.jsx")),
+  careers:        lazy(() => import("../../components/CareersSection.jsx")),
+  ads:            lazy(() => import("../../components/PromotionsSection.jsx")),
+  "sister-concerns": lazy(() => import("../../components/SisterConcernsSection.jsx")),
+  "mission-vision": lazy(() => import("../../components/MissionVisionSection.jsx")),
 };
 
 // Ordered list of selectors that map to rendered items in each public component.
@@ -25,6 +28,9 @@ const ITEM_SELECTORS = [
   ".cert-card",
   ".award-item",
   ".review-card",
+  ".job-card",
+  ".promo-card",
+  ".sister-card",
   ".stat-item",
   ".carousel-item",
   ".kpi-card",

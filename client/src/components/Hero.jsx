@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
+import { motion, useReducedMotion } from "framer-motion";
 import { useI18n } from "../context/I18nContext.jsx";
 import { useContent, pickLang } from "../hooks/useContent.js";
 
@@ -17,12 +18,23 @@ const VIDEO_FALLBACK = {
   poster: "/assets/hero-poster.jpg",
 };
 
+const CONTAINER_VARIANTS = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.12, delayChildren: 0.15 } },
+};
+
+const ITEM_VARIANTS = {
+  hidden: { opacity: 0, y: 18 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] } },
+};
+
 export default function Hero() {
   const { lang } = useI18n();
   const { data } = useContent("hero");
   const section = data?.section;
   const extra = section?.extra || {};
   const video = { ...VIDEO_FALLBACK, ...(extra.video || {}) };
+  const reduceMotion = useReducedMotion();
 
   const videoRef = useRef(null);
 
@@ -69,19 +81,30 @@ export default function Hero() {
 
         <div className="hero-overlay">
           <div className="container hero-container">
-            <div className="hero-content">
-              <span className="overline hero-overline">{pickLang(section?.overline, lang)}</span>
-              <h1 className="hero-title">{pickLang(section?.title, lang)}</h1>
-              <p className="hero-subtitle">{pickLang(section?.lede, lang)}</p>
-              <div className="hero-buttons">
+            <motion.div
+              className="hero-content"
+              initial={reduceMotion ? false : "hidden"}
+              animate="show"
+              variants={CONTAINER_VARIANTS}
+            >
+              <motion.span className="overline hero-overline" variants={ITEM_VARIANTS}>
+                {pickLang(section?.overline, lang)}
+              </motion.span>
+              <motion.h1 className="hero-title" variants={ITEM_VARIANTS}>
+                {pickLang(section?.title, lang)}
+              </motion.h1>
+              <motion.p className="hero-subtitle" variants={ITEM_VARIANTS}>
+                {pickLang(section?.lede, lang)}
+              </motion.p>
+              <motion.div className="hero-buttons" variants={ITEM_VARIANTS}>
                 <Link to="/contact" className="btn btn-solid btn-gold btn-large">
                   {pickLang(extra.btnProposal, lang)}
                 </Link>
                 <Link to="/projects" className="btn btn-outline btn-white btn-large">
                   {pickLang(extra.btnProjects, lang)}
                 </Link>
-              </div>
-            </div>
+              </motion.div>
+            </motion.div>
           </div>
           <div className="scroll-indicator">
             <div className="mouse">

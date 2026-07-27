@@ -15,7 +15,10 @@ const SECTION_LABELS = {
   certifications: "Certifications",
   awards:         "Awards & CSR",
   numbers:        "By the numbers",
-  reviews:        "Reviews",
+  careers:        "Careers",
+  ads:            "Promotions & Announcements",
+  "sister-concerns": "Sister Concerns",
+  "mission-vision": "Mission & Vision",
 };
 
 export default function AdminLayout() {

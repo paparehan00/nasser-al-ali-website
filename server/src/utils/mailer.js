@@ -23,7 +23,7 @@ export async function verifyMailer() {
   }
   try {
     await getTransport().verify();
-    console.log(`Mailer: SMTP ready (${env.smtpUser})`);
+    console.log(`Mailer: SMTP ready (${env.smtpUser}) — booking alerts go to ${env.notifyEmail || "NOT SET"}`);
     return true;
   } catch (err) {
     console.error("Mailer: SMTP connection failed:", err.message);
@@ -66,9 +66,9 @@ function emailShell(bodyHtml) {
     <td style="background:#0b1f3a;padding:20px 40px;text-align:center;">
       <p style="margin:0;color:#8a9bb0;font-size:11px;line-height:1.7;">
         Salwa Road, Building-155, Zone 43 · Doha, Qatar · P.O. Box 13115<br/>
-        <a href="tel:+97466557728" style="color:#c9a84c;text-decoration:none;">+974 6655 7728</a> ·
-        <a href="mailto:info@nasseralaligroup.com" style="color:#c9a84c;text-decoration:none;">info@nasseralaligroup.com</a> ·
-        <a href="https://www.nasseralaligroup.com" style="color:#c9a84c;text-decoration:none;">nasseralaligroup.com</a>
+        <a href="tel:+97455861100" style="color:#c9a84c;text-decoration:none;">+974 5586 1100</a> ·
+        <a href="mailto:info@nasseralalienterprises.com" style="color:#c9a84c;text-decoration:none;">info@nasseralalienterprises.com</a> ·
+        <a href="https://www.nasseralalienterprises.com" style="color:#c9a84c;text-decoration:none;">nasseralalienterprises.com</a>
       </p>
     </td>
   </tr>
@@ -94,7 +94,7 @@ function detailsTable(rows) {
 }
 
 function esc(v) {
-  return String(v ?? "—")
+  return String(v ?? "N/A")
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
@@ -130,7 +130,7 @@ export async function sendCustomerConfirmation(booking) {
     <p style="margin:0 0 20px;color:#c9a84c;font-size:13px;letter-spacing:1px;text-transform:uppercase;font-weight:700;">Your consultation request has been received</p>
 
     <p style="color:#333;font-size:15px;line-height:1.6;margin:0 0 16px;">
-      We appreciate your interest in Nasser Al Ali Enterprises. One of our team members will review your request and get back to you within 1–2 business days.
+      We appreciate your interest in Nasser Al Ali Enterprises. One of our team members will review your request and get back to you within 1 to 2 business days.
     </p>
 
     <p style="color:#333;font-size:15px;line-height:1.6;margin:0 0 24px;">
@@ -143,10 +143,10 @@ export async function sendCustomerConfirmation(booking) {
       In the meantime, feel free to reach us directly:
     </p>
     <p style="color:#333;font-size:15px;line-height:1.6;margin:0 0 4px;">
-      📞 <a href="tel:+97466557728" style="color:#c9a84c;">+974 6655 7728</a> (WhatsApp)
+      📞 <a href="tel:+97455596774" style="color:#c9a84c;">+974 5559 6774</a> (WhatsApp)
     </p>
     <p style="color:#333;font-size:15px;line-height:1.6;margin:0 0 28px;">
-      📧 <a href="mailto:info@nasseralaligroup.com" style="color:#c9a84c;">info@nasseralaligroup.com</a>
+      📧 <a href="mailto:info@nasseralalienterprises.com" style="color:#c9a84c;">info@nasseralalienterprises.com</a>
     </p>
 
     <p style="color:#555;font-size:14px;line-height:1.6;margin:0;">
@@ -158,27 +158,27 @@ export async function sendCustomerConfirmation(booking) {
   const plain = [
     `Thank you, ${name}!`,
     "",
-    "We received your consultation request and will be in touch within 1–2 business days.",
+    "We received your consultation request and will be in touch within 1 to 2 business days.",
     "",
     "Your booking details:",
     `  Name:    ${name}`,
-    `  Company: ${company ?? "—"}`,
+    `  Company: ${company ?? "N/A"}`,
     `  Email:   ${email}`,
-    `  Phone:   ${phone ?? "—"}`,
-    `  Service: ${(serviceLabels[service] || service) ?? "—"}`,
+    `  Phone:   ${phone ?? "N/A"}`,
+    `  Service: ${(serviceLabels[service] || service) ?? "N/A"}`,
     preferred_date ? `  Date/time: ${preferred_date}` : null,
     message ? `  Message: ${message}` : null,
     "",
-    "Contact us: +974 6655 7728 | info@nasseralaligroup.com",
-    "— Nasser Al Ali Enterprises",
+    "Contact us: +974 5586 1100 | info@nasseralalienterprises.com",
+    "Nasser Al Ali Enterprises",
   ]
     .filter((l) => l !== null)
     .join("\n");
 
   await getTransport().sendMail({
-    from: `"${env.mailFromName}" <${env.smtpUser}>`,
+    from: `"${env.mailFromName}" <${env.mailFromEmail || env.smtpUser}>`,
     to: email,
-    subject: "Thank you for your booking — Nasser Al Ali Enterprises",
+    subject: "Thank You for Your Booking - Nasser Al Ali Enterprises",
     text: plain,
     html: emailShell(body),
   });
@@ -210,7 +210,7 @@ export async function sendAdminNotification(booking) {
     ${details}
 
     <p style="color:#555;font-size:13px;margin:24px 0 0;">
-      Reply to this email to contact the customer directly — Reply-To is set to <strong>${esc(email)}</strong>.
+      Reply to this email to contact the customer directly. Reply-To is set to <strong>${esc(email)}</strong>.
     </p>
   `;
 
@@ -218,15 +218,15 @@ export async function sendAdminNotification(booking) {
     `New consultation booking from ${name}`,
     "",
     `Name:     ${name}`,
-    `Company:  ${company ?? "—"}`,
+    `Company:  ${company ?? "N/A"}`,
     `Email:    ${email}`,
-    `Phone:    ${phone ?? "—"}`,
-    `Service:  ${service ?? "—"}`,
+    `Phone:    ${phone ?? "N/A"}`,
+    `Service:  ${service ?? "N/A"}`,
     preferred_date ? `Date/time: ${preferred_date}` : null,
     message ? `Message:  ${message}` : null,
     "",
     `Submitted: ${ts}`,
-    `IP: ${booking.ip ?? "—"}`,
+    `IP: ${booking.ip ?? "N/A"}`,
     "",
     "Reply to this email to reach the customer.",
   ]
@@ -234,11 +234,107 @@ export async function sendAdminNotification(booking) {
     .join("\n");
 
   await getTransport().sendMail({
-    from: `"${env.mailFromName}" <${env.smtpUser}>`,
+    // This internal copy specifically must read as coming from info@, not
+    // the leads@ inbox the SMTP account authenticates as — unlike the
+    // customer-facing confirmation above, which keeps the normal
+    // mailFromEmail/smtpUser fallback untouched.
+    from: `"${env.mailFromName}" <info@nasseralalienterprises.com>`,
     to: env.notifyEmail,
     replyTo: email,
-    subject: `New consultation booking — ${name}`,
+    subject: `New consultation booking from ${name}`,
     text: plain,
     html: emailShell(body),
+  });
+}
+
+// ─── Career applications ──────────────────────────────────────────────────────
+
+export async function sendApplicationConfirmation(application) {
+  const { name, email, jobTitle } = application;
+
+  const body = `
+    <h1 style="margin:0 0 6px;color:#0b1f3a;font-size:22px;">Thank you, ${esc(name)}!</h1>
+    <p style="margin:0 0 20px;color:#c9a84c;font-size:13px;letter-spacing:1px;text-transform:uppercase;font-weight:700;">Your application has been received</p>
+
+    <p style="color:#333;font-size:15px;line-height:1.6;margin:0 0 16px;">
+      Thank you for your interest in joining Nasser Al Ali Enterprises${jobTitle ? ` for the <strong>${esc(jobTitle)}</strong> role` : ""}. Our HR team will review your application and reach out if there's a match.
+    </p>
+
+    <p style="color:#555;font-size:14px;line-height:1.6;margin:24px 0 0;">
+      Warm regards,<br/>
+      <strong style="color:#0b1f3a;">The Nasser Al Ali Team</strong>
+    </p>
+  `;
+
+  const plain = [
+    `Thank you, ${name}!`,
+    "",
+    `We received your application${jobTitle ? ` for the ${jobTitle} role` : ""}. Our HR team will review it and reach out if there's a match.`,
+    "",
+    "Nasser Al Ali Enterprises",
+  ].join("\n");
+
+  await getTransport().sendMail({
+    from: `"${env.mailFromName}" <${env.mailFromEmail || env.smtpUser}>`,
+    to: email,
+    subject: "Thank you for your application - Nasser Al Ali Enterprises",
+    text: plain,
+    html: emailShell(body),
+  });
+}
+
+export async function sendApplicationNotification(application, attachment = null) {
+  const { name, email, phone, jobTitle, message, created_at } = application;
+
+  const ts = new Date((created_at ?? Date.now() / 1000) * 1000).toISOString().replace("T", " ").slice(0, 19) + " UTC";
+
+  const details = detailsTable([
+    ["Name", name],
+    ["Email", email],
+    ["Phone", phone],
+    ["Applying for", jobTitle || "General application"],
+    ...(message ? [["Cover message", message]] : []),
+    ["CV attached", attachment ? "Yes (see attachment)" : "No"],
+    ["Submitted", ts],
+    ["IP", application.ip],
+  ]);
+
+  const body = `
+    <h1 style="margin:0 0 6px;color:#0b1f3a;font-size:20px;">New job application</h1>
+    <p style="margin:0 0 24px;color:#c9a84c;font-size:13px;letter-spacing:1px;text-transform:uppercase;font-weight:700;">from ${esc(name)}</p>
+
+    ${details}
+
+    <p style="color:#555;font-size:13px;margin:24px 0 0;">
+      Reply to this email to contact the applicant directly. Reply-To is set to <strong>${esc(email)}</strong>.
+    </p>
+  `;
+
+  const plain = [
+    `New job application from ${name}`,
+    "",
+    `Name:  ${name}`,
+    `Email: ${email}`,
+    `Phone: ${phone ?? "-"}`,
+    `Applying for: ${jobTitle || "General application"}`,
+    message ? `Message: ${message}` : null,
+    `CV attached: ${attachment ? "Yes (see attachment)" : "No"}`,
+    "",
+    `Submitted: ${ts}`,
+    `IP: ${application.ip ?? "-"}`,
+    "",
+    "Reply to this email to reach the applicant.",
+  ]
+    .filter((l) => l !== null)
+    .join("\n");
+
+  await getTransport().sendMail({
+    from: `"${env.mailFromName}" <${env.mailFromEmail || env.smtpUser}>`,
+    to: env.notifyEmail,
+    replyTo: email,
+    subject: `New job application: ${name}${jobTitle ? ` (${jobTitle})` : ""}`,
+    text: plain,
+    html: emailShell(body),
+    attachments: attachment ? [attachment] : undefined,
   });
 }

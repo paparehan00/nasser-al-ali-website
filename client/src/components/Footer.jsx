@@ -1,29 +1,147 @@
 import { Link } from "react-router-dom";
 import { useI18n } from "../context/I18nContext.jsx";
-import { EMAIL, PHONE_TEL, WHATSAPP_URL } from "../lib/constants.js";
+import { useContent } from "../hooks/useContent.js";
+import {
+  EMAIL, PHONE, PHONE_TEL,
+  PHONE_2, PHONE_2_TEL,
+} from "../lib/constants.js";
+import { SOCIALS } from "./SocialSidebar.jsx";
+
+// About Us + Our Services columns reuse the same link data/labels as the
+// header mega menu so the two stay in sync.
+const ABOUT_LINKS = [
+  { to: "/about#about",                   key: "megamenu.link.overview" },
+  { to: "/company-profile",               key: "megamenu.link.companyProfile" },
+  { to: "/about#leadership",              key: "megamenu.link.leadership" },
+  { to: "/mission-vision",                key: "megamenu.link.missionVision" },
+  { to: "/certifications-awards#certifications", key: "megamenu.link.certifications" },
+  { to: "/careers",                       key: "nav.careers" },
+  { to: "/promotions",                    key: "footer.promotions" },
+];
+
+const SERVICE_LINKS = [
+  { to: "/services#services", key: "megamenu.link.manpower" },
+  { to: "/services#services", key: "megamenu.link.equipment" },
+  { to: "/services#services", key: "megamenu.link.civilSvc" },
+  { to: "/services#services", key: "megamenu.link.mep" },
+  { to: "/services#services", key: "megamenu.link.cleaning" },
+  { to: "/services#services", key: "megamenu.link.business" },
+];
 
 export default function Footer() {
   const { t } = useI18n();
+  const { data: certData } = useContent("certifications");
+  const certBadges = (certData?.items || []).slice(0, 3);
+
   return (
     <footer className="site-footer">
-      <div className="footer-bottom">
-        <div className="container footer-bottom-flex">
-          <div className="footer-logo">
-            <img src="/assets/logo.png" alt="Nasser Al Ali Logo" />
-            <span>Nasser Al Ali Enterprises</span>
+
+      {/* ── Main footer grid ────────────────────────────────────────────── */}
+      <div className="footer-main">
+        <div className="container footer-grid">
+
+          {/* Logo + blurb + socials */}
+          <div className="footer-col footer-col-brand">
+            <Link to="/" className="footer-logo">
+              <span className="logo-glow-wrap footer-logo-glow-wrap">
+                <span className="logo-glow" aria-hidden="true"></span>
+                <img src="/assets/logo.png" alt="Nasser Al Ali Enterprises" />
+              </span>
+            </Link>
+            <p className="footer-blurb">{t("footer.blurb")}</p>
+            <div className="footer-col-socials">
+              {SOCIALS.map(({ href, label, icon }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="footer-social-btn"
+                  aria-label={label}
+                >
+                  {icon}
+                </a>
+              ))}
+            </div>
           </div>
-          <div className="footer-slogan">
-            <span className="slogan-line">{t("footer.slogan")}</span>
-            <span className="slogan-tag">{t("footer.tag")}</span>
+
+          {/* About Us */}
+          <div className="footer-col">
+            <h3 className="footer-col-heading">{t("footer.aboutUs")}</h3>
+            <ul className="footer-col-links">
+              {ABOUT_LINKS.map((l) => (
+                <li key={l.key}><Link to={l.to}>{t(l.key)}</Link></li>
+              ))}
+            </ul>
+            {certBadges.length > 0 && (
+              <div className="footer-cert-badges">
+                {certBadges.map((c) => (
+                  <Link to="/certifications-awards#certifications" key={c.id} className="footer-cert-badge">
+                    <img src={c.imagePath} alt={c.data?.title?.en || c.data?.code || "Certification"} loading="lazy" />
+                  </Link>
+                ))}
+              </div>
+            )}
           </div>
-          <div className="footer-social">
-            <a href={PHONE_TEL} className="btn-text">{t("cta.callAria").split(" ")[0]}</a>
-            <span className="divider">·</span>
-            <a href={WHATSAPP_URL} className="btn-text green-text" target="_blank" rel="noopener noreferrer">WhatsApp</a>
-            <span className="divider">·</span>
-            <a href={`mailto:${EMAIL}`} className="btn-text">Email</a>
+
+          {/* Our Services */}
+          <div className="footer-col">
+            <h3 className="footer-col-heading">{t("footer.ourServices")}</h3>
+            <ul className="footer-col-links">
+              {SERVICE_LINKS.map((l) => (
+                <li key={l.key}><Link to={l.to}>{t(l.key)}</Link></li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Contact */}
+          <div className="footer-col">
+            <h3 className="footer-col-heading">{t("footer.contactHeading")}</h3>
+            <ul className="footer-col-links footer-contact-list">
+              <li className="footer-address">
+                Salwa Road, Building-155, Zone 43<br/>
+                Doha, State of Qatar<br/>
+                P.O. Box 13115, Doha, Qatar
+              </li>
+              <li className="footer-office-hours">
+                <span className="footer-office-hours-label">{t("footer.officeHours")}</span>
+                <span>{t("footer.officeHoursValue")}</span>
+              </li>
+              <li><a href={PHONE_TEL}>{PHONE}</a> · <a href={PHONE_2_TEL}>{PHONE_2}</a></li>
+              <li><a href={`mailto:${EMAIL}`}>{EMAIL}</a></li>
+            </ul>
+          </div>
+
+        </div>
+      </div>
+
+      {/* We Support — charity / CSR partner logos */}
+      <div className="footer-support">
+        <div className="container footer-support-inner">
+          <span className="footer-support-label">{t("footer.weSupport")}</span>
+          <div className="footer-support-logos">
+            <a
+              href="https://www.qcharity.org"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Qatar Charity"
+            >
+              <img src="/assets/qatarcharity.png" alt="Qatar Charity" />
+            </a>
+            <a
+              href="https://www.greenpeace.org"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Greenpeace"
+            >
+              <img src="/assets/greenpeace.png" alt="Greenpeace" />
+            </a>
           </div>
         </div>
+      </div>
+
+      {/* Legal + copyright */}
+      <div className="footer-bottom">
         <div className="container footer-legal">
           <ul className="footer-legal-links">
             <li><Link to="/privacy">{t("footer.privacy")}</Link></li>

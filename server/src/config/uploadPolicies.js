@@ -20,9 +20,17 @@ const POLICIES = {
   certifications: { maxWidth: 1600, maxHeight: 2000, format: "webp", quality: 82, maxBytes: 350_000 },
   awards:         { maxWidth: 1600, maxHeight: 1600, format: "webp", quality: 80, maxBytes: 300_000 },
   reviews:        { maxWidth: 400,  maxHeight: 400,  format: "webp", quality: 82, maxBytes: 60_000 },
+  "sister-concerns": { maxWidth: 640, maxHeight: 640, format: "webp", quality: 88, maxBytes: 100_000 },
+  "mission-vision": { maxWidth: 1920, maxHeight: 1920, format: "jpeg", quality: 82, maxBytes: 400_000 },
+  // Poster/promo images — taller aspect ratio is common for ad posters, so
+  // maxHeight is generous relative to maxWidth.
+  ads:            { maxWidth: 1600, maxHeight: 2200, format: "webp", quality: 82, maxBytes: 350_000 },
   // Singleton sections that don't take images
   stats:    null,
   numbers:  null,
+  // Job postings don't carry a per-item image (no poster field on a job) —
+  // this reuses the shared ImageUpload component's "no upload" state.
+  careers:  null,
 };
 
 // Returns null when the section either doesn't exist or doesn't accept uploads.

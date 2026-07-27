@@ -1,6 +1,7 @@
 import { useI18n } from "../context/I18nContext.jsx";
 import { useContent, pickLang } from "../hooks/useContent.js";
 import HorizontalCarousel from "./HorizontalCarousel.jsx";
+import { tiltHandlers } from "../lib/tiltEffect.js";
 
 export default function ProjectsMasonry({ onOpen }) {
   const { lang } = useI18n();
@@ -39,10 +40,10 @@ export default function ProjectsMasonry({ onOpen }) {
                 {d.latest && (
                   <span className="project-badge-latest" aria-label="Latest project">Latest</span>
                 )}
-                <div className="project-img-wrapper">
+                <div className="project-img-wrapper tilt-frame" {...tiltHandlers}>
                   <img
                     src={p.imagePath}
-                    alt={d.name ? `${d.name}${d.location ? ` — ${d.location}` : ""}` : "Project"}
+                    alt={d.name ? `${d.name}${d.location ? `, ${d.location}` : ""}` : "Project"}
                     loading="lazy"
                     draggable={false}
                   />

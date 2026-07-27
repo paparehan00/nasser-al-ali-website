@@ -25,5 +25,14 @@ export const bookingLimiter = rateLimit({
   limit: 6,
   standardHeaders: "draft-7",
   legacyHeaders: false,
-  message: { error: "Too many submissions from this address. Please try again in an hour or contact us directly at +974 6655 7728." },
+  message: { error: "Too many submissions from this address. Please try again in an hour or contact us directly at +974 5586 1100." },
+});
+
+// Same shape as bookingLimiter — job applications get the same protection.
+export const applicationLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000,
+  limit: 6,
+  standardHeaders: "draft-7",
+  legacyHeaders: false,
+  message: { error: "Too many submissions from this address. Please try again in an hour or contact us directly at +974 5586 1100." },
 });

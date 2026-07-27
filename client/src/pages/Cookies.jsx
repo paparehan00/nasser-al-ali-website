@@ -52,7 +52,7 @@ function EnglishBody() {
       <p>If we add new storage items or third-party embeds, we will update this page and, where required, ask for your consent again.</p>
 
       <h2>6. Contact</h2>
-      <p>Questions about this Cookie Policy: <a href="mailto:info@nasseralaligroup.com">info@nasseralaligroup.com</a> · +974 6655 7728.</p>
+      <p>Questions about this Cookie Policy: <a href="mailto:info@nasseralalienterprises.com">info@nasseralalienterprises.com</a> · +974 5586 1100.</p>
     </>
   );
 }
@@ -96,7 +96,7 @@ function ArabicBody() {
       <p>عند إضافة عناصر تخزين جديدة أو تضمينات من طرف ثالث، سنُحدّث هذه الصفحة ونطلب موافقتك مجددًا حيثما لزم.</p>
 
       <h2>6. تواصل معنا</h2>
-      <p>للاستفسار حول سياسة الكوكيز: <a href="mailto:info@nasseralaligroup.com">info@nasseralaligroup.com</a> · +974 6655 7728.</p>
+      <p>للاستفسار حول سياسة الكوكيز: <a href="mailto:info@nasseralalienterprises.com">info@nasseralalienterprises.com</a> · +974 5586 1100.</p>
     </>
   );
 }

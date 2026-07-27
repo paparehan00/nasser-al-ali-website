@@ -27,7 +27,21 @@
       "Bash(diff -rq client/src/admin/api.js ../../client/src/admin/api.js)",
       "Bash(diff -rq client/src/admin/pages/SectionEditor.jsx ../../client/src/admin/pages/SectionEditor.jsx)",
       "Bash(diff -rq client/src/admin/components/StructuredEditor.jsx ../../client/src/admin/components/StructuredEditor.jsx)",
-      "Bash(npm run *)"
+      "Bash(npm run *)",
+      "Bash(npx --yes wrangler@3 --version)",
+      "Bash(npx --yes wrangler@3 deploy chat-worker.js)",
+      "Bash(node --input-type=module)",
+      "Bash(echo \"Exit: $?\")",
+      "Bash(node --check /mnt/c/Users/HP/.gemini/antigravity/scratch/NAA/client/public/js/chat.js)",
+      "Bash(node --check server/src/routes/bookings.js)",
+      "Bash(sqlite3 /mnt/c/Users/HP/.gemini/antigravity/scratch/NAA/server/data/app.db \"SELECT key, title_en, title_ar FROM content_sections WHERE key='chairman';\")",
+      "Bash(sqlite3 /mnt/c/Users/HP/.gemini/antigravity/scratch/NAA/server/data/app.db \"SELECT extra FROM content_sections WHERE key='chairman';\")",
+      "Bash(apt list *)",
+      "Bash(node *)",
+      "Bash(timeout 30 npx vite build --mode development)",
+      "Bash(npx vite *)",
+      "Bash(nslookup -type=MX nasseralalienterprises.com)",
+      "Bash(dig MX nasseralalienterprises.com +short)"
     ]
   }
 }

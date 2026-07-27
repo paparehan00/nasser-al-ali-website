@@ -23,6 +23,7 @@ export default function HorizontalCarousel({
   label = "Carousel",
   className = "",
 }) {
+  const rootRef  = useRef(null);   // outer wrapper (for visibility gating)
   const vpRef    = useRef(null);   // viewport div (overflow:hidden)
   const trackRef = useRef(null);   // wide flex track
   const scrubRef = useRef(null);   // <input type=range>
@@ -63,7 +64,9 @@ export default function HorizontalCarousel({
     // Sync scrubber — position within one set (0 → singleW)
     if (scrubRef.current && s.current.singleW > 0) {
       const within = ((s.current.pos % s.current.singleW) + s.current.singleW) % s.current.singleW;
-      scrubRef.current.value = (within / s.current.singleW) * 100;
+      const pct = (within / s.current.singleW) * 100;
+      scrubRef.current.value = pct;
+      scrubRef.current.style.setProperty("--hc-progress", `${pct}%`);
     }
   }, []);
 
@@ -92,9 +95,36 @@ export default function HorizontalCarousel({
     st.raf = requestAnimationFrame(tick);
   }, [autoSpeed, wrap, applyPos]);
 
+  // Only run the per-frame animation loop while the carousel is actually
+  // near the viewport — left running unconditionally, it writes to the DOM
+  // every single frame for as long as the page is open, even while the
+  // user has scrolled far away (e.g. down at the Contact form). With two
+  // of these mounted on the Home page at once, that's steady main-thread
+  // work competing with the browser's own scroll/compositor thread — a
+  // real contributor to scroll jank on mid-range mobile hardware.
   useEffect(() => {
-    s.current.raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(s.current.raf);
+    const node = rootRef.current;
+    if (!node || !("IntersectionObserver" in window)) {
+      s.current.raf = requestAnimationFrame(tick);
+      return () => cancelAnimationFrame(s.current.raf);
+    }
+    const startLoop = () => {
+      if (s.current.raf) return;
+      s.current.lastTs = null; // avoid a large dt jump on resume
+      s.current.raf = requestAnimationFrame(tick);
+    };
+    const stopLoop = () => {
+      if (s.current.raf) {
+        cancelAnimationFrame(s.current.raf);
+        s.current.raf = null;
+      }
+    };
+    const obs = new IntersectionObserver(
+      (entries) => entries.forEach((e) => (e.isIntersecting ? startLoop() : stopLoop())),
+      { rootMargin: "200px 0px 200px 0px" }
+    );
+    obs.observe(node);
+    return () => { obs.disconnect(); stopLoop(); };
   }, [tick]);
 
   // ── Pointer drag (mouse + touch via pointer events) ───────────────────────
@@ -152,7 +182,7 @@ export default function HorizontalCarousel({
   const onScrubEnd   = () => { s.current.paused = false; s.current.lastTs = null; };
 
   return (
-    <div className={`hc ${className}`} aria-label={label} role="region">
+    <div className={`hc ${className}`} aria-label={label} role="region" ref={rootRef}>
       <div
         ref={vpRef}
         className="hc-viewport"
@@ -164,7 +194,7 @@ export default function HorizontalCarousel({
         onMouseLeave={onMouseLeave}
         onKeyDown={onKeyDown}
         tabIndex={0}
-        aria-label={`${label} — use arrow keys or drag to scroll`}
+        aria-label={`${label}, use arrow keys or drag to scroll`}
       >
         <div
           ref={trackRef}
