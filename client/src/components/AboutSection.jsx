@@ -1,16 +1,22 @@
 import { Link } from "react-router-dom";
 import { useI18n } from "../context/I18nContext.jsx";
 import { tiltHandlers } from "../lib/tiltEffect.js";
+import { highlightPhrases } from "../lib/highlightText.jsx";
+
+const HIGHLIGHT_PHRASES = {
+  en: ["2005", "5,000+ workforce"],
+  ar: ["2005", "5,000 عامل"],
+};
 
 export default function AboutSection() {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
   return (
     <section className="about" id="about">
       <div className="container about-container">
         <div className="about-content">
           <span className="overline">{t("about.overline")}</span>
           <h2>{t("about.title")}</h2>
-          <p>{t("about.body")}</p>
+          <p>{highlightPhrases(t("about.body"), HIGHLIGHT_PHRASES[lang])}</p>
           <div className="about-actions">
             <Link to="/contact" className="btn btn-solid btn-gold btn-large about-btn">{t("about.speak")}</Link>
             <a href="/assets/nasser-al-ali-enterprises-company-profile.pdf" className="btn btn-outline btn-gold btn-large about-btn" target="_blank" rel="noopener noreferrer" download>

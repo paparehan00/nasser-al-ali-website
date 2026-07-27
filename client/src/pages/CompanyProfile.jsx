@@ -2,10 +2,11 @@ import { useDocumentTitle } from "../hooks/useDocumentTitle.js";
 import { useI18n } from "../context/I18nContext.jsx";
 import { ROUTE_TITLES } from "../lib/constants.js";
 import ChairmanSection from "../components/ChairmanSection.jsx";
+import { highlightPhrases } from "../lib/highlightText.jsx";
 
 export default function CompanyProfile() {
   useDocumentTitle(ROUTE_TITLES["/company-profile"]);
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
 
   return (
     <div className="route-page">
@@ -14,7 +15,7 @@ export default function CompanyProfile() {
           <div className="section-header center">
             <span className="overline">{t("companyProfile.overline")}</span>
             <h2>{t("companyProfile.title")}</h2>
-            <p className="section-lede">{t("companyProfile.body")}</p>
+            <p className="section-lede">{highlightPhrases(t("companyProfile.body"), ["2005"])}</p>
           </div>
           <div className="company-profile-cta">
             <a

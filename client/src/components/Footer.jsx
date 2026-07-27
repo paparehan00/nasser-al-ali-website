@@ -36,6 +36,23 @@ export default function Footer() {
   return (
     <footer className="site-footer">
 
+      {/* ── CTA marquee band ────────────────────────────────────────────── */}
+      <div className="footer-cta-band">
+        <div className="footer-cta-marquee" aria-hidden="true">
+          <span className="footer-cta-marquee-track">
+            {Array.from({ length: 8 }).map((_, i) => (
+              <span key={i}>{t("footer.ctaMarquee")}</span>
+            ))}
+          </span>
+        </div>
+        <div className="container footer-cta-inner">
+          <h2 className="footer-cta-heading">{t("footer.ctaHeading")}</h2>
+          <Link to="/contact" className="btn btn-solid btn-gold btn-large">
+            {t("footer.ctaButton")}
+          </Link>
+        </div>
+      </div>
+
       {/* ── Main footer grid ────────────────────────────────────────────── */}
       <div className="footer-main">
         <div className="container footer-grid">

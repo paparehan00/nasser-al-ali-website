@@ -3,6 +3,11 @@ import { useContent, pickLang } from "../hooks/useContent.js";
 import HorizontalCarousel from "./HorizontalCarousel.jsx";
 import { tiltHandlers } from "../lib/tiltEffect.js";
 
+// Cycled per card as a thin accent "spine" on the trailing edge — a nod to
+// stacked case-study cards peeking behind the active one, using our own
+// two brand colors rather than decoration for its own sake.
+const SPINE_COLORS = ["var(--accent)", "var(--brand-green)"];
+
 export default function ProjectsMasonry({ onOpen }) {
   const { lang } = useI18n();
   const { data } = useContent("projects");
@@ -27,13 +32,14 @@ export default function ProjectsMasonry({ onOpen }) {
           autoSpeed={30}
           label="Featured projects carousel"
           className="projects-carousel"
-          renderItem={(p) => {
+          renderItem={(p, i) => {
             const d = p.data || {};
             return (
               <div
                 className="project-card"
                 role="button"
                 tabIndex={0}
+                style={{ "--spine-color": SPINE_COLORS[i % SPINE_COLORS.length] }}
                 onClick={() => onOpen && onOpen(p.imagePath, d.name)}
                 onKeyDown={(e) => e.key === "Enter" && onOpen && onOpen(p.imagePath, d.name)}
               >
