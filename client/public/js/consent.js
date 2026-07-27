@@ -7,14 +7,65 @@
   "use strict";
 
   const STORAGE_KEY = "naa-consent-v1";
+  const LANG_KEY = "naa-lang";
   const VERSION = 1;
 
-  // Category definitions
+  // Self-contained translations - this script runs outside the React i18n
+  // bundle, so it reads the same "naa-lang" preference the site itself
+  // persists (see I18nContext) instead of importing anything.
+  const STRINGS = {
+    en: {
+      title: "Your privacy",
+      desc: 'We use strictly necessary storage to run the site and its AI chat assistant. With your consent we may also load analytics and third-party embeds (Google Maps, Calendly). Read our <a href="/privacy">Privacy Policy</a> and <a href="/cookies">Cookie Policy</a>.',
+      reject: "Reject non-essential",
+      prefs: "Preferences",
+      acceptAll: "Accept all",
+      back: "Back",
+      save: "Save preferences",
+      alwaysOn: "(always on)",
+      categories: {
+        essential:  { label: "Strictly necessary", desc: "Required for the site and chat assistant to work. Cannot be disabled." },
+        functional: { label: "Functional",         desc: "Remembers your preferences (e.g. language)." },
+        analytics:  { label: "Analytics",          desc: "Anonymised traffic measurement (Google Analytics)." },
+        embeds:     { label: "Third-party embeds", desc: "Google Maps office pin and Calendly appointment booking." },
+      },
+    },
+    ar: {
+      title: "خصوصيتك",
+      desc: 'نستخدم تخزينًا ضروريًا فقط لتشغيل الموقع ومساعد المحادثة الذكي. بموافقتك، قد نُفعّل أيضًا التحليلات والمحتوى المضمّن من أطراف خارجية (خرائط جوجل، كالندلي). اطّلع على <a href="/privacy">سياسة الخصوصية</a> و<a href="/cookies">سياسة الكوكيز</a>.',
+      reject: "رفض غير الضروري",
+      prefs: "التفضيلات",
+      acceptAll: "قبول الكل",
+      back: "رجوع",
+      save: "حفظ التفضيلات",
+      alwaysOn: "(مفعّل دائمًا)",
+      categories: {
+        essential:  { label: "ضروري بشكل أساسي", desc: "مطلوب لتشغيل الموقع ومساعد المحادثة. لا يمكن تعطيله." },
+        functional: { label: "وظيفي",             desc: "يحفظ تفضيلاتك (مثل اللغة)." },
+        analytics:  { label: "التحليلات",          desc: "قياس حركة الزوار بشكل مجهول (Google Analytics)." },
+        embeds:     { label: "محتوى خارجي مضمّن",  desc: "دبوس الموقع على خرائط جوجل وحجز المواعيد عبر Calendly." },
+      },
+    },
+  };
+
+  const getLang = () => {
+    const attr = document.documentElement.getAttribute("lang");
+    if (attr === "ar" || attr === "en") return attr;
+    try {
+      const stored = localStorage.getItem(LANG_KEY);
+      if (stored === "ar" || stored === "en") return stored;
+    } catch (_) {}
+    return "en";
+  };
+  const t = () => STRINGS[getLang()] || STRINGS.en;
+
+  // Category definitions (locked/default flags are language-independent;
+  // label/desc are pulled from STRINGS at render time via t().categories)
   const CATEGORIES = {
-    essential:  { label: "Strictly necessary", locked: true,  default: true,  desc: "Required for the site and chat assistant to work. Cannot be disabled." },
-    functional: { label: "Functional",         locked: false, default: false, desc: "Remembers your preferences (e.g. language)." },
-    analytics:  { label: "Analytics",          locked: false, default: false, desc: "Anonymised traffic measurement (Google Analytics)." },
-    embeds:     { label: "Third-party embeds", locked: false, default: false, desc: "Google Maps office pin and Calendly appointment booking." },
+    essential:  { locked: true,  default: true },
+    functional: { locked: false, default: false },
+    analytics:  { locked: false, default: false },
+    embeds:     { locked: false, default: false },
   };
 
   // ---------------------------------------------------------------------------
@@ -85,8 +136,11 @@
     .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
 
   const build = (initial) => {
+    const lang = getLang();
+    const strings = t();
     const wrap = document.createElement("div");
     wrap.className = "naa-consent";
+    wrap.dir = lang === "ar" ? "rtl" : "ltr";
     wrap.setAttribute("role", "dialog");
     wrap.setAttribute("aria-modal", "false");
     wrap.setAttribute("aria-labelledby", "naa-consent-title");
@@ -95,38 +149,35 @@
     wrap.innerHTML = `
       <div class="naa-consent-inner">
         <div class="naa-consent-main">
-          <div class="naa-consent-title" id="naa-consent-title">Your privacy</div>
-          <div class="naa-consent-desc" id="naa-consent-desc">
-            We use strictly necessary storage to run the site and its AI chat assistant.
-            With your consent we may also load analytics and third-party embeds
-            (Google Maps, Calendly). Read our
-            <a href="privacy.html">Privacy Policy</a> and
-            <a href="cookies.html">Cookie Policy</a>.
-          </div>
+          <div class="naa-consent-title" id="naa-consent-title">${escapeHtml(strings.title)}</div>
+          <div class="naa-consent-desc" id="naa-consent-desc">${strings.desc}</div>
           <div class="naa-consent-actions">
-            <button type="button" class="btn btn-outline btn-white" data-action="reject">Reject non-essential</button>
-            <button type="button" class="btn btn-outline btn-gold" data-action="prefs">Preferences</button>
-            <button type="button" class="btn btn-solid btn-gold" data-action="accept-all">Accept all</button>
+            <button type="button" class="btn btn-outline btn-white" data-action="reject">${escapeHtml(strings.reject)}</button>
+            <button type="button" class="btn btn-outline btn-gold" data-action="prefs">${escapeHtml(strings.prefs)}</button>
+            <button type="button" class="btn btn-solid btn-gold" data-action="accept-all">${escapeHtml(strings.acceptAll)}</button>
           </div>
         </div>
         <div class="naa-consent-prefs" hidden>
           <div class="naa-consent-prefs-list">
-            ${Object.entries(CATEGORIES).map(([key, def]) => `
+            ${Object.entries(CATEGORIES).map(([key, def]) => {
+              const cat = strings.categories[key];
+              return `
               <label class="naa-consent-row${def.locked ? ' is-locked' : ''}">
                 <input type="checkbox"
                        data-cat="${key}"
                        ${initial[key] ? "checked" : ""}
                        ${def.locked ? "disabled" : ""}>
                 <span class="naa-consent-row-body">
-                  <span class="naa-consent-row-title">${escapeHtml(def.label)}${def.locked ? ' <em>(always on)</em>' : ''}</span>
-                  <span class="naa-consent-row-desc">${escapeHtml(def.desc)}</span>
+                  <span class="naa-consent-row-title">${escapeHtml(cat.label)}${def.locked ? ` <em>${escapeHtml(strings.alwaysOn)}</em>` : ''}</span>
+                  <span class="naa-consent-row-desc">${escapeHtml(cat.desc)}</span>
                 </span>
               </label>
-            `).join("")}
+            `;
+            }).join("")}
           </div>
           <div class="naa-consent-prefs-actions">
-            <button type="button" class="btn btn-outline btn-white" data-action="prefs-close">Back</button>
-            <button type="button" class="btn btn-solid btn-gold" data-action="save">Save preferences</button>
+            <button type="button" class="btn btn-outline btn-white" data-action="prefs-close">${escapeHtml(strings.back)}</button>
+            <button type="button" class="btn btn-solid btn-gold" data-action="save">${escapeHtml(strings.save)}</button>
           </div>
         </div>
       </div>
@@ -193,6 +244,12 @@
     });
     // Custom event (used by cookies.html)
     window.addEventListener("naa-consent-reopen", () => api.reopen());
+    // React's I18nContext dispatches this on every EN/AR toggle - rebuild
+    // the banner in place if it's currently open, so switching language
+    // mid-banner doesn't leave stale text from the other language.
+    window.addEventListener("naa-lang-change", () => {
+      if (bannerEl) showBanner(readConsent());
+    });
   };
 
   // ---------------------------------------------------------------------------
