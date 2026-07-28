@@ -85,7 +85,7 @@ CONTACT
 
 OFFICE
 - Corporate Headquarters: Salwa Road, Building-155, Zone 43, Doha, State of Qatar.
-- Working hours: Sunday-Thursday, 8:00 AM - 6:00 PM.
+- Working hours: Sunday-Thursday, 9:00 AM - 6:00 PM.
 - Service coverage: all of Qatar and the wider GCC.
 
 CERTIFICATIONS
