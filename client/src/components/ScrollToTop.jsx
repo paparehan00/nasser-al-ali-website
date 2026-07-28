@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
+import { scrollToTarget } from "../lib/lenis.js";
 
 // Section content (services, projects, etc.) is fetched async from the API,
 // so the target element often doesn't exist yet on the first render after a
@@ -18,14 +19,10 @@ export default function ScrollToTop() {
   const { pathname, hash } = useLocation();
 
   useEffect(() => {
-    const prefersReduced =
-      typeof window !== "undefined" &&
-      window.matchMedia &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const behavior = prefersReduced ? "instant" : "smooth";
-
     if (!hash) {
-      window.scrollTo({ top: 0, left: 0, behavior });
+      // Route changes land at the top instantly; animating a full-page
+      // scroll on every navigation reads as lag, not polish.
+      scrollToTarget(0, { smooth: false });
       return;
     }
 
@@ -36,7 +33,7 @@ export default function ScrollToTop() {
     const tryScroll = () => {
       const el = document.getElementById(id);
       if (el) {
-        el.scrollIntoView({ behavior, block: "start" });
+        scrollToTarget(el);
         return;
       }
       attempts += 1;

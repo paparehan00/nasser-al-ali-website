@@ -28,6 +28,49 @@ const ITEM_VARIANTS = {
   show: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] } },
 };
 
+// Word-by-word title reveal (rise + de-blur). Splits on spaces only —
+// per-letter splitting would break Arabic ligatures, but Arabic letters
+// never join across a space, so word-level spans are safe in both langs.
+const WORDS_CONTAINER = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.07, delayChildren: 0.25 } },
+};
+
+const WORD_VARIANTS = {
+  hidden: { opacity: 0, y: "0.5em", filter: "blur(8px)" },
+  show: {
+    opacity: 1,
+    y: 0,
+    filter: "blur(0px)",
+    transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] },
+  },
+};
+
+// Standalone motion tree (own initial/animate, keyed by text) so the
+// animation replays when the API content arrives and replaces the
+// fallback, instead of new words popping in already-visible.
+function RevealWords({ text, reduceMotion }) {
+  if (!text) return null;
+  if (reduceMotion) return text;
+  const words = String(text).split(" ");
+  return (
+    <motion.span
+      key={text}
+      initial="hidden"
+      animate="show"
+      variants={WORDS_CONTAINER}
+      aria-label={text}
+    >
+      {words.map((word, i) => (
+        <motion.span key={i} className="hero-word" variants={WORD_VARIANTS} aria-hidden="true">
+          {word}
+          {i < words.length - 1 ? " " : ""}
+        </motion.span>
+      ))}
+    </motion.span>
+  );
+}
+
 export default function Hero() {
   const { lang } = useI18n();
   const { data } = useContent("hero");
@@ -90,8 +133,8 @@ export default function Hero() {
               <motion.span className="overline hero-overline" variants={ITEM_VARIANTS}>
                 {pickLang(section?.overline, lang)}
               </motion.span>
-              <motion.h1 className="hero-title" variants={ITEM_VARIANTS}>
-                {pickLang(section?.title, lang)}
+              <motion.h1 className="hero-title">
+                <RevealWords text={pickLang(section?.title, lang)} reduceMotion={reduceMotion} />
               </motion.h1>
               <motion.p className="hero-subtitle" variants={ITEM_VARIANTS}>
                 {pickLang(section?.lede, lang)}

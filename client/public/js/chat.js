@@ -276,7 +276,7 @@
         </div>
       </header>
 
-      <div class="naa-chat-body" id="naa-chat-body" aria-live="polite"></div>
+      <div class="naa-chat-body" id="naa-chat-body" aria-live="polite" data-lenis-prevent></div>
 
       <div class="naa-chat-chips" id="naa-chat-chips"></div>
 

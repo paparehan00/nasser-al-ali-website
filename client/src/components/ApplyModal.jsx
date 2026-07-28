@@ -107,6 +107,7 @@ export default function ApplyModal({ job, onClose }) {
   return (
     <div
       className="apply-modal-backdrop"
+      data-lenis-prevent
       onClick={(e) => { if (e.currentTarget === e.target) onClose(); }}
       role="dialog"
       aria-modal="true"

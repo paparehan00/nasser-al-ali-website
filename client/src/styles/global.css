@@ -5802,3 +5802,97 @@ section:has(+ .home-viewall) {
   gap: 10px;
   color: var(--accent-hover);
 }
+
+/* ══════════════════════════════════════════════════════════════════════════
+   SCROLL & MICRO-INTERACTION ENHANCEMENTS
+   Lenis smooth scroll, reading-progress bar, hero word reveal, and the
+   pointer-tracked card spotlight (see lib/lenis.js, lib/spotlight.js).
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Lenis handshake (required by the library) ─────────────────────────────
+   Lenis stamps these classes on <html> while active. scroll-behavior must
+   be auto while it drives the scroll, otherwise the browser's own smooth
+   scrolling fights the Lenis animation loop and everything rubber-bands. */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+/* ── Reading-progress bar ────────────────────────────────────────────────── */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent-hover), var(--accent));
+  transform-origin: left center;
+  transform: scaleX(0);
+  z-index: 1200; /* above announcement bar (1001) and header (1000) */
+  pointer-events: none;
+}
+html[dir="rtl"] .scroll-progress {
+  transform-origin: right center;
+  background: linear-gradient(-90deg, var(--accent-hover), var(--accent));
+}
+
+/* ── Hero word reveal ────────────────────────────────────────────────────
+   inline-block so each word can translate/blur independently; white-space
+   pre keeps the trailing space that inline-block would otherwise strip. */
+.hero-word {
+  display: inline-block;
+  white-space: pre;
+  will-change: transform, filter;
+}
+
+/* ── Card spotlight (desktop pointer devices only) ───────────────────────
+   Radial highlight that follows the cursor across the glass cards.
+   --spot-x/--spot-y are set by the delegated listener in lib/spotlight.js. */
+@media (hover: hover) and (pointer: fine) {
+  .chart-card,
+  .kpi-card {
+    position: relative;
+    overflow: hidden;
+  }
+  .service-card::after,
+  .chart-card::after,
+  .kpi-card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.35s ease;
+    background: radial-gradient(
+      340px circle at var(--spot-x, 50%) var(--spot-y, 50%),
+      rgba(28, 143, 209, 0.14),
+      transparent 65%
+    );
+  }
+  .service-card:hover::after,
+  .chart-card:hover::after,
+  .kpi-card:hover::after {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-progress {
+    display: none;
+  }
+  .service-card::after,
+  .chart-card::after,
+  .kpi-card::after {
+    display: none;
+  }
+}

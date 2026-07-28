@@ -267,7 +267,7 @@ export default function Header() {
           </Link>
         </div>
 
-        <nav className={`main-nav${menuOpen ? " active" : ""}`} ref={navRef}>
+        <nav className={`main-nav${menuOpen ? " active" : ""}`} ref={navRef} data-lenis-prevent>
           <ul>
             {LEADING_NAV.map((item) => (
               <li key={item.to}>
