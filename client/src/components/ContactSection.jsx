@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useI18n } from "../context/I18nContext.jsx";
+import { useInView } from "../hooks/useInView.js";
 import { EMAIL, PHONE, PHONE_TEL, PHONE_2, PHONE_2_TEL, WHATSAPP_URL, MAP_EMBED, MAP_LINK } from "../lib/constants.js";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -73,6 +74,7 @@ function localNow() {
 
 export default function ContactSection() {
   const { t, lang } = useI18n();
+  const [gridRef, inView] = useInView(0.15);
   const [status, setStatus] = useState("idle"); // idle | sending | success | error
   // Read the real, site-wide consent choice — not a fresh local flag — so the
   // map doesn't ask again if the user already accepted embeds via the main
@@ -156,7 +158,7 @@ export default function ContactSection() {
           <a href="#contact-form" className="btn btn-solid btn-gold btn-large contact-cta">{t("contact.book")}</a>
         </div>
 
-        <div className="contact-grid">
+        <div className={"contact-grid fade-rise" + (inView ? " is-in" : "")} ref={gridRef}>
           <div className="contact-form-wrap">
             <h3>{t("contact.formTitle")}</h3>
             <form id="contact-form" name="contact" method="POST" onSubmit={onSubmit}>

@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { useI18n } from "../context/I18nContext.jsx";
+import { useInView } from "../hooks/useInView.js";
 import { tiltHandlers } from "../lib/tiltEffect.js";
 import { highlightPhrases } from "../lib/highlightText.jsx";
 
@@ -10,10 +11,11 @@ const HIGHLIGHT_PHRASES = {
 
 export default function AboutSection() {
   const { t, lang } = useI18n();
+  const [ref, inView] = useInView(0.2);
   return (
     <section className="about" id="about">
-      <div className="container about-container">
-        <div className="about-content">
+      <div className="container about-container" ref={ref}>
+        <div className={"about-content fade-rise" + (inView ? " is-in" : "")}>
           <span className="overline">{t("about.overline")}</span>
           <h2>{t("about.title")}</h2>
           <p>{highlightPhrases(t("about.body"), HIGHLIGHT_PHRASES[lang])}</p>
@@ -25,7 +27,7 @@ export default function AboutSection() {
             </a>
           </div>
         </div>
-        <div className="about-image tilt-frame" {...tiltHandlers}>
+        <div className={"about-image tilt-frame clip-reveal" + (inView ? " is-in" : "")} {...tiltHandlers}>
           <img
             className="about-image-kenburns"
             src="/assets/about-theme-1.jpg"

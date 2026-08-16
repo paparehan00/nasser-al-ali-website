@@ -5,5 +5,8 @@ data/*.db-wal
 data/*.db-shm
 data/backups/
 
-# Uploaded images (owner-uploaded content, not source-controlled)
-
+# Applicant-submitted resumes - personal data, never source-controlled
+# (uploaded site images like logos/certs/awards ARE tracked deliberately,
+# since they're site content with no other backing store; the CV_DIR itself
+# is created at server startup via fs.mkdirSync, so no dir placeholder needed)
+uploads/cvs/

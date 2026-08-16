@@ -1,9 +1,11 @@
 import { useI18n } from "../context/I18nContext.jsx";
 import { useContent, pickLang } from "../hooks/useContent.js";
+import { useInView } from "../hooks/useInView.js";
 import { tiltHandlers } from "../lib/tiltEffect.js";
 
 export default function ChairmanSection() {
   const { lang } = useI18n();
+  const [ref, inView] = useInView(0.2);
   const { data } = useContent("chairman");
   const section = data?.section;
   const extra = section?.extra || {};
@@ -13,9 +15,9 @@ export default function ChairmanSection() {
 
   return (
     <section className="chairman section-alt" id="chairman">
-      <div className="container chairman-container">
+      <div className="container chairman-container" ref={ref}>
         <div className="chairman-photo">
-          <div className="chairman-photo-inner tilt-frame" {...tiltHandlers}>
+          <div className={"chairman-photo-inner tilt-frame clip-reveal" + (inView ? " is-in" : "")} {...tiltHandlers}>
             <img src={photo} alt={`${name} - ${role}`} loading="lazy" />
           </div>
           <div className="chairman-name-plate">
@@ -23,7 +25,7 @@ export default function ChairmanSection() {
             <div className="plate-title">{role}</div>
           </div>
         </div>
-        <div className="chairman-content">
+        <div className={"chairman-content fade-rise" + (inView ? " is-in" : "")}>
           {/* No overline — "Chairman's Message" above "A word from our
               Chairman" was the same statement twice; the heading alone
               already says it. */}

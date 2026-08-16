@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Users, Truck, Building2, Zap, Sparkles, Briefcase } from "lucide-react";
 import { useI18n } from "../context/I18nContext.jsx";
 import { useContent, pickLang } from "../hooks/useContent.js";
+import { useInView } from "../hooks/useInView.js";
 import { SERVICE_SLUGS_BY_ID } from "../lib/serviceDetails.js";
 
 // Icon glyphs are per-service-id UI, not editable content — kept inline
@@ -20,6 +21,7 @@ export default function ServicesGrid() {
   const { data } = useContent("services");
   const section = data?.section;
   const items = data?.items || [];
+  const [gridRef, inView] = useInView(0.1);
 
   return (
     <section className="services" id="services">
@@ -29,14 +31,14 @@ export default function ServicesGrid() {
           <h2>{pickLang(section?.title, lang)}</h2>
           <p className="section-lede">{pickLang(section?.lede, lang)}</p>
         </div>
-        <div className="services-grid">
-          {items.map((s) => {
+        <div className={"services-grid" + (inView ? " is-in-view" : "")} ref={gridRef}>
+          {items.map((s, i) => {
             const d = s.data || {};
             const slug = SERVICE_SLUGS_BY_ID[d.id];
             const card = (
               <>
                 <div className="service-media">
-                  <div className="service-img-wrap">
+                  <div className={"service-img-wrap clip-reveal" + (inView ? " is-in" : "")}>
                     <img src={s.imagePath} alt={d.alt} loading="lazy" />
                   </div>
                   <div className="service-icon">{ICONS[d.id]}</div>
@@ -49,11 +51,16 @@ export default function ServicesGrid() {
               </>
             );
             return slug ? (
-              <Link className="service-card service-card-link" to={`/services/${slug}`} key={s.id}>
+              <Link
+                className="service-card service-card-link reveal-up"
+                to={`/services/${slug}`}
+                key={s.id}
+                style={{ "--reveal-delay": `${i * 0.06}s` }}
+              >
                 {card}
               </Link>
             ) : (
-              <div className="service-card" key={s.id}>{card}</div>
+              <div className="service-card reveal-up" key={s.id} style={{ "--reveal-delay": `${i * 0.06}s` }}>{card}</div>
             );
           })}
         </div>

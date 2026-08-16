@@ -1,4 +1,5 @@
 import { useI18n } from "../context/I18nContext.jsx";
+import { useInView } from "../hooks/useInView.js";
 
 const FLEET = [
   { id: "towerCranes", img: "/assets/fleet/tower-cranes.webp",       alt: "Tower cranes on a Doha construction site" },
@@ -11,6 +12,7 @@ const FLEET = [
 
 export default function FleetGrid() {
   const { t } = useI18n();
+  const [gridRef, inView] = useInView(0.1);
   return (
     <section className="fleet section-alt" id="fleet">
       <div className="container">
@@ -19,10 +21,10 @@ export default function FleetGrid() {
           <h2>{t("fleet.title")}</h2>
           <p className="section-lede">{t("fleet.lede")}</p>
         </div>
-        <div className="fleet-grid">
-          {FLEET.map((f) => (
-            <div className="fleet-card" key={f.id}>
-              <div className="fleet-illus">
+        <div className={"fleet-grid" + (inView ? " is-in-view" : "")} ref={gridRef}>
+          {FLEET.map((f, i) => (
+            <div className="fleet-card reveal-up" key={f.id} style={{ "--reveal-delay": `${i * 0.06}s` }}>
+              <div className={"fleet-illus clip-reveal" + (inView ? " is-in" : "")}>
                 <img src={f.img} alt={f.alt} loading="lazy" />
               </div>
               <div className="fleet-body">

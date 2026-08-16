@@ -1,5 +1,6 @@
 import { useI18n } from "../context/I18nContext.jsx";
 import { useContent, pickLang } from "../hooks/useContent.js";
+import { useInView } from "../hooks/useInView.js";
 import { tiltHandlers } from "../lib/tiltEffect.js";
 import Model3DViewer from "./Model3DViewer.jsx";
 
@@ -21,6 +22,7 @@ export default function CertificationsGrid({ onOpen }) {
   const section = data?.section;
   const items = data?.items || [];
   const extra = section?.extra || {};
+  const [gridRef, inView] = useInView(0.1);
 
   return (
     <section className="certifications" id="certifications">
@@ -31,21 +33,22 @@ export default function CertificationsGrid({ onOpen }) {
           <p className="section-lede">{pickLang(section?.lede, lang)}</p>
         </div>
         <Model3DViewer {...CERT_BADGE_MODEL} compact />
-        <div className="certs-grid">
-          {items.map((c) => {
+        <div className={"certs-grid" + (inView ? " is-in-view" : "")} ref={gridRef}>
+          {items.map((c, i) => {
             const d = c.data || {};
             const localizedTitle = pickLang(d.title, lang);
             return (
               <a
-                className="cert-card"
+                className="cert-card reveal-up"
                 key={c.id}
                 href={c.imagePath}
+                style={{ "--reveal-delay": `${i * 0.06}s` }}
                 onClick={(e) => {
                   e.preventDefault();
                   onOpen && onOpen(c.imagePath, `${d.code} - ${localizedTitle}`);
                 }}
               >
-                <div className="cert-thumb tilt-frame" {...tiltHandlers}>
+                <div className={"cert-thumb tilt-frame clip-reveal" + (inView ? " is-in" : "")} {...tiltHandlers}>
                   <img src={c.imagePath} alt={d.alt} loading="lazy" />
                 </div>
                 <div className="cert-body">

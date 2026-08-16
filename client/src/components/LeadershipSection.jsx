@@ -1,5 +1,6 @@
 import { useI18n } from "../context/I18nContext.jsx";
 import { useContent, pickLang } from "../hooks/useContent.js";
+import { useInView } from "../hooks/useInView.js";
 
 const PLACEHOLDER = (
   <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
@@ -17,6 +18,7 @@ const MANAGERS = [
 
 export default function LeadershipSection() {
   const { t, lang } = useI18n();
+  const [orgRef, inView] = useInView(0.1);
   const { data: chairmanData } = useContent("chairman");
   const chairmanExtra = chairmanData?.section?.extra || {};
   const chairName = pickLang(chairmanExtra.name, lang);
@@ -32,9 +34,9 @@ export default function LeadershipSection() {
           <p className="section-lede">{t("leadership.lede")}</p>
         </div>
 
-        <div className="org-chart">
+        <div className={"org-chart" + (inView ? " is-in-view" : "")} ref={orgRef}>
           <div className="org-top">
-            <div className="leader-card leader-chair">
+            <div className="leader-card leader-chair reveal-up" style={{ "--reveal-delay": "0s" }}>
               <div className="leader-photo">
                 <img src={chairPhoto} alt={`${chairName} - ${chairRole}`} loading="lazy" />
               </div>
@@ -52,8 +54,8 @@ export default function LeadershipSection() {
           </div>
 
           <div className="org-row">
-            {MANAGERS.map((m) => (
-              <div className="leader-card" key={m.roleKey}>
+            {MANAGERS.map((m, i) => (
+              <div className="leader-card reveal-up" key={m.roleKey} style={{ "--reveal-delay": `${(i + 1) * 0.06}s` }}>
                 <div className="leader-photo placeholder-photo">{PLACEHOLDER}</div>
                 <div className="leader-body">
                   <span className="leader-role">{t(m.roleKey)}</span>

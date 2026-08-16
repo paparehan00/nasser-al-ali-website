@@ -45,3 +45,9 @@ assets/certifications/
 
 # Legacy site snapshot - kept for reference only, not for publishing
 _legacy-dist/
+
+# Claude Code local tooling - machine-local config and scratch worktrees,
+# never part of the delivered project
+.claude/settings.local.json
+.claude/worktrees/
+.playwright-mcp/

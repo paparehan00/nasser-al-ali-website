@@ -203,17 +203,17 @@ h1, h2, h3, h4, .display {
   text-wrap: balance;
 }
 
-.display { font-size: 72px; font-weight: 800; }
-h1 { font-size: 60px; font-weight: 800; }
-h2 { font-size: 42px; font-weight: 800; }
-h3 { font-size: 26px; font-weight: 700; }
-h4 { font-size: 20px; font-weight: 700; letter-spacing: -0.01em; }
+.display { font-size: 104px; font-weight: 700; letter-spacing: -0.03em; }
+h1 { font-size: 76px; font-weight: 700; letter-spacing: -0.03em; }
+h2 { font-size: 48px; font-weight: 700; }
+h3 { font-size: 28px; font-weight: 600; }
+h4 { font-size: 20px; font-weight: 600; letter-spacing: -0.01em; }
 
 @media (max-width: 768px) {
-  .display { font-size: 40px; }
-  h1 { font-size: 38px; }
-  h2 { font-size: 30px; }
-  h3 { font-size: 22px; }
+  .display { font-size: 48px; letter-spacing: -0.02em; }
+  h1 { font-size: 40px; letter-spacing: -0.02em; }
+  h2 { font-size: 32px; }
+  h3 { font-size: 23px; }
 }
 
 .overline {
@@ -224,12 +224,40 @@ h4 { font-size: 20px; font-weight: 700; letter-spacing: -0.01em; }
   letter-spacing: 2.4px;
   text-transform: uppercase;
   margin-bottom: var(--sp-16);
+  padding-left: 32px;
   position: relative;
+}
+/* Accent tick — the recurring "brand signature" mark before every eyebrow
+   label, sitewide. Reuses the padding-left every .overline already
+   reserves, previously unused. */
+.overline::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 22px;
+  height: 2px;
+  background: var(--accent);
+  transform: translateY(-50%);
 }
 .section-header.center .overline {
   padding-left: 0;
 }
 .section-header.center .overline::before { display: none; }
+
+/* RTL: the tick sits before the text in reading order either way, so it
+   moves to the right edge and the reserved space flips to padding-right. */
+html[dir="rtl"] .overline {
+  padding-left: 0;
+  padding-right: 32px;
+}
+html[dir="rtl"] .overline::before {
+  left: auto;
+  right: 0;
+}
+html[dir="rtl"] .section-header.center .overline {
+  padding-right: 0;
+}
 
 .section-lede {
   font-size: 18px;
@@ -281,17 +309,47 @@ section {
   margin-right: auto;
 }
 
-/* Fail-open animation base: elements are VISIBLE by default.
-   GSAP will animate FROM opacity 0 → 1 when it initializes.
-   If GSAP fails to load, elements simply stay visible. */
+/* Scroll-reveal fade+rise — pairs with the useInView() hook, which toggles
+   .is-in once the element crosses the viewport threshold and fires once.
+   useInView() itself fails open (sets inView true immediately) when
+   IntersectionObserver isn't supported, so content never gets stuck
+   invisible — the fail-open guarantee lives at the hook level, not here. */
 .fade-rise {
-  opacity: 1;
-  transform: none;
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1), transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: opacity, transform;
 }
+.fade-rise.is-in {
+  opacity: 1;
+  transform: none;
+}
+
+/* For a staggered grid of cards, use the existing .reveal-up + per-container
+   .is-in-view convention below (Scroll-reveal section) instead of this —
+   .fade-rise is for standalone single elements only. */
+
+/* Clip-path image reveal-wipe — for landmark/project photography specifically
+   (distinct from the plain fade+rise so it doesn't feel repetitive; reads as
+   "unveiling a landmark"). Wrap an <img>/media element's container in
+   .clip-reveal; useInView() toggles .is-in the same way as .fade-rise. */
+.clip-reveal {
+  clip-path: inset(0 0 100% 0);
+  transform: scale(1.08);
+  transition: clip-path 0.85s cubic-bezier(0.22, 1, 0.36, 1), transform 0.85s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: clip-path, transform;
+}
+.clip-reveal.is-in {
+  clip-path: inset(0 0 0 0);
+  transform: scale(1);
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .fade-rise, .parallax {
+  .fade-rise, .clip-reveal, .parallax {
+    opacity: 1 !important;
     transform: none !important;
+    clip-path: none !important;
+    transition: none !important;
   }
 }
 
@@ -1369,19 +1427,19 @@ html[dir="rtl"] .mega-link { direction: rtl; text-align: right; }
   align-items: center;
 }
 .hero-content {
-  max-width: 720px;
+  max-width: 860px;
 }
 .hero-overline {
   color: var(--accent);
   padding-left: 36px;
 }
 .hero-title {
-  font-size: 72px;
-  font-weight: 800;
+  font-size: 96px;
+  font-weight: 700;
   margin-bottom: var(--sp-24);
   text-shadow: 0 4px 24px rgba(0,0,0,0.5);
-  letter-spacing: -0.02em;
-  line-height: 1.05;
+  letter-spacing: -0.03em;
+  line-height: 1.02;
 }
 .hero-subtitle {
   font-size: 20px;
@@ -1399,8 +1457,12 @@ html[dir="rtl"] .mega-link { direction: rtl; text-align: right; }
 
 @media (max-width: 768px) {
   .hero-buttons { flex-direction: column; }
-  .hero-title { font-size: 40px; }
+  .hero-title { font-size: 46px; letter-spacing: -0.02em; }
   .hero-subtitle { font-size: 17px; }
+}
+
+@media (min-width: 769px) and (max-width: 1200px) {
+  .hero-title { font-size: 68px; }
 }
 
 /* Short BROWSER WINDOWS (not just narrow ones — e.g. a 1366x768 laptop
@@ -1477,24 +1539,35 @@ html[dir="rtl"] .mega-link { direction: rtl; text-align: right; }
 }
 .stat-number, .stat-plus {
   font-family: var(--font-heading);
-  font-size: 56px;
-  font-weight: 800;
+  font-size: 88px;
+  font-weight: 700;
   color: var(--accent);
   line-height: 1;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
 }
 .stat-plus {
-  font-size: 40px;
+  font-size: 56px;
   margin-left: 2px;
 }
 .stat-label {
   display: block;
   font-size: 14px;
   color: var(--text);
-  margin-top: var(--sp-12);
+  margin-top: var(--sp-16);
   text-transform: uppercase;
   letter-spacing: 1.4px;
   font-weight: 500;
+}
+/* Thin accent rule between the oversized numeral and its label — the
+   recurring "brand tick" motif, here doubling as breathing room. */
+.stat-label::before {
+  content: '';
+  display: block;
+  width: 32px;
+  height: 2px;
+  background: var(--accent);
+  margin: 0 auto var(--sp-12);
 }
 .stat-divider {
   width: 1px;
@@ -1508,7 +1581,8 @@ html[dir="rtl"] .mega-link { direction: rtl; text-align: right; }
   }
   .stat-item { flex: 0 0 calc(50% - 16px); }
   .stat-divider { display: none; }
-  .stat-number, .stat-plus { font-size: 42px; }
+  .stat-number, .stat-plus { font-size: 52px; }
+  .stat-plus { font-size: 34px; }
 }
 
 /* ==========================================================================
@@ -1837,7 +1911,7 @@ html[dir="rtl"] .project-card::after { right: auto; left: 10px; }
   position: absolute;
   bottom: 0; left: 0; width: 100%;
   padding: var(--sp-32) var(--sp-24) var(--sp-24);
-  background: linear-gradient(to top, rgba(7, 20, 39, 0.96) 20%, rgba(11,31,58, 0.55) 70%, transparent);
+  background: linear-gradient(to top, rgba(7, 20, 39, 0.96) 20%, rgba(11, 31, 58, 0.55) 70%, transparent);
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
   transform: translateY(20px);
@@ -1914,6 +1988,20 @@ html[dir="rtl"] .project-card::after { right: auto; left: 10px; }
   padding: 18px 24px 4px;
   max-width: 640px;
   margin: 0 auto;
+}
+
+/* Numbered counter — "01 / 08" — the editorial alternative to dot
+   pagination; reads more precise, pairs with the numeric language the
+   stat counters already use elsewhere on the site. */
+.hc-counter {
+  flex-shrink: 0;
+  font-family: var(--font-heading);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+  min-width: 52px;
 }
 
 .hc-arrow {
@@ -2847,7 +2935,15 @@ html[dir="rtl"] .footer-col-links a:hover { padding-left: 0; padding-right: 4px;
 .promo-grid.is-in-view .reveal-up,
 .sister-grid.is-in-view .reveal-up,
 .mv-grid.is-in-view .reveal-up,
-.mv-page-inner.is-in-view .reveal-up {
+.mv-page-inner.is-in-view .reveal-up,
+.services-grid.is-in-view .reveal-up,
+.awards-grid.is-in-view .reveal-up,
+.csr-grid.is-in-view .reveal-up,
+.certs-grid.is-in-view .reveal-up,
+.gallery-logo-grid.is-in-view .reveal-up,
+.gallery-photo-grid.is-in-view .reveal-up,
+.fleet-grid.is-in-view .reveal-up,
+.org-chart.is-in-view .reveal-up {
   opacity: 1;
   transform: none;
 }
@@ -4415,15 +4511,16 @@ textarea[aria-invalid="true"] {
 }
 .kpi-value {
   font-family: var(--font-heading);
-  font-weight: 800;
-  font-size: 44px;
+  font-weight: 700;
+  font-size: 64px;
   line-height: 1;
   color: var(--accent);
-  letter-spacing: -0.02em;
-  margin-bottom: 6px;
+  letter-spacing: -0.03em;
+  margin-bottom: var(--sp-12);
+  font-variant-numeric: tabular-nums;
 }
 .kpi-plus {
-  font-size: 30px;
+  font-size: 40px;
   color: var(--accent-hover);
   margin-left: 2px;
 }
@@ -4434,6 +4531,17 @@ textarea[aria-invalid="true"] {
   letter-spacing: 1.5px;
   text-transform: uppercase;
   margin-bottom: 8px;
+  position: relative;
+  padding-top: var(--sp-12);
+}
+.kpi-label::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 32px;
+  height: 2px;
+  background: var(--accent);
 }
 .kpi-detail {
   color: var(--text-muted);

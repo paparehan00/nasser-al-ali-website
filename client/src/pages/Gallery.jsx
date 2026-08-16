@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useI18n } from "../context/I18nContext.jsx";
 import { useContent, pickLang } from "../hooks/useContent.js";
+import { useInView } from "../hooks/useInView.js";
 import Lightbox from "../components/Lightbox.jsx";
 import { tiltHandlers } from "../lib/tiltEffect.js";
 import { useDocumentTitle } from "../hooks/useDocumentTitle.js";
@@ -10,6 +11,9 @@ export default function Gallery() {
   useDocumentTitle(ROUTE_TITLES["/gallery"]);
   const { lang, t } = useI18n();
   const [lb, setLb] = useState({ src: "", alt: "" });
+  const [clientsRef, clientsInView]   = useInView(0.1);
+  const [projectsRef, projectsInView] = useInView(0.1);
+  const [awardsRef, awardsInView]     = useInView(0.1);
 
   const { data: clientData }  = useContent("clients");
   const { data: projectData } = useContent("projects");
@@ -51,9 +55,9 @@ export default function Gallery() {
             <p className="section-lede">{t("gallery.clientsLede")}</p>
           </div>
           {clients.length > 0 ? (
-            <div className="gallery-logo-grid">
-              {clients.map((c) => (
-                <div className="gallery-logo-item" key={c.id}>
+            <div className={"gallery-logo-grid" + (clientsInView ? " is-in-view" : "")} ref={clientsRef}>
+              {clients.map((c, i) => (
+                <div className="gallery-logo-item reveal-up" key={c.id} style={{ "--reveal-delay": `${i * 0.05}s` }}>
                   <img
                     src={c.imagePath}
                     alt={c.data?.name || "Client logo"}
@@ -77,22 +81,23 @@ export default function Gallery() {
             <p className="section-lede">{t("gallery.projectsLede")}</p>
           </div>
           {projects.length > 0 ? (
-            <div className="gallery-photo-grid">
-              {projects.map((p) => {
+            <div className={"gallery-photo-grid" + (projectsInView ? " is-in-view" : "")} ref={projectsRef}>
+              {projects.map((p, i) => {
                 const d = p.data || {};
                 const name = pickLang(d.name, lang) || d.name || "Project";
                 const loc  = pickLang(d.location, lang) || d.location || "";
                 return (
                   <figure
-                    className="gallery-photo-item"
+                    className="gallery-photo-item reveal-up"
                     key={p.id}
                     role="button"
                     tabIndex={0}
                     onClick={() => open(p.imagePath, name)}
                     onKeyDown={(e) => e.key === "Enter" && open(p.imagePath, name)}
                     aria-label={`View ${name}`}
+                    style={{ "--reveal-delay": `${i * 0.06}s` }}
                   >
-                    <div className="gallery-photo-wrap tilt-frame" {...tiltHandlers}>
+                    <div className={"gallery-photo-wrap tilt-frame clip-reveal" + (projectsInView ? " is-in" : "")} {...tiltHandlers}>
                       <img src={p.imagePath} alt={name} loading="lazy" />
                     </div>
                     {(name || loc) && (
@@ -120,18 +125,19 @@ export default function Gallery() {
             <p className="section-lede">{t("gallery.awardsLede")}</p>
           </div>
           {awards.length > 0 ? (
-            <div className="gallery-photo-grid">
+            <div className={"gallery-photo-grid" + (awardsInView ? " is-in-view" : "")} ref={awardsRef}>
               {awards.map((a, i) => (
                 <figure
-                  className="gallery-photo-item"
+                  className="gallery-photo-item reveal-up"
                   key={a.id}
                   role="button"
                   tabIndex={0}
                   onClick={() => open(a.imagePath, `Award recognition ${i + 1}`)}
                   onKeyDown={(e) => e.key === "Enter" && open(a.imagePath, `Award recognition ${i + 1}`)}
                   aria-label={`View award ${i + 1}`}
+                  style={{ "--reveal-delay": `${i * 0.06}s` }}
                 >
-                  <div className="gallery-photo-wrap tilt-frame" {...tiltHandlers}>
+                  <div className={"gallery-photo-wrap tilt-frame clip-reveal" + (awardsInView ? " is-in" : "")} {...tiltHandlers}>
                     <img src={a.imagePath} alt={`Award recognition ${i + 1}`} loading="lazy" />
                   </div>
                 </figure>

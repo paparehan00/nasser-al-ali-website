@@ -23,10 +23,12 @@ export default function HorizontalCarousel({
   label = "Carousel",
   className = "",
 }) {
-  const rootRef  = useRef(null);   // outer wrapper (for visibility gating)
-  const vpRef    = useRef(null);   // viewport div (overflow:hidden)
-  const trackRef = useRef(null);   // wide flex track
-  const scrubRef = useRef(null);   // <input type=range>
+  const rootRef    = useRef(null);   // outer wrapper (for visibility gating)
+  const vpRef      = useRef(null);   // viewport div (overflow:hidden)
+  const trackRef   = useRef(null);   // wide flex track
+  const scrubRef   = useRef(null);   // <input type=range>
+  const counterRef = useRef(null);   // "01 / 08" numbered readout
+  const lastIdx    = useRef(-1);     // last index written to counterRef, dedupes DOM writes
   const s        = useRef({        // mutable hot state — never triggers re-render
     pos: 0,
     singleW: 0,
@@ -67,8 +69,20 @@ export default function HorizontalCarousel({
       const pct = (within / s.current.singleW) * 100;
       scrubRef.current.value = pct;
       scrubRef.current.style.setProperty("--hc-progress", `${pct}%`);
+
+      // Numbered counter — nearest slide index within the one-set span.
+      // Written imperatively (not React state) for the same reason as the
+      // scrubber: this runs every animation frame and must not trigger renders.
+      if (counterRef.current && items.length > 0) {
+        const idx = Math.round(within / (slideWidth + gap)) % items.length;
+        if (idx !== lastIdx.current) {
+          lastIdx.current = idx;
+          const pad = (n) => String(n).padStart(2, "0");
+          counterRef.current.textContent = `${pad(idx + 1)} / ${pad(items.length)}`;
+        }
+      }
     }
-  }, []);
+  }, [items.length, slideWidth, gap]);
 
   // ── Wrap position so we never hit the edges ──────────────────────────────
   const wrap = useCallback(() => {
@@ -219,6 +233,10 @@ export default function HorizontalCarousel({
       </div>
 
       <div className="hc-controls" aria-label="Carousel controls">
+        <span className="hc-counter" ref={counterRef} aria-hidden="true">
+          {`01 / ${String(items.length).padStart(2, "0")}`}
+        </span>
+
         <button
           type="button"
           className="hc-arrow"
