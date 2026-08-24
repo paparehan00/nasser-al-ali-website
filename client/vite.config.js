@@ -13,6 +13,10 @@ export default defineConfig({
   server: {
     port: 5173,
     open: false,
+    // Allow access via tunnel/port-forwarding tools (random subdomain per
+    // session, e.g. bc09s9bc-5174.inc1.devtunnels.ms or evil-flowers-vanish.loca.lt)
+    // — otherwise Vite rejects the forwarded request's Host header.
+    allowedHosts: [".devtunnels.ms", ".loca.lt"],
     // Dev proxy: the React app calls /api/* and /uploads/* which the
     // Express server (server/src/index.js) serves on :4000. Keeps the
     // browser origin single so cookies + CSRF work like in prod.
@@ -25,7 +29,15 @@ export default defineConfig({
       // public/assets/). Windows leaves ".~tmp" lock files when apps like
       // Photoshop save images, which chokes the FS watcher.
       ignored: [
-        "**/assets/**",           // repo-root scratchpad, not the app's public/assets
+        // Was "**/assets/**", which also matched public/assets/** (the
+        // glob doesn't stop at the first "assets" segment) — Vite's dev
+        // server serves files straight off disk regardless of the watcher,
+        // but something about being permanently unwatched left it treating
+        // public/assets/* paths as nonexistent and falling through to the
+        // SPA index.html instead of the real file. Scoped to the actual
+        // repo-root scratchpad folder (sibling of client/) so public/assets
+        // stays watched/served normally.
+        "../assets/**",
         "**/_legacy-dist/**",     // pre-migration snapshot
         "**/dist/**",             // build output
         "**/*.~tmp",              // Windows temp-save lock files

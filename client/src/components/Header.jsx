@@ -260,7 +260,6 @@ export default function Header() {
             }}
           >
             <span className="logo-glow-wrap">
-              <span className="logo-glow" aria-hidden="true"></span>
               <img src="/assets/logo.png" alt="Nasser Al Ali Enterprises" className="logo-img" />
             </span>
             <span className="logo-text">Nasser Al Ali Enterprises</span>
@@ -399,7 +398,7 @@ export default function Header() {
           </div>
 
           <button
-            className="mobile-menu-toggle"
+            className={`mobile-menu-toggle${menuOpen ? " active" : ""}`}
             aria-label="Toggle Menu"
             aria-expanded={menuOpen}
             onClick={() => setMenuOpen((v) => !v)}

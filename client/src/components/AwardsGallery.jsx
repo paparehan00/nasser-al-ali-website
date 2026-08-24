@@ -10,7 +10,14 @@ export default function AwardsGallery({ onOpen }) {
   const items = data?.items || [];
   const extra = section?.extra || {};
   const [csrRef, csrInView] = useInView(0.1);
-  const [galleryRef, galleryInView] = useInView(0.1);
+  // threshold:0.1 requires 10% of the *whole grid container* visible at
+  // once to fire — fine for a short grid, but this one is now 60+ photos
+  // (a single tall column on mobile, many thousands of px), so 10% of its
+  // height can exceed the entire viewport and the observer never reaches
+  // the threshold at all. Every .reveal-up item then stays stuck at
+  // opacity:0 forever — the photos are loaded, just permanently invisible.
+  // threshold:0 fires as soon as any part of the grid enters the viewport.
+  const [galleryRef, galleryInView] = useInView(0);
 
   return (
     <section className="awards" id="awards">

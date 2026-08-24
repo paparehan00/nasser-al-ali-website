@@ -25,6 +25,13 @@ export default function AnnouncementBar() {
   const [dismissed, setDismissed] = useState(
     () => typeof window !== "undefined" && sessionStorage.getItem(DISMISS_KEY) === "1"
   );
+  // Dismiss plays a CSS exit animation before actually unmounting (see
+  // `.announce-bar.closing` in global.css) — `dismissed` (which drives
+  // `visible` below, and with it the whole height-reservation effect)
+  // only flips once that animation finishes, so --header-height/
+  // --announce-height stay reserved for the full exit instead of the
+  // header snapping up while the bar is still visibly closing.
+  const [closing, setClosing] = useState(false);
 
   const isContactPage = location.pathname === "/contact";
   const visible = Boolean(promo) && !dismissed && !isContactPage;
@@ -99,13 +106,29 @@ export default function AnnouncementBar() {
 
   const title = pickLang(promo.data?.title, lang);
 
-  const dismiss = () => {
+  const finalizeDismiss = () => {
     sessionStorage.setItem(DISMISS_KEY, "1");
     setDismissed(true);
   };
 
+  const dismiss = () => {
+    const reduced = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    if (reduced) { finalizeDismiss(); return; }
+    setClosing(true);
+  };
+
+  const handleAnimationEnd = (e) => {
+    if (e.animationName === "announceOut") finalizeDismiss();
+  };
+
   return (
-    <div className="announce-bar" ref={barRef} role="region" aria-label={t("announce.aria")}>
+    <div
+      className={`announce-bar${closing ? " closing" : ""}`}
+      ref={barRef}
+      role="region"
+      aria-label={t("announce.aria")}
+      onAnimationEnd={handleAnimationEnd}
+    >
       <div className="container announce-bar-inner">
         <span className="announce-bar-text">{title}</span>
         <Link to="/promotions" className="announce-bar-link">{t("announce.view")}</Link>

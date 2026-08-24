@@ -51,3 +51,6 @@ _legacy-dist/
 .claude/settings.local.json
 .claude/worktrees/
 .playwright-mcp/
+
+# Design-reference scratch (downloaded inspiration videos + analysis batches)
+figma/

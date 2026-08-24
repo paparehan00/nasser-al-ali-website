@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useI18n } from "../context/I18nContext.jsx";
 import { useContent } from "../hooks/useContent.js";
+import { useInView } from "../hooks/useInView.js";
 import {
   EMAIL, PHONE, PHONE_TEL,
   PHONE_2, PHONE_2_TEL,
@@ -32,6 +33,9 @@ export default function Footer() {
   const { t } = useI18n();
   const { data: certData } = useContent("certifications");
   const certBadges = (certData?.items || []).slice(0, 3);
+  const [ctaRef, ctaInView] = useInView(0.3);
+  const [gridRef, gridInView] = useInView(0.1);
+  const [supportRef, supportInView] = useInView(0.3);
 
   return (
     <footer className="site-footer">
@@ -45,7 +49,7 @@ export default function Footer() {
             ))}
           </span>
         </div>
-        <div className="container footer-cta-inner">
+        <div className={"container footer-cta-inner fade-rise" + (ctaInView ? " is-in" : "")} ref={ctaRef}>
           <h2 className="footer-cta-heading">{t("footer.ctaHeading")}</h2>
           <Link to="/contact" className="btn btn-solid btn-gold btn-large">
             {t("footer.ctaButton")}
@@ -55,13 +59,12 @@ export default function Footer() {
 
       {/* ── Main footer grid ────────────────────────────────────────────── */}
       <div className="footer-main">
-        <div className="container footer-grid">
+        <div className={"container footer-grid" + (gridInView ? " is-in-view" : "")} ref={gridRef}>
 
           {/* Logo + blurb + socials */}
-          <div className="footer-col footer-col-brand">
+          <div className="footer-col footer-col-brand reveal-up" style={{ "--reveal-delay": "0s" }}>
             <Link to="/" className="footer-logo">
               <span className="logo-glow-wrap footer-logo-glow-wrap">
-                <span className="logo-glow" aria-hidden="true"></span>
                 <img src="/assets/logo.png" alt="Nasser Al Ali Enterprises" />
               </span>
             </Link>
@@ -83,7 +86,7 @@ export default function Footer() {
           </div>
 
           {/* About Us */}
-          <div className="footer-col">
+          <div className="footer-col reveal-up" style={{ "--reveal-delay": "0.06s" }}>
             <h3 className="footer-col-heading">{t("footer.aboutUs")}</h3>
             <ul className="footer-col-links">
               {ABOUT_LINKS.map((l) => (
@@ -102,7 +105,7 @@ export default function Footer() {
           </div>
 
           {/* Our Services */}
-          <div className="footer-col">
+          <div className="footer-col reveal-up" style={{ "--reveal-delay": "0.12s" }}>
             <h3 className="footer-col-heading">{t("footer.ourServices")}</h3>
             <ul className="footer-col-links">
               {SERVICE_LINKS.map((l) => (
@@ -112,7 +115,7 @@ export default function Footer() {
           </div>
 
           {/* Contact */}
-          <div className="footer-col">
+          <div className="footer-col reveal-up" style={{ "--reveal-delay": "0.18s" }}>
             <h3 className="footer-col-heading">{t("footer.contactHeading")}</h3>
             <ul className="footer-col-links footer-contact-list">
               <li className="footer-address">
@@ -136,12 +139,14 @@ export default function Footer() {
       <div className="footer-support">
         <div className="container footer-support-inner">
           <span className="footer-support-label">{t("footer.weSupport")}</span>
-          <div className="footer-support-logos">
+          <div className={"footer-support-logos" + (supportInView ? " is-in-view" : "")} ref={supportRef}>
             <a
               href="https://www.qcharity.org"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Qatar Charity"
+              className="reveal-up"
+              style={{ "--reveal-delay": "0s" }}
             >
               <img src="/assets/qatarcharity.png" alt="Qatar Charity" />
             </a>
@@ -150,6 +155,8 @@ export default function Footer() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Greenpeace"
+              className="reveal-up"
+              style={{ "--reveal-delay": "0.06s" }}
             >
               <img src="/assets/greenpeace.png" alt="Greenpeace" />
             </a>

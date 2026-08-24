@@ -51,10 +51,26 @@ export default function MissionVisionSection() {
     if (!v) return;
     v.muted = true;
     v.playsInline = true;
+
+    // Some mobile browsers (notably Chrome/Android with Data Saver on)
+    // refuse to fetch ANY video bytes — not just refuse to play — until
+    // the user's first touch, so "canplay" can silently never fire at all
+    // pre-interaction. Registering the touch/click retry unconditionally
+    // (not nested inside a failed-play catch) means the first tap still
+    // kicks the video off even in that case, instead of it being stuck on
+    // its poster frame forever (same pattern as Hero.jsx).
+    const kick = () => v.play().catch(() => {});
+    document.addEventListener("click", kick, { once: true });
+    document.addEventListener("touchstart", kick, { once: true });
+
     const tryPlay = () => v.play().catch(() => {});
     v.load();
     v.addEventListener("canplay", tryPlay, { once: true });
-    return () => v.removeEventListener("canplay", tryPlay);
+    return () => {
+      v.removeEventListener("canplay", tryPlay);
+      document.removeEventListener("click", kick);
+      document.removeEventListener("touchstart", kick);
+    };
   }, [shouldMountVideo, video.webm, video.mp4]);
 
   return (

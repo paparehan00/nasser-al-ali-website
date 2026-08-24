@@ -45,7 +45,6 @@ export default function ServicesGrid() {
                 </div>
                 <div className="service-body">
                   <h3>{pickLang(d.title, lang)}</h3>
-                  <div className="card-line" />
                   <p>{pickLang(d.body, lang)}</p>
                 </div>
               </>

@@ -55,8 +55,11 @@
      shorter once scrolled and the top bar collapses) plus a little
      breathing room. Every anchor-scroll offset and the hero's own top
      clearance derive from this single value, so if the header's height
-     ever changes, this is the one place to update. */
-  --header-height: 160px;
+     ever changes, this is the one place to update.
+     Desktop got +~14px from the floating nav-row treatment below (10px +
+     12px margin replacing what was 0 margin) — bumped 160 -> 176 to keep
+     the same breathing-room cushion over the new real height (~158px). */
+  --header-height: 176px;
 
   /* Two-layer shadows — a tight, low-opacity contact shadow for definition
      plus a soft, larger, diffuse one for depth — read as considerably more
@@ -224,39 +227,6 @@ h4 { font-size: 20px; font-weight: 600; letter-spacing: -0.01em; }
   letter-spacing: 2.4px;
   text-transform: uppercase;
   margin-bottom: var(--sp-16);
-  padding-left: 32px;
-  position: relative;
-}
-/* Accent tick — the recurring "brand signature" mark before every eyebrow
-   label, sitewide. Reuses the padding-left every .overline already
-   reserves, previously unused. */
-.overline::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 50%;
-  width: 22px;
-  height: 2px;
-  background: var(--accent);
-  transform: translateY(-50%);
-}
-.section-header.center .overline {
-  padding-left: 0;
-}
-.section-header.center .overline::before { display: none; }
-
-/* RTL: the tick sits before the text in reading order either way, so it
-   moves to the right edge and the reserved space flips to padding-right. */
-html[dir="rtl"] .overline {
-  padding-left: 0;
-  padding-right: 32px;
-}
-html[dir="rtl"] .overline::before {
-  left: auto;
-  right: 0;
-}
-html[dir="rtl"] .section-header.center .overline {
-  padding-right: 0;
 }
 
 .section-lede {
@@ -500,6 +470,17 @@ section {
   from { opacity: 0; transform: translateY(-100%); }
   to   { opacity: 1; transform: none; }
 }
+.announce-bar.closing {
+  /* AnnouncementBar.jsx keeps --header-height/--announce-height reserved
+     until this finishes, so .site-header's own "top" transition slides it
+     back up in sync instead of snapping the instant the bar unmounts. */
+  animation: announceOut 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  pointer-events: none;
+}
+@keyframes announceOut {
+  from { opacity: 1; transform: none; }
+  to   { opacity: 0; transform: translateY(-100%); }
+}
 .announce-bar-inner {
   display: flex;
   align-items: center;
@@ -668,10 +649,15 @@ html[dir="rtl"] .announce-bar-close { margin-left: 0; margin-right: var(--sp-8);
      over busy content. */
   background-color: rgba(11, 31, 58, 0.55);
   backdrop-filter: blur(8px);
+  /* Crisp glass edge instead of flat opacity — a thin inner highlight along
+     the bottom reads as a pane of glass, not just a tinted rectangle. */
+  box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.06);
 }
 .site-header.scrolled {
   background-color: rgba(11, 31, 58, 0.92);
-  backdrop-filter: blur(14px);
+  /* Trimmed from 14px — heavy backdrop-filter blur is a real FPS cost on
+     mid-tier Android; 11px keeps the glass read at a lighter GPU cost. */
+  backdrop-filter: blur(11px);
   border-bottom: 1px solid var(--border);
 }
 .header-container {
@@ -683,6 +669,62 @@ html[dir="rtl"] .announce-bar-close { margin-left: 0; margin-right: var(--sp-8);
 }
 .site-header.scrolled .header-container {
   padding: var(--sp-12) 0;
+}
+
+/* Desktop: the nav row floats as its own inset, rounded glass bar instead
+   of a flat edge-to-edge strip — .site-header becomes an invisible fixed
+   positioning shell (its background/blur/shadow move to .header-container
+   below) so the visible chrome reads as a pane of glass hovering over the
+   page, not a bar spanning it. Mobile keeps the plain edge-to-edge bar
+   (already strips extra chrome for space — see .logo-area's mobile rule)
+   since a floating pill has less room to earn its keep at that width.
+   Adds ~16px to the header's real rendered height — accounted for in
+   --header-height above (every page's top padding and every anchor's
+   scroll-margin-top derive from that one constant). */
+@media (min-width: 769px) {
+  .site-header {
+    background-color: transparent;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border-bottom: none;
+    box-shadow: none;
+  }
+  .site-header.scrolled {
+    background-color: transparent;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border-bottom: none;
+  }
+  .header-container {
+    /* max-width + auto horizontal margin centers the bar itself (the plain
+       .container rule's own auto-centering gets fully overridden by this
+       same-specificity margin shorthand, so it has to be re-declared here
+       explicitly) — width:calc keeps a 16px minimum gutter on viewports
+       narrower than max-width + 32px. */
+    max-width: var(--container);
+    width: calc(100% - 32px);
+    margin: 10px auto 12px;
+    padding: var(--sp-12) var(--sp-24);
+    /* Mostly-transparent glass — blur + a thin border carry the "pane of
+       glass" read instead of a tinted fill. */
+    background-color: rgba(11, 31, 58, 0.22);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 18px;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    transition: background-color 0.3s ease, padding 0.3s ease, margin 0.3s ease,
+                box-shadow 0.3s ease, border-radius 0.3s ease;
+  }
+  .site-header.scrolled .header-container {
+    margin: 6px auto 8px;
+    padding: var(--sp-8) var(--sp-24);
+    /* More opaque once scrolled — most pages have light content directly
+       under the header, and a near-transparent bar over that reads as
+       broken (white-on-white), not intentional. */
+    background-color: rgba(11, 31, 58, 0.9);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.34), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  }
 }
 
 /* RTL: mirror the top-bar layout */
@@ -730,8 +772,7 @@ html[dir="rtl"] .top-bar-inner { flex-direction: row-reverse; }
 }
 
 /* Standard-size logo mark on a light chip — the blue/green mark pops far
-   harder on near-white than on the dark navy header. An animated brand-color
-   halo rings the chip for the "alive" professional touch. */
+   harder on near-white than on the dark navy header. */
 .logo-glow-wrap {
   position: relative;
   display: inline-flex;
@@ -741,29 +782,34 @@ html[dir="rtl"] .top-bar-inner { flex-direction: row-reverse; }
   background: linear-gradient(150deg, #ffffff 0%, #e9f4fc 100%);
   padding: 5px 10px;
   border-radius: 10px;
-  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.30), inset 0 1px 0 rgba(255, 255, 255, 0.95);
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.30), inset 0 1px 0 rgba(255, 255, 255, 0.95),
+              0 0 14px 2px rgba(28, 143, 209, 0.35);
+  transition: box-shadow 0.25s ease;
+  /* Soft breathing glow — a single box-shadow layer (not a separate
+     blurred ring element) so it stays restrained: slow cycle, modest
+     amplitude, reads as "alive" rather than a pulsing AI-template blob. */
+  animation: logoGlowBreathe 3.2s ease-in-out infinite;
 }
-.logo-glow {
-  position: absolute;
-  inset: -9px;
-  border-radius: 16px;
-  /* transparent center: the halo rings the chip instead of washing over it */
-  background: radial-gradient(ellipse at center,
-    transparent 42%,
-    rgba(28, 143, 209, 0.42) 63%,
-    rgba(30, 136, 83, 0.22) 80%,
-    transparent 94%);
-  filter: blur(6px);
-  animation: logoGlowPulse 4.5s ease-in-out infinite;
-  z-index: 0;
-  pointer-events: none;
+@keyframes logoGlowBreathe {
+  0%, 100% {
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.30), inset 0 1px 0 rgba(255, 255, 255, 0.95),
+                0 0 14px 2px rgba(28, 143, 209, 0.35);
+  }
+  50% {
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.30), inset 0 1px 0 rgba(255, 255, 255, 0.95),
+                0 0 24px 5px rgba(28, 143, 209, 0.55);
+  }
 }
-@keyframes logoGlowPulse {
-  0%, 100% { opacity: 0.55; transform: scale(0.96); }
-  50%      { opacity: 1;    transform: scale(1.08); }
+.logo-link:hover .logo-glow-wrap {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.34), inset 0 1px 0 rgba(255, 255, 255, 0.95),
+              0 0 28px 6px rgba(28, 143, 209, 0.65);
 }
 @media (prefers-reduced-motion: reduce) {
-  .logo-glow { animation: none; opacity: 0.7; }
+  .logo-glow-wrap {
+    animation: none;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.30), inset 0 1px 0 rgba(255, 255, 255, 0.95),
+                0 0 18px 3px rgba(28, 143, 209, 0.45);
+  }
 }
 .logo-img {
   position: relative;
@@ -822,28 +868,12 @@ html[dir="rtl"] .top-bar-inner { flex-direction: row-reverse; }
   border-radius: 9px;
   letter-spacing: 0.3px;
   white-space: nowrap;
-  transition: color 0.2s ease, background 0.2s ease;
-}
-.nav-link::after {
-  content: '';
-  position: absolute;
-  bottom: 3px;
-  left: 14px;
-  right: 14px;
-  height: 2px;
-  border-radius: 2px;
-  background: linear-gradient(90deg, var(--accent), var(--brand-green));
-  transform: scaleX(0);
-  transform-origin: right;
-  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: color 0.2s ease, background 0.2s ease, transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .nav-link:hover {
   color: var(--text);
-  background: rgba(255, 255, 255, 0.07);
-}
-.nav-link:hover::after {
-  transform: scaleX(1);
-  transform-origin: left;
+  background: rgba(255, 255, 255, 0.08);
+  transform: translateY(-1px);
 }
 .header-actions {
   display: flex;
@@ -860,15 +890,28 @@ html[dir="rtl"] .top-bar-inner { flex-direction: row-reverse; }
 }
 .mobile-menu-toggle span {
   display: block; width: 24px; height: 2px; background: #fff;
-  margin: 5px auto; transition: 0.3s;
+  border-radius: 1px;
+  position: absolute; left: 10px;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              top 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
+.mobile-menu-toggle span:nth-child(1) { top: 15px; }
+.mobile-menu-toggle span:nth-child(2) { top: 21px; }
+.mobile-menu-toggle span:nth-child(3) { top: 27px; }
+/* Bars-to-X morph: top/bottom bars meet at center and rotate into an X,
+   middle bar fades out — same duration/curve as the rest of the site's
+   deliberate easing (never default), just at the micro-feedback register. */
+.mobile-menu-toggle.active span:nth-child(1) { top: 21px; transform: rotate(45deg); }
+.mobile-menu-toggle.active span:nth-child(2) { opacity: 0; }
+.mobile-menu-toggle.active span:nth-child(3) { top: 21px; transform: rotate(-45deg); }
 @media (max-width: 992px) {
   .main-nav {
     position: fixed;
     top: 0; right: -100%; width: 300px; height: 100vh;
     background: var(--bg-elevated);
     padding: 100px var(--sp-24);
-    transition: 0.4s ease;
+    transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     border-left: 1px solid var(--border);
     overflow-y: auto;
   }
@@ -915,7 +958,7 @@ html[dir="rtl"] .top-bar-inner { flex-direction: row-reverse; }
 }
 .dropdown-btn:hover { color: var(--text); background: rgba(255, 255, 255, 0.07); }
 .dropdown-chevron {
-  transition: transform 0.25s ease;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .dropdown-chevron.open {
   transform: rotate(180deg);
@@ -1554,20 +1597,10 @@ html[dir="rtl"] .mega-link { direction: rtl; text-align: right; }
   display: block;
   font-size: 14px;
   color: var(--text);
-  margin-top: var(--sp-16);
+  margin-top: var(--sp-24);
   text-transform: uppercase;
   letter-spacing: 1.4px;
   font-weight: 500;
-}
-/* Thin accent rule between the oversized numeral and its label — the
-   recurring "brand tick" motif, here doubling as breathing room. */
-.stat-label::before {
-  content: '';
-  display: block;
-  width: 32px;
-  height: 2px;
-  background: var(--accent);
-  margin: 0 auto var(--sp-12);
 }
 .stat-divider {
   width: 1px;
@@ -1741,18 +1774,8 @@ html[dir="rtl"] .mega-link { direction: rtl; text-align: right; }
 }
 .service-body h3 {
   font-size: 20px;
-  margin-bottom: 8px;
+  margin-bottom: var(--sp-24);
   color: var(--text);
-}
-.card-line {
-  width: 32px; height: 2px;
-  background: var(--border-strong);
-  margin: var(--sp-8) 0 var(--sp-12);
-  transition: background 0.3s ease, width 0.3s ease;
-}
-.service-card:hover .card-line {
-  background: var(--accent);
-  width: 48px;
 }
 .service-body p {
   font-size: 14.5px;
@@ -1944,7 +1967,13 @@ html[dir="rtl"] .project-card::after { right: auto; left: 10px; }
 @media (max-width: 600px) {
   .masonry-grid { grid-template-columns: 1fr; grid-auto-rows: 240px; }
   .project-card.feature-card { grid-column: span 1; grid-row: span 1; }
-  .project-caption { transform: none; opacity: 1; }
+  /* On desktop the caption (with its backdrop-filter blur) only shows on
+     :hover, so the blur is transient. Mobile has no hover, so opacity:1
+     here makes it permanent — without turning the blur off too, the bottom
+     third of every project photo reads as permanently half-blurred. The
+     gradient background alone already gives the white caption text enough
+     contrast without blurring the photo underneath it. */
+  .project-caption { transform: none; opacity: 1; backdrop-filter: none; -webkit-backdrop-filter: none; }
 }
 
 /* ==========================================================================
@@ -2893,13 +2922,18 @@ html[dir="rtl"] .footer-col-links a:hover { padding-left: 0; padding-right: 4px;
   display: flex;
   align-items: center;
   justify-content: center;
-  opacity: 0;
-  pointer-events: none;
-  transition: 0.3s ease;
+  /* React only ever mounts this element already "active" (see
+     Lightbox.jsx), so a plain opacity transition has no "from" state to
+     animate from — an entrance keyframe (same technique as .apply-modal)
+     fires correctly on mount regardless. */
+  animation: lightboxIn 0.25s ease both;
 }
-.lightbox.active {
-  opacity: 1;
-  pointer-events: auto;
+@keyframes lightboxIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .lightbox, .lightbox-img, #lightbox-img { animation: none; }
 }
 .lightbox-close {
   position: absolute;
@@ -2918,6 +2952,13 @@ html[dir="rtl"] .footer-col-links a:hover { padding-left: 0; padding-right: 4px;
   border-radius: var(--radius);
   border: 1px solid var(--border);
   box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+  /* Scale-in reveal (not a plain fade) on the same deliberate curve used
+     sitewide for modals/panels — see .apply-modal. */
+  animation: lightboxImgIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes lightboxImgIn {
+  from { opacity: 0; transform: scale(0.94); }
+  to   { opacity: 1; transform: none; }
 }
 
 /* ==========================================================================
@@ -2943,7 +2984,9 @@ html[dir="rtl"] .footer-col-links a:hover { padding-left: 0; padding-right: 4px;
 .gallery-logo-grid.is-in-view .reveal-up,
 .gallery-photo-grid.is-in-view .reveal-up,
 .fleet-grid.is-in-view .reveal-up,
-.org-chart.is-in-view .reveal-up {
+.org-chart.is-in-view .reveal-up,
+.footer-grid.is-in-view .reveal-up,
+.footer-support-logos.is-in-view .reveal-up {
   opacity: 1;
   transform: none;
 }
@@ -4531,17 +4574,6 @@ textarea[aria-invalid="true"] {
   letter-spacing: 1.5px;
   text-transform: uppercase;
   margin-bottom: 8px;
-  position: relative;
-  padding-top: var(--sp-12);
-}
-.kpi-label::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 32px;
-  height: 2px;
-  background: var(--accent);
 }
 .kpi-detail {
   color: var(--text-muted);
@@ -4983,6 +5015,7 @@ html[dir="rtl"] .floating-cta { right: auto; left: 22px; align-items: flex-start
               0 2px 6px rgba(0, 0, 0, 0.25);
   transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
               box-shadow 0.25s ease;
+  animation: floatBtnIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both;
 }
 .floating-whatsapp img {
   width: 56px;
@@ -5017,6 +5050,7 @@ html[dir="rtl"] .floating-cta { right: auto; left: 22px; align-items: flex-start
   transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
               box-shadow 0.25s ease,
               background 0.2s ease;
+  animation: floatBtnIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.42s both;
 }
 .floating-call:hover {
   transform: scale(1.06);
@@ -5027,6 +5061,13 @@ html[dir="rtl"] .floating-cta { right: auto; left: 22px; align-items: flex-start
 .floating-call:focus-visible {
   outline: 2px solid var(--text);
   outline-offset: 3px;
+}
+@keyframes floatBtnIn {
+  from { opacity: 0; transform: scale(0.5); }
+  to   { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .floating-whatsapp, .floating-call { animation: none; }
 }
 
 @media (max-width: 500px) {
@@ -5193,13 +5234,10 @@ html[dir="rtl"] .back-to-top { left: auto; right: 22px; }
 .site-header .header-call,
 .site-header .header-wa { display: none !important; }
 
-/* Active NavLink accent line stays lit */
 .nav-link.is-active {
   color: var(--text);
   background: var(--accent-soft);
 }
-.nav-link.is-active::after { transform: scaleX(1); transform-origin: left; }
-html[dir="rtl"] .nav-link.is-active::after { transform-origin: right; }
 
 /* ==========================================================================
    CSR block inside Awards section (task 4)
@@ -5242,7 +5280,6 @@ html[dir="rtl"] .csr-grid { text-align: right; }
   text-align: center;
   margin-bottom: var(--sp-32);
 }
-.section-subhead .overline { padding-left: 0; }
 
 /* ==========================================================================
    Route-page fade-in (feels smoother on navigation, especially for
@@ -5620,9 +5657,11 @@ html { scroll-behavior: smooth; }
 }
 
 /* ==========================================================================
-   Mission & Vision — standalone page (/mission-vision). Plain editorial
-   layout (no video) — the home page's video-background teaser is a
-   deliberately punchier summary; this is the full, thorough version.
+   Mission & Vision — standalone page (/mission-vision). Intro block reuses
+   the home page's .mission-vision/.mv-bg/.mv-video/.mv-overlay video
+   treatment (see MissionIntro in MissionVision.jsx); the mission/vision
+   blocks below stay plain editorial (.mv-page-block) — full paragraph text
+   over video would need heavy dimming that defeats the point of showing it.
    ========================================================================== */
 .mv-page-block { background: var(--bg-base); }
 .mv-page-heading {

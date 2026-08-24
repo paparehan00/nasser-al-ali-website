@@ -88,14 +88,26 @@ export default function Hero() {
     v.playsInline = true;
     v.controls = false;
     v.removeAttribute("controls");
-    const tryPlay = () => v.play().catch(() => {
-      const kick = () => v.play().catch(() => {});
-      document.addEventListener("click", kick, { once: true });
-      document.addEventListener("touchstart", kick, { once: true });
-    });
+
+    // Some mobile browsers (notably Chrome/Android with Data Saver on)
+    // refuse to fetch ANY video bytes — not just refuse to play — until
+    // the user's first touch, so "canplay" can silently never fire at
+    // all pre-interaction. Registering the touch/click retry unconditionally
+    // (not just inside a failed-play catch) means the very first tap still
+    // kicks the video off even in that case, instead of it staying dead
+    // until canplay eventually fires on its own.
+    const kick = () => v.play().catch(() => {});
+    document.addEventListener("click", kick, { once: true });
+    document.addEventListener("touchstart", kick, { once: true });
+
+    const tryPlay = () => v.play().catch(() => {});
     v.load();
     v.addEventListener("canplay", tryPlay, { once: true });
-    return () => v.removeEventListener("canplay", tryPlay);
+    return () => {
+      v.removeEventListener("canplay", tryPlay);
+      document.removeEventListener("click", kick);
+      document.removeEventListener("touchstart", kick);
+    };
   }, [video.webm, video.mp4]);
 
   return (

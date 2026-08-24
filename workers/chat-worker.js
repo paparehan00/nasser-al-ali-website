@@ -24,13 +24,18 @@
 // AI provider endpoint - Groq (OpenAI-compatible chat-completions API).
 // Auth uses `Authorization: Bearer ${AI_API_KEY}` header, NOT a ?key= query param.
 //
-// Arabic reliability note: llama-3.3-70b-versatile can drift to English even when
-// instructed to use Arabic. If Arabic replies remain unreliable after the prompt
-// hardening below, switch AI_MODEL to a model with stronger multilingual support:
+// llama-3.3-70b-versatile was retired by Groq on 2026-08-16 (confirmed via
+// https://console.groq.com/docs/deprecations) — every request was failing
+// with a 404 from Groq until this switch. Groq's own recommended
+// replacements are "openai/gpt-oss-120b" or "qwen/qwen3.6-27b"; picked Qwen
+// since this project already needed strong Arabic reliability (see the
+// language rule below) and Qwen was already the documented pick for that
+// before this deprecation forced the change.
+//
+// Other options if Arabic replies ever drift unreliable again:
 //   "mistral-saba-24b"             – Mistral's Arabic/Middle-East optimised model
-//   "qwen/qwen3-32b"               – Qwen 3, excellent Arabic + multilingual
-//   "meta-llama/llama-4-maverick-17b-128e-instruct" – Llama 4, better multilingual
-const AI_MODEL = "llama-3.3-70b-versatile";
+//   "openai/gpt-oss-120b"          – Groq's other recommended replacement
+const AI_MODEL = "qwen/qwen3.6-27b";
 const AI_ENDPOINT = "https://api.groq.com/openai/v1/chat/completions";
 
 const SYSTEM_PROMPT = `LANGUAGE RULE — READ THIS FIRST, HIGHEST PRIORITY, NO EXCEPTIONS:
@@ -120,8 +125,6 @@ LEAD CAPTURE
 When the visitor has shown clear buying or hiring intent AND you have exchanged at least two turns, you MAY end your message with the exact tag "[[LEAD_FORM]]" on its own line. Use this at most ONCE per conversation. Never pressure the visitor - if they decline, be gracious.`;
 
 const ALLOWED_ORIGINS = new Set([
-  "http://localhost:5173",
-  "http://localhost:5175",
   "http://localhost:4173",
   "https://www.nasseralalienterprises.com",
   "https://nasseralalienterprises.com",
@@ -132,7 +135,12 @@ function isAllowedOrigin(origin) {
   if (ALLOWED_ORIGINS.has(origin)) return true;
   try {
     const u = new URL(origin);
-    return u.protocol === "https:" && u.hostname.endsWith(".devtunnels.ms");
+    if (u.protocol === "https:" && u.hostname.endsWith(".devtunnels.ms")) return true;
+    // Any localhost/127.0.0.1 port — Vite picks a different port whenever
+    // the previous one is still taken (5173, 5174, 5175, ...), so hardcoding
+    // one exact port here just breaks CORS again the next time it drifts.
+    if (u.protocol === "http:" && (u.hostname === "localhost" || u.hostname === "127.0.0.1")) return true;
+    return false;
   } catch {
     return false;
   }
@@ -196,6 +204,15 @@ export default {
       temperature: 0.3,   // Low = literal / faithful to the company facts
       max_tokens: 800,
       stream: false,      // Matches previous non-streaming behaviour
+      // Qwen3.6 is a reasoning model — left alone, its <think>...</think>
+      // chain-of-thought comes back inline in `content` (and is verbose
+      // enough to blow through max_tokens before ever reaching the actual
+      // answer, so reasoning_format:"hidden" — which still runs the hidden
+      // reasoning — isn't enough on its own). reasoning_effort is the
+      // Qwen3-specific control; "none" skips reasoning entirely, which also
+      // suits a customer-facing widget better (faster replies, no wasted
+      // tokens on hidden thinking).
+      reasoning_effort: "none",
     };
 
     // Small retry loop for 429/5xx
@@ -231,13 +248,17 @@ export default {
     // OpenAI / Groq response shape:
     //   { choices: [{ message: { role, content }, finish_reason }, ...], ... }
     const data = await resp.json().catch(() => ({}));
-    const text = (
+    const rawText = (
       data &&
       data.choices &&
       data.choices[0] &&
       data.choices[0].message &&
       typeof data.choices[0].message.content === "string"
-    ) ? data.choices[0].message.content.trim() : "";
+    ) ? data.choices[0].message.content : "";
+    // Defensive: reasoning_effort:"none" already prevents this, but strip
+    // any stray <think> block too so a provider/model change never leaks
+    // raw chain-of-thought into the widget again.
+    const text = rawText.replace(/<think>[\s\S]*?<\/think>/gi, "").trim();
 
     if (!text) {
       return json({
