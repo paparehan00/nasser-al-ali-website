@@ -10,11 +10,11 @@ export const SERVICE_DETAILS = {
     id: "manpower",
     photo: "/assets/services-manpower-support-2.jpg",
     tagline: {
-      en: "Skilled, reliable workforce for construction, maintenance, and industrial operations across Qatar.",
+      en: "Certified technical manpower for construction, maintenance and industrial operations across Qatar.",
       ar: "عمالة ماهرة وموثوقة لأعمال البناء والصيانة والعمليات الصناعية في قطر.",
     },
     description: {
-      en: "Nasser Al Ali Enterprises supplies trained manpower for projects of every size across Qatar. We started as a manpower company back in 2005, and it is still one of the things we do best. Whether a client needs a few workers for a short task or a large team for a long-term contract, we handle the hiring, training, and daily management so our clients can focus on the job itself.",
+      en: "Nasser Al Ali Enterprises supplies certified technical manpower for projects of every scale across Qatar. Since 2005 we have supplied general labour, skilled trades, plant operators and site supervisors to contractors and developers nationwide. We manage the full workforce lifecycle - sourcing, permits and visas, accommodation, training and daily site supervision - so clients receive a compliant, productive team and can focus on delivery.",
       ar: "توفر ناصر العلي للمقاولات عمالة مدرَّبة لمشاريع بكل الأحجام في قطر. بدأنا كشركة توفير عمالة عام 2005، ولا يزال هذا من أقوى مجالاتنا حتى اليوم. سواء احتاج العميل إلى عدد قليل من العمال لمهمة قصيرة أو فريق كبير لعقد طويل الأمد، نتولى نحن التوظيف والتدريب والإدارة اليومية، ليتفرغ عملاؤنا للعمل نفسه.",
     },
     scopeItems: [
@@ -27,7 +27,7 @@ export const SERVICE_DETAILS = {
       { en: "Flexible team sizes that scale up or down as the project changes", ar: "فرق عمل مرنة يمكن زيادتها أو تقليصها حسب تطور المشروع" },
     ],
     why: {
-      en: "Two decades of manpower experience in Qatar means we understand local labour law, visa and accommodation requirements, and how to keep a large workforce organized and safe on site. Our workers are trained before they reach site and supervised throughout the job, so clients get consistent quality, not just extra hands.",
+      en: "Two decades of manpower delivery in Qatar means we work to local labour law, visa and accommodation rules, and to our own site safety and quality controls. Every worker is inducted, briefed and supervised on site, and our supervisors hold the daily method-statement and risk-assessment review. Clients get consistent, compliant output - not just extra hands.",
       ar: "خبرة تمتد لعقدين في سوق العمالة بقطر تعني أننا نفهم قوانين العمل المحلية، ومتطلبات التأشيرات والسكن، وكيفية تنظيم فريق عمل كبير بأمان في الموقع. يخضع عمالنا للتدريب قبل الوصول إلى الموقع ويُشرف عليهم طوال فترة العمل، ليحصل العميل على جودة ثابتة، لا مجرد أيدٍ إضافية.",
     },
     ctaText: {
@@ -49,11 +49,11 @@ export const SERVICE_DETAILS = {
       credit: { name: "Kieran Farr", url: "https://poly.pizza/m/cm5teXZ5Ctr" },
     },
     tagline: {
-      en: "A modern heavy-equipment fleet with operators for excavation, lifting, and site logistics.",
+      en: "Modern heavy plant and equipment with trained operators for excavation, lifting and site logistics.",
       ar: "أسطول حديث من المعدات الثقيلة مع مشغّلين للحفر والرفع واللوجستيات الميدانية.",
     },
     description: {
-      en: "We run a modern fleet of heavy machinery, ready to support excavation, lifting, and material handling on any site in Qatar. Every machine comes with a trained operator, so clients get the equipment and the skill to run it safely and efficiently, not just a rented vehicle.",
+      en: "We operate a modern fleet of heavy plant and equipment, ready for excavation, earthworks, lifting and material handling on sites across Qatar. Every machine is supplied with a trained operator and a safe lifting or working plan, so clients receive the equipment and the technical skill to run it efficiently and in line with site HSE requirements - not just a rented machine.",
       ar: "نُشغّل أسطولاً حديثًا من المعدات الثقيلة، جاهزًا لدعم أعمال الحفر والرفع ونقل المواد في أي موقع بقطر. تأتي كل آلة مع مشغّل مدرَّب، ليحصل العميل على المعدة والمهارة اللازمة لتشغيلها بأمان وكفاءة، لا مجرد مركبة مستأجرة.",
     },
     scopeItems: [
@@ -65,7 +65,7 @@ export const SERVICE_DETAILS = {
       { en: "Trained, experienced operators included with every machine", ar: "مشغّلون مدرَّبون وذوو خبرة مع كل آلة" },
     ],
     why: {
-      en: "Our fleet is maintained regularly, so breakdowns and downtime stay rare. We plan equipment schedules around each project's real timeline, which means machines and operators show up when they are actually needed, not late and not sitting idle.",
+      en: "Our fleet is maintained to a planned preventive-maintenance schedule, which keeps breakdowns and downtime rare. We plan equipment allocation around each project's programme, so plant, operators and site logistics arrive exactly when the schedule needs them - on time, mobilised and never idle.",
       ar: "تتم صيانة أسطولنا بانتظام، لذا تبقى الأعطال وتوقف العمل نادرة. نخطط لجداول المعدات وفق الجدول الزمني الحقيقي لكل مشروع، ما يعني وصول الآلات والمشغّلين عند الحاجة الفعلية، لا متأخرين ولا معطَّلين بلا عمل.",
     },
     ctaText: {
@@ -78,11 +78,11 @@ export const SERVICE_DETAILS = {
     id: "civil",
     photo: "/assets/services-civil-contracting-2.jpg",
     tagline: {
-      en: "Turnkey civil construction: substations, villas, landscaping, and infrastructure.",
+      en: "Turnkey civil construction - substations, villas, roads, utilities and landscaping.",
       ar: "أعمال مدنية شاملة بمفتاح اليد: محطات فرعية، فلل، مناظر طبيعية، وبنية تحتية.",
     },
     description: {
-      en: "Our civil contracting team delivers full construction projects from start to finish. \"Turnkey\" means we handle the whole job, design coordination, materials, labour, equipment, and site management, so the client gets a finished result, not just a piece of the work.",
+      en: "Our civil contracting division delivers construction and infrastructure projects end to end. Turnkey delivery means we take responsibility for the complete scope - design coordination, procurement, materials, labour, plant and site management - so clients receive a finished, commissioning-ready asset under a single contract, rather than a package of separate work packages.",
       ar: "يُنجز فريق المقاولات المدنية لدينا مشاريع إنشائية كاملة من البداية إلى النهاية. مفهوم \"مفتاح اليد\" يعني أننا نتولى العمل بأكمله، تنسيق التصميم، المواد، العمالة، المعدات، وإدارة الموقع، ليحصل العميل على نتيجة جاهزة، لا جزءًا من العمل فقط.",
     },
     scopeItems: [
@@ -94,7 +94,7 @@ export const SERVICE_DETAILS = {
       { en: "Coordination between our manpower, equipment, and MEP teams under one contract", ar: "تنسيق بين فرق العمالة والمعدات والأعمال الكهروميكانيكية لدينا ضمن عقد واحد" },
     ],
     why: {
-      en: "Because we also run our own manpower and equipment divisions, our civil projects do not depend on outside subcontractors for the basics. That means fewer delays, clearer accountability, and one company responsible for the result, from the first excavation to the final handover.",
+      en: "Because we also self-perform manpower, plant and MEP, our civil projects do not depend on third-party subcontractors for the critical path. This means fewer interface delays, single-point accountability and one company answerable for quality, programme and HSE - from first excavation and groundworks to structural completion and final handover.",
       ar: "لأننا نُشغّل أيضًا أقسامنا الخاصة للعمالة والمعدات، لا تعتمد مشاريعنا المدنية على مقاولين من الباطن للأساسيات. هذا يعني تأخيرًا أقل، ومسؤولية أوضح، وشركة واحدة مسؤولة عن النتيجة، من أول حفرية حتى التسليم النهائي.",
     },
     ctaText: {
@@ -107,11 +107,11 @@ export const SERVICE_DETAILS = {
     id: "mep",
     photo: "/assets/services-mep-contracting-2.jpg",
     tagline: {
-      en: "Integrated mechanical, electrical, and plumbing works for buildings and industrial facilities.",
+      en: "Design, installation and maintenance of integrated MEP systems for buildings and industry.",
       ar: "أعمال ميكانيكية وكهربائية وسباكة متكاملة للمباني والمنشآت الصناعية.",
     },
     description: {
-      en: "MEP stands for Mechanical, Electrical, and Plumbing, the systems that make a building actually work: power, water, air conditioning, and drainage. We design, install, and maintain these systems for both new buildings and industrial facilities across Qatar.",
+      en: "MEP - mechanical, electrical and plumbing - provides the active systems that make a building work: HVAC, power distribution, water supply, drainage and fire protection. We design, install, test, commission and maintain these systems for new buildings, fit-outs and industrial facilities across Qatar, delivered in coordination with the civil works to keep the programme on track.",
       ar: "الأعمال الكهروميكانيكية (MEP) تعني الأنظمة الميكانيكية والكهربائية والسباكة، وهي الأنظمة التي تجعل المبنى يعمل فعليًا: الطاقة، والمياه، وتكييف الهواء، والصرف. نصمم هذه الأنظمة ونركّبها ونصونها للمباني الجديدة والمنشآت الصناعية في قطر.",
     },
     scopeItems: [
@@ -123,7 +123,7 @@ export const SERVICE_DETAILS = {
       { en: "MEP work coordinated with our civil contracting team when a project needs both", ar: "تنسيق الأعمال الكهروميكانيكية مع فريق المقاولات المدنية عند الحاجة لكليهما" },
     ],
     why: {
-      en: "MEP problems are expensive to fix after a building is finished, so we focus on getting the installation right the first time. Our technicians work closely with the civil team from early in the project, which avoids the clashes and rework that happen when MEP is treated as an afterthought.",
+      en: "MEP defects are very expensive to remediate after handover, so we engineer the installation right first time. Our MEP engineers coordinate with the civil team from pre-construction, producing coordinated services drawings and a testing-and-commissioning plan that resolve clashes early - reducing rework, delays and costly post-completion changes.",
       ar: "مشاكل الأعمال الكهروميكانيكية مكلفة الإصلاح بعد اكتمال المبنى، لذا نركّز على إنجاز التركيب بشكل صحيح من المرة الأولى. يعمل فنيونا بتنسيق وثيق مع فريق الأعمال المدنية منذ بداية المشروع، ما يتفادى التعارضات وإعادة العمل التي تحدث عندما تُعامَل الأعمال الكهروميكانيكية كفكرة لاحقة.",
     },
     ctaText: {
@@ -136,11 +136,11 @@ export const SERVICE_DETAILS = {
     id: "cleaning",
     photo: "/assets/services-professional-cleaning-2.jpg",
     tagline: {
-      en: "Comprehensive commercial and post-construction cleaning services.",
+      en: "Commercial and post-construction cleaning to a client-ready specification.",
       ar: "خدمات تنظيف شاملة تجارية ومرحلة ما بعد البناء.",
     },
     description: {
-      en: "We provide cleaning services for offices, commercial buildings, and construction sites once the heavy work is done. Post-construction cleaning is a specific skill: it means removing dust, debris, and residue safely so a new building is ready to actually use, not just swept.",
+      en: "We provide commercial and post-construction cleaning for offices, commercial buildings and completed construction sites. Post-construction cleaning is a specialist discipline: removing construction dust, debris, residue and protection from surfaces and services, then detailing to a defined standard, so a new asset is genuinely ready for use and handover - not merely swept.",
       ar: "نقدّم خدمات تنظيف للمكاتب والمباني التجارية ومواقع البناء بعد انتهاء الأعمال الثقيلة. التنظيف بعد البناء مهارة خاصة: يعني إزالة الغبار والمخلفات والبقايا بأمان، ليكون المبنى الجديد جاهزًا للاستخدام فعليًا، لا مجرد مبنى تم كنسه.",
     },
     scopeItems: [
@@ -151,7 +151,7 @@ export const SERVICE_DETAILS = {
       { en: "Flexible contracts: one-time jobs or ongoing service", ar: "عقود مرنة: مهمة لمرة واحدة أو خدمة مستمرة" },
     ],
     why: {
-      en: "Because we also build the buildings, we understand exactly what post-construction cleaning needs to cover: dust in ducts, residue on new fittings, debris in corners contractors miss. Our teams know what a finished handover should look like, because we have handed over the buildings ourselves.",
+      en: "Because we also build and fit out buildings, we know exactly what a post-construction clean must cover - dust in ductwork and risers, residue on new fixtures, adhesive and protection debris in the corners others miss. Our teams clean to the handover specification we ourselves would expect, because we hand over buildings.",
       ar: "لأننا نبني المباني أيضًا، نفهم بالضبط ما يجب أن يشمله التنظيف بعد البناء، الغبار داخل المجاري الهوائية، البقايا على التركيبات الجديدة، المخلفات في الزوايا التي يغفل عنها المقاولون غالبًا. تعرف فرقنا كيف يجب أن يبدو التسليم النهائي، لأننا سلّمنا المباني بأنفسنا.",
     },
     ctaText: {
@@ -163,11 +163,11 @@ export const SERVICE_DETAILS = {
   "business-center-real-estate": {
     id: "business",
     tagline: {
-      en: "Managed office space and real-estate solutions through our Nasser Al Ali Business Center and group real-estate arm.",
+      en: "Managed office space and real-estate solutions through Nasser Al Ali Business Center.",
       ar: "خدمات مساحات مكتبية مُدارة وحلول عقارية من خلال مركز أعمال ناصر العلي وذراع العقارات في المجموعة.",
     },
     description: {
-      en: "Beyond construction, we also help businesses get set up and operating in Qatar through managed office space and real-estate support, run through our Nasser Al Ali Business Center and our group's real-estate arm.",
+      en: "Beyond construction, we support businesses to set up and operate in Qatar through managed, serviced office space and real-estate services, delivered by our Nasser Al Ali Business Center and the group's property arm. We provide a ready-to-operate local base, supporting documentation and practical property options for companies entering or expanding in the Qatari market.",
       ar: "بعيدًا عن أعمال المقاولات، نساعد أيضًا الشركات على التأسيس والعمل في قطر من خلال مساحات مكتبية مُدارة ودعم عقاري، عبر مركز أعمال ناصر العلي وذراع العقارات التابعة لمجموعتنا.",
     },
     scopeItems: [
@@ -177,7 +177,7 @@ export const SERVICE_DETAILS = {
       { en: "Flexible terms for small businesses and larger companies alike", ar: "شروط مرنة تناسب الشركات الصغيرة والكبرى على حد سواء" },
     ],
     why: {
-      en: "We understand what it takes to operate in Qatar because we have built our own business here since 2005. That experience means we can offer straightforward, practical office and property solutions, not just square footage.",
+      en: "We have operated our own business in Qatar since 2005, so we understand the regulatory, licensing and property landscape first-hand. That experience lets us offer practical, compliant office and property solutions - not just square footage - so companies can establish and operate with confidence.",
       ar: "نفهم متطلبات العمل في قطر لأننا بنينا أعمالنا الخاصة هنا منذ عام 2005. هذه الخبرة تمكّننا من تقديم حلول مكتبية وعقارية عملية ومباشرة، لا مجرد مساحة مربعة فارغة.",
     },
     ctaText: {

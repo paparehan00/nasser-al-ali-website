@@ -142,9 +142,11 @@ export default function Hero() {
               animate="show"
               variants={CONTAINER_VARIANTS}
             >
-              <motion.span className="overline hero-overline" variants={ITEM_VARIANTS}>
-                {pickLang(section?.overline, lang)}
-              </motion.span>
+              {pickLang(section?.overline, lang) ? (
+                <motion.span className="overline hero-overline" variants={ITEM_VARIANTS}>
+                  {pickLang(section?.overline, lang)}
+                </motion.span>
+              ) : null}
               <motion.h1 className="hero-title">
                 <RevealWords text={pickLang(section?.title, lang)} reduceMotion={reduceMotion} />
               </motion.h1>

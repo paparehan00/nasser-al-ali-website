@@ -18,6 +18,28 @@ import { SOCIALS } from "./SocialSidebar.jsx";
 // repeated inside other menus' sub-panels.
 const MEGA_MENU = [
   {
+    to: "/about",
+    key: "nav.about",
+    columns: [
+      {
+        headingKey: "megamenu.about.company",
+        links: [
+          { to: "/about#about",       key: "megamenu.link.overview" },
+          { to: "/company-profile",   key: "megamenu.link.companyProfile" },
+          { to: "/about#leadership",  key: "megamenu.link.leadership" },
+        ],
+      },
+      {
+        headingKey: "megamenu.about.more",
+        links: [
+          { to: "/about#numbers",     key: "megamenu.link.numbers" },
+          { to: "/sister-concerns",   key: "nav.sisterConcerns" },
+          { to: "/mission-vision",    key: "megamenu.link.missionVision" },
+        ],
+      },
+    ],
+  },
+  {
     to: "/services",
     key: "nav.services",
     columns: [
@@ -56,28 +78,6 @@ const MEGA_MENU = [
           // so it doesn't earn equal top-level billing next to Services,
           // Projects, and About.
           { to: "/gallery",            key: "megamenu.link.fullGallery" },
-        ],
-      },
-    ],
-  },
-  {
-    to: "/about",
-    key: "nav.about",
-    columns: [
-      {
-        headingKey: "megamenu.about.company",
-        links: [
-          { to: "/about#about",       key: "megamenu.link.overview" },
-          { to: "/company-profile",   key: "megamenu.link.companyProfile" },
-          { to: "/about#leadership",  key: "megamenu.link.leadership" },
-        ],
-      },
-      {
-        headingKey: "megamenu.about.more",
-        links: [
-          { to: "/about#numbers",     key: "megamenu.link.numbers" },
-          { to: "/sister-concerns",   key: "nav.sisterConcerns" },
-          { to: "/mission-vision",    key: "megamenu.link.missionVision" },
         ],
       },
     ],

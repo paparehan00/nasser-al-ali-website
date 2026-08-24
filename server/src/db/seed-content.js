@@ -52,7 +52,6 @@ console.log("Seeding managed sections:");
 
 seed({
   key: "hero",
-  overline: { en: "EST. 2005 · DOHA, QATAR", ar: "تأسست عام 2005 · الدوحة، قطر" },
   title: { en: "Building Qatar's Landmarks Since 2005", ar: "نبني معالم قطر منذ عام 2005" },
   lede: {
     en: "Civil contracting, MEP, skilled manpower and heavy-equipment support for the region's most demanding projects.",
@@ -81,16 +80,16 @@ seed({
   overline: { en: "OUR EXPERTISE", ar: "خبراتنا" },
   title: { en: "Core Services", ar: "خدماتنا الأساسية" },
   lede: {
-    en: "Six divisions, one accountable partner - from manpower to turnkey delivery.",
+    en: "One accountable partner across the full project lifecycle - technical manpower, plant & equipment, civil construction and integrated MEP systems, from site mobilisation to final handover.",
     ar: "ستة قطاعات متكاملة تحت مظلة شريك واحد مسؤول - من العمالة إلى التسليم بمفتاح اليد.",
   },
   items: [
-    { imagePath: "/assets/services/manpower-support.webp",   data: { id: "manpower",  alt: "Site team of skilled workers at a Qatar industrial project",       title: { en: "Manpower Support",              ar: "توفير العمالة" },       body: { en: "Skilled, reliable workforce for construction, maintenance and industrial operations across Qatar.",                                          ar: "عمالة ماهرة وموثوقة لأعمال البناء والصيانة والعمليات الصناعية في قطر." } } },
-    { imagePath: "/assets/services/equipment-support.webp",  data: { id: "equipment", alt: "Heavy equipment fleet on a Qatar construction site",               title: { en: "Equipment Support",             ar: "دعم المعدات" },         body: { en: "A modern heavy-equipment fleet with operators for excavation, lifting and site logistics.",                                                  ar: "أسطول حديث من المعدات الثقيلة مع مشغّلين للحفر والرفع واللوجستيات الميدانية." } } },
-    { imagePath: "/assets/services/civil-contracting.webp",  data: { id: "civil",     alt: "Civil contracting works in progress with backhoe and site team",   title: { en: "Civil Contracting",             ar: "المقاولات المدنية" },   body: { en: "Turnkey civil construction: substations, villas, landscaping and infrastructure.",                                                            ar: "أعمال مدنية شاملة بمفتاح اليد: محطات فرعية، فلل، مناظر طبيعية، وبنية تحتية." } } },
-    { imagePath: "/assets/services/mep-contracting.webp",    data: { id: "mep",       alt: "MEP installation with ductwork and fire piping in a commercial building", title: { en: "MEP Contracting",         ar: "الأعمال الكهروميكانيكية (MEP)" }, body: { en: "Integrated mechanical, electrical and plumbing works for buildings and industrial facilities.",                                              ar: "أعمال ميكانيكية وكهربائية وسباكة متكاملة للمباني والمنشآت الصناعية." } } },
-    { imagePath: "/assets/services/professional-cleaning.webp", data: { id: "cleaning", alt: "Industrial floor-cleaning operation",                             title: { en: "Professional Cleaning",         ar: "التنظيف الاحترافي" },   body: { en: "Comprehensive commercial and post-construction cleaning services.",                                                                            ar: "خدمات تنظيف شاملة تجارية ومرحلة ما بعد البناء." } } },
-    { imagePath: "/assets/services/business-center.webp",    data: { id: "business",  alt: "Business Center and real estate services",                          title: { en: "Business Center & Real Estate", ar: "مراكز الأعمال والعقارات" }, body: { en: "Managed office space and real-estate solutions through our Nasser Al Ali Business Center and group real-estate arm.",                        ar: "خدمات مساحات مكتبية مُدارة وحلول عقارية من خلال مركز أعمال ناصر العلي وذراع العقارات في المجموعة." } } },
+    { imagePath: "/assets/services/manpower-support.webp",   data: { id: "manpower",  alt: "Site team of skilled workers at a Qatar industrial project",       title: { en: "Manpower Support",              ar: "توفير العمالة" },       body: { en: "Certified technical manpower for construction, maintenance and industrial works - skilled trades, plant operators and supervisors, supplied, trained and managed on site.",                               ar: "عمالة ماهرة وموثوقة لأعمال البناء والصيانة والعمليات الصناعية في قطر." } } },
+    { imagePath: "/assets/services/equipment-support.webp",  data: { id: "equipment", alt: "Heavy equipment fleet on a Qatar construction site",               title: { en: "Equipment Support",             ar: "دعم المعدات" },         body: { en: "A modern heavy plant and equipment fleet with trained operators - excavation, lifting, earthworks and site logistics, maintained for on-schedule delivery.",                                                        ar: "أسطول حديث من المعدات الثقيلة مع مشغّلين للحفر والرفع واللوجستيات الميدانية." } } },
+    { imagePath: "/assets/services/civil-contracting.webp",  data: { id: "civil",     alt: "Civil contracting works in progress with backhoe and site team",   title: { en: "Civil Contracting",             ar: "المقاولات المدنية" },   body: { en: "Turnkey civil construction and infrastructure - substations, villas, roads, utilities and landscaping, delivered from design coordination to handover under one contract.",                                           ar: "أعمال مدنية شاملة بمفتاح اليد: محطات فرعية، فلل، مناظر طبيعية، وبنية تحتية." } } },
+    { imagePath: "/assets/services/mep-contracting.webp",    data: { id: "mep",       alt: "MEP installation with ductwork and fire piping in a commercial building", title: { en: "MEP Contracting",         ar: "الأعمال الكهروميكانيكية (MEP)" }, body: { en: "Design, installation and maintenance of integrated MEP systems - HVAC, power, plumbing, drainage and fire safety - for buildings and industrial facilities.",                        ar: "أعمال ميكانيكية وكهربائية وسباكة متكاملة للمباني والمنشآت الصناعية." } } },
+    { imagePath: "/assets/services/professional-cleaning.webp", data: { id: "cleaning", alt: "Industrial floor-cleaning operation",                             title: { en: "Professional Cleaning",         ar: "التنظيف الاحترافي" },   body: { en: "Commercial and post-construction cleaning - safe removal of construction dust, debris and residue to a client-ready specification before handover.",                                                   ar: "خدمات تنظيف شاملة تجارية ومرحلة ما بعد البناء." } } },
+    { imagePath: "/assets/services/business-center.webp",    data: { id: "business",  alt: "Business Center and real estate services",                          title: { en: "Business Center & Real Estate", ar: "مراكز الأعمال والعقارات" }, body: { en: "Managed office space and real-estate solutions through Nasser Al Ali Business Center and the group's property arm - support for business set-up and local operations in Qatar.",                            ar: "خدمات مساحات مكتبية مُدارة وحلول عقارية من خلال مركز أعمال ناصر العلي وذراع العقارات في المجموعة." } } },
   ],
 });
 
@@ -154,7 +153,7 @@ seed({
   overline: { en: "PORTFOLIO", ar: "أعمالنا" },
   title: { en: "Featured Projects", ar: "مشاريع مختارة" },
   lede: {
-    en: "A selection of landmark builds we've delivered or supported across Doha and beyond.",
+    en: "A selection of landmark projects we have delivered or supported across Doha and beyond - high-rise towers, residential developments, educational buildings and civil infrastructure works.",
     ar: "مجموعة من المعالم التي أنجزناها أو دعمنا تنفيذها عبر الدوحة وما يتجاوزها.",
   },
   items: [
@@ -176,7 +175,7 @@ seed({
   overline: { en: "CIVIL WORKS", ar: "الأعمال المدنية" },
   title: { en: "Civil Gallery", ar: "معرض الأعمال المدنية" },
   lede: {
-    en: "On-site photography from villa builds, substations, landscaping and infrastructure projects.",
+    en: "On-site engineering photography from villa builds, substations, landscaping and infrastructure projects.",
     ar: "صور من المواقع لمشاريع الفلل والمحطات الفرعية وأعمال المناظر الطبيعية والبنية التحتية.",
   },
   items: [
@@ -195,11 +194,11 @@ seed({
     name: { en: "Nasser Ali J Z Al Ali", ar: "ناصر على جديد زامل العلى" },
     role: { en: "Chairman",                ar: "رئيس مجلس الإدارة" },
     p1: {
-      en: "With a modest beginning as a manpower support services provider, Nasser Al Ali Enterprises has grown to its current position thanks to our team's commitment and the demand for quality services in Qatar's booming construction sector. Having built our company one block at a time, we established ourselves as one of the most sought-after service providers through our professionalism, dedication and commitment to work.",
+      en: "Born from a modest manpower support operation, Nasser Al Ali Enterprises has grown into a trusted engineering and construction group through the commitment of our people and the demand for quality delivery in Qatar's fast-developing construction sector. We built our capacity block by block, and today we are a preferred delivery partner for major contractors and developers - measured by engineering discipline, safe execution and steadfast commitment to the work.",
       ar: "بدايات متواضعة كمزود خدمات دعم العمالة، ونمت ناصر العلي للمقاولات لتصل إلى مكانتها الحالية بفضل التزام فريقنا والطلب على الخدمات عالية الجودة في قطاع البناء المزدهر في قطر. لبنة تلو أخرى، رسّخنا مكانتنا كأحد أكثر مزودي الخدمات طلبًا من خلال احترافيتنا وتفانينا والتزامنا بالعمل.",
     },
     p2: {
-      en: "We know that delivering the results our clients need, when they need them, should never mean sacrificing quality. We place the utmost emphasis on our people, because we firmly believe a company is what its people are - a team of highly skilled, motivated individuals chosen for the right experience. Nasser Al Ali Enterprises is out to make a difference by setting examples.",
+      en: "We are clear that delivering what our clients need, when they need it, must never come at the cost of quality, safety or integrity. Our people are our real asset. We invest in skilled, motivated professionals with the right technical experience, because a company is only as good as the team that executes its work. Nasser Al Ali Enterprises exists to set the standard - through engineering rigour, on-site safety and evidence of quality in every project we deliver.",
       ar: "نعلم أن تقديم النتائج التي يحتاجها عملاؤنا، في الوقت الذي يحتاجونها فيه، لا يجب أن يعني أبدًا التضحية بالجودة. نضع الأولوية القصوى على موظفينا، لأننا نؤمن إيمانًا راسخًا بأن الشركة هي انعكاس لموظفيها - فريق من الأفراد المتحمسين ذوي المهارات العالية المختارين بالخبرة المناسبة. ناصر العلي للمقاولات ماضية في إحداث الفرق عبر تقديم النموذج.",
     },
     signoff: { en: "- Nasser Ali J Z Al Ali, Chairman", ar: "- ناصر على جديد زامل العلى، رئيس مجلس الإدارة" },
@@ -230,7 +229,7 @@ seed({
         alt: "ISO 9001:2015 Quality Management System certificate for Nasser Al Ali Enterprises",
         title: { en: "Quality Management System", ar: "نظام إدارة الجودة" },
         desc: {
-          en: "Certifies that our quality management processes consistently meet customer, regulatory and statutory requirements across every project we deliver.",
+          en: "Certifies a quality-management system that consistently meets client, regulatory and statutory requirements across every project we deliver - from engineering design and procurement to construction supervision and handover.",
           ar: "تُثبت أن عملياتنا لإدارة الجودة تلبّي باستمرار متطلبات العملاء والمتطلبات القانونية والتنظيمية في كل مشروع نُنفذه.",
         },
       },
@@ -244,7 +243,7 @@ seed({
         alt: "ISO 14001:2015 Environmental Management System certificate for Nasser Al Ali Enterprises",
         title: { en: "Environmental Management System", ar: "نظام الإدارة البيئية" },
         desc: {
-          en: "Certifies that we identify, monitor and reduce the environmental impact of our operations - from site waste and emissions to resource use across our fleet and facilities.",
+          en: "Certifies an environmental-management system that identifies, monitors and reduces the environmental impact of our operations - site waste, emissions, energy and resource use across our plant, fleet and facilities.",
           ar: "تُثبت أننا نُحدّد ونُراقب ونُقلّل الأثر البيئي لعملياتنا - من نفايات المواقع والانبعاثات إلى استخدام الموارد عبر أسطولنا ومنشآتنا.",
         },
       },
@@ -258,7 +257,7 @@ seed({
         alt: "ISO 45001:2018 Occupational Health and Safety Management System certificate for Nasser Al Ali Enterprises",
         title: { en: "Occupational Health & Safety Management System", ar: "نظام إدارة الصحة والسلامة المهنية" },
         desc: {
-          en: "Certifies that we operate a workplace-safety framework aligned to the world's leading H&S standard - covering hazard control, incident reporting and continuous worker-welfare improvement. Replaces the earlier OHSAS 18001.",
+          en: "Certifies a health-and-safety management framework aligned to the world's leading H&S standard - hazard identification and risk control, incident reporting and continuous improvement in worker welfare. Replaces the earlier OHSAS 18001.",
           ar: "تُثبت تطبيقنا لإطار عمل السلامة المهنية وفق أعلى المعايير العالمية - يشمل التحكم بالمخاطر والإبلاغ عن الحوادث والتحسين المستمر لرفاهية العمال. تحل محل معيار OHSAS 18001 السابق.",
         },
       },
@@ -271,14 +270,14 @@ seed({
   overline: { en: "RECOGNITION & CSR", ar: "التكريم والمسؤولية الاجتماعية" },
   title: { en: "Awards & Corporate Social Responsibility", ar: "التكريم والمسؤولية الاجتماعية للشركات" },
   lede: {
-    en: "Nasser Al Ali Enterprises honours the workers and staff whose dedication builds Qatar. The moments below capture our Chairman presenting long-service, safety and outstanding-performance recognition to team members across our sites and offices.",
+    en: "Nasser Al Ali Enterprises recognises the engineers, technicians and site teams whose dedication builds Qatar. The moments below show our Chairman presenting long-service, safety and outstanding-performance awards to team members across our sites and offices.",
     ar: "تحرص ناصر العلي للمقاولات على تكريم العمال والموظفين الذين يُساهمون في بناء قطر. تعرض الصور أدناه لحظات من تكريم رئيس مجلس الإدارة لأعضاء الفريق تقديرًا لخدمتهم الطويلة، وسِجل السلامة، والأداء المتميّز عبر مواقعنا ومكاتبنا.",
   },
   extra: {
     csrTitle:     { en: "Our commitment to people and community",                                                                                              ar: "التزامنا تجاه أفرادنا ومجتمعنا" },
-    csrP1:        { en: "We recognise and reward outstanding workers whose dedication and craftsmanship set the standard for every project we deliver.",       ar: "نُكرّم ونُكافئ العمال المتميزين الذين يُجسّد تفانيهم ومهاراتهم المعيار الذي نلتزم به في كل مشروع." },
-    csrP2:        { en: "Beyond recognition, we invest in employee welfare, safe working conditions and continuous training - because a company is only as strong as the people who build with it.", ar: "بعيدًا عن التكريم، نستثمر في رفاهية الموظفين وبيئات العمل الآمنة والتدريب المستمر - لأن قوة الشركة من قوة أفرادها." },
-    csrP3:        { en: "We are proud to contribute to the communities where we operate across Qatar, supporting local causes and creating stable, long-term opportunities for our workforce.",    ar: "نفخر بمساهمتنا في المجتمعات التي نعمل فيها عبر قطر، ودعم القضايا المحلية، وخلق فرص عمل مستقرة وطويلة الأمد لكوادرنا." },
+    csrP1:        { en: "We recognise and reward the workers and engineers whose dedication and technical craft set the delivery standard on every project we build.",       ar: "نُكرّم ونُكافئ العمال المتميزين الذين يُجسّد تفانيهم ومهاراتهم المعيار الذي نلتزم به في كل مشروع." },
+    csrP2:        { en: "Beyond recognition, we invest in workforce welfare, safe working conditions and continuous technical training - because construction quality is only as strong as the people who execute it.", ar: "بعيدًا عن التكريم، نستثمر في رفاهية الموظفين وبيئات العمل الآمنة والتدريب المستمر - لأن قوة الشركة من قوة أفرادها." },
+    csrP3:        { en: "We are proud to support the communities where we operate across Qatar, backing local causes and creating stable, long-term opportunities for our workforce.",    ar: "نفخر بمساهمتنا في المجتمعات التي نعمل فيها عبر قطر، ودعم القضايا المحلية، وخلق فرص عمل مستقرة وطويلة الأمد لكوادرنا." },
     galleryTitle: { en: "Recognition Moments", ar: "لحظات التكريم" },
   },
   items: Array.from({ length: 40 }, (_, i) => {
@@ -292,15 +291,15 @@ seed({
   overline: { en: "BY THE NUMBERS", ar: "بالأرقام" },
   title: { en: "Two decades of measurable growth", ar: "عقدان من النمو الملموس" },
   lede: {
-    en: "Where our people, projects and clients have taken us since 2005.",
+    en: "Engineering capability measured - where our people, projects and clients have taken us since 2005.",
     ar: "قصة أرقام تُروى منذ عام 2005 - موظفون، مشاريع، وعملاء.",
   },
   extra: {
     workforceKicker: { en: "Workforce · 2005 → 2026",                 ar: "القوى العاملة · 2005 → 2026" },
-    workforceTitle:  { en: "From 50 to 5,000+ in 20 years",           ar: "من 50 إلى أكثر من 5,000 في 20 عامًا" },
+    workforceTitle:  { en: "From 50 to 5,000+ technical professionals in 20 years",           ar: "من 50 إلى أكثر من 5,000 في 20 عامًا" },
     workforceNote:   { en: "Approximate figures across the Group. Sources: HR records & annual reviews.", ar: "أرقام تقريبية على مستوى المجموعة. المصادر: سجلات الموارد البشرية والمراجعات السنوية." },
     mixKicker:       { en: "Workforce mix",                           ar: "تركيبة القوى العاملة" },
-    mixTitle:        { en: "Skilled trades & specialists",            ar: "حرفيون مهرة ومتخصصون" },
+    mixTitle:        { en: "Skilled trades & engineering specialists",            ar: "حرفيون مهرة ومتخصصون" },
     donutLabel:      { en: "EMPLOYEES",                               ar: "موظف" },
     bars: [
       { year: "2005", target: 50,   px: 2,   labelText: "50" },
@@ -317,7 +316,7 @@ seed({
     ],
     kpis: [
       { value: 43, label: { en: "Major clients",   ar: "عميل رئيسي" },  detail: { en: "Al Habtoor, Hyundai, J&P, Samsung C&T, Elegancia, Gulf Contracting, Midmac-TAV, Dogus-Onur & more.", ar: "الحبتور، هيونداي، J&P، سامسونج C&T، إليغانسيا، جلف كونتراكتنج، ميدماك-تاف، دوغوس-أونور والمزيد." } },
-      { value: 16, label: { en: "Group companies", ar: "شركات المجموعة" }, detail: { en: "A vertically-integrated ecosystem covering construction, MEP, real estate & support services.", ar: "منظومة متكاملة رأسيًا تشمل البناء والكهروميكانيك والعقارات وخدمات الدعم." } },
+      { value: 16, label: { en: "Group companies", ar: "شركات المجموعة" }, detail: { en: "A vertically integrated group ecosystem spanning construction, MEP, real estate and support services.", ar: "منظومة متكاملة رأسيًا تشمل البناء والكهروميكانيك والعقارات وخدمات الدعم." } },
       { value: 21, label: { en: "Years in Qatar",  ar: "سنة في قطر" }, detail: { en: "Established 2005 · Doha, State of Qatar · continuous operations.",                                    ar: "تأسست 2005 · الدوحة، دولة قطر · عمليات مستمرة." } },
     ],
   },
@@ -328,7 +327,7 @@ seed({
   overline: { en: "OUR REPUTATION", ar: "سُمعتنا" },
   title: { en: "What our clients say", ar: "ما يقوله عملاؤنا" },
   lede: {
-    en: "Verified reviews from clients and site teams on Google.",
+    en: "Verified reviews from clients and on-site delivery teams on Google.",
     ar: "مراجعات موثّقة من عملائنا وفرق العمل عبر خرائط جوجل.",
   },
   extra: {

@@ -29,8 +29,10 @@ export default function Home() {
   return (
     <>
       <Hero />
-      <StatBar />
-      <ClientLogos />
+      <AboutSection />
+      <div className="home-viewall">
+        <Link to="/about" className="home-viewall-link">{t("home.learnMoreAbout")} →</Link>
+      </div>
 
       <ServicesGrid />
       <div className="home-viewall">
@@ -42,10 +44,8 @@ export default function Home() {
         <Link to="/projects" className="home-viewall-link">{t("home.viewAllProjects")} →</Link>
       </div>
 
-      <AboutSection />
-      <div className="home-viewall">
-        <Link to="/about" className="home-viewall-link">{t("home.learnMoreAbout")} →</Link>
-      </div>
+      <StatBar />
+      <ClientLogos />
 
       <NumbersSection />
       <MissionVisionSection />
