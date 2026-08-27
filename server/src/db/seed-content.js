@@ -191,7 +191,7 @@ seed({
   title: { en: "A word from our Chairman", ar: "كلمة من رئيس مجلس الإدارة" },
   extra: {
     imagePath: "/assets/chairman.png",
-    name: { en: "Nasser Ali J Z Al Ali", ar: "ناصر على جديد زامل العلى" },
+    name: { en: "Nasser Ali J Z Alali", ar: "ناصر على جديد زامل العلى" },
     role: { en: "Chairman",                ar: "رئيس مجلس الإدارة" },
     p1: {
       en: "Born from a modest manpower support operation, Nasser Al Ali Enterprises has grown into a trusted engineering and construction group through the commitment of our people and the demand for quality delivery in Qatar's fast-developing construction sector. We built our capacity block by block, and today we are a preferred delivery partner for major contractors and developers - measured by engineering discipline, safe execution and steadfast commitment to the work.",
@@ -201,7 +201,7 @@ seed({
       en: "We are clear that delivering what our clients need, when they need it, must never come at the cost of quality, safety or integrity. Our people are our real asset. We invest in skilled, motivated professionals with the right technical experience, because a company is only as good as the team that executes its work. Nasser Al Ali Enterprises exists to set the standard - through engineering rigour, on-site safety and evidence of quality in every project we deliver.",
       ar: "نعلم أن تقديم النتائج التي يحتاجها عملاؤنا، في الوقت الذي يحتاجونها فيه، لا يجب أن يعني أبدًا التضحية بالجودة. نضع الأولوية القصوى على موظفينا، لأننا نؤمن إيمانًا راسخًا بأن الشركة هي انعكاس لموظفيها - فريق من الأفراد المتحمسين ذوي المهارات العالية المختارين بالخبرة المناسبة. ناصر العلي للمقاولات ماضية في إحداث الفرق عبر تقديم النموذج.",
     },
-    signoff: { en: "- Nasser Ali J Z Al Ali, Chairman", ar: "- ناصر على جديد زامل العلى، رئيس مجلس الإدارة" },
+    signoff: { en: "- Nasser Ali J Z Alali, Chairman", ar: "- ناصر على جديد زامل العلى، رئيس مجلس الإدارة" },
   },
 });
 

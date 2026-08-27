@@ -39,7 +39,7 @@ export default function ServicesGrid() {
               <>
                 <div className="service-media">
                   <div className={"service-img-wrap clip-reveal" + (inView ? " is-in" : "")}>
-                    <img src={s.imagePath} alt={d.alt} loading="lazy" />
+                    <img src={s.imagePath} alt={d.alt} loading="lazy"  decoding="sync" />
                   </div>
                   <div className="service-icon">{ICONS[d.id]}</div>
                 </div>

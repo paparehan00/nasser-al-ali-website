@@ -32,7 +32,7 @@ export default function SisterConcernsSection() {
               return (
                 <div className="sister-card reveal-up" key={it.id} style={{ "--reveal-delay": `${i * 0.06}s` }}>
                   <div className="sister-logo tilt-frame" {...tiltHandlers}>
-                    <img src={it.imagePath} alt={name} loading="lazy" />
+                    <img src={it.imagePath} alt={name} loading="lazy"  decoding="sync" />
                   </div>
                   <h3 className="sister-name">{name}</h3>
                 </div>

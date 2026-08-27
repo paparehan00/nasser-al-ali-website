@@ -38,7 +38,7 @@ export default function LeadershipSection() {
           <div className="org-top">
             <div className="leader-card leader-chair reveal-up" style={{ "--reveal-delay": "0s" }}>
               <div className="leader-photo">
-                <img src={chairPhoto} alt={`${chairName} - ${chairRole}`} loading="lazy" />
+                <img src={chairPhoto} alt={`${chairName} - ${chairRole}`} loading="lazy"  decoding="sync" />
               </div>
               <div className="leader-body">
                 <span className="leader-role">{t("leadership.chairman")}</span>

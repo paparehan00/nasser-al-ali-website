@@ -18,7 +18,7 @@ export default function ChairmanSection() {
       <div className="container chairman-container" ref={ref}>
         <div className="chairman-photo">
           <div className={"chairman-photo-inner tilt-frame clip-reveal" + (inView ? " is-in" : "")} {...tiltHandlers}>
-            <img src={photo} alt={`${name} - ${role}`} loading="lazy" />
+            <img src={photo} alt={`${name} - ${role}`} loading="lazy"  decoding="sync" />
           </div>
           <div className="chairman-name-plate">
             <div className="plate-name">{name}</div>

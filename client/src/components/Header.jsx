@@ -260,7 +260,7 @@ export default function Header() {
             }}
           >
             <span className="logo-glow-wrap">
-              <img src="/assets/logo.png" alt="Nasser Al Ali Enterprises" className="logo-img" />
+              <img src="/assets/logo.png" alt="Nasser Al Ali Enterprises" className="logo-img"  decoding="sync" />
             </span>
             <span className="logo-text">Nasser Al Ali Enterprises</span>
           </Link>

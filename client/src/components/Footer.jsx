@@ -65,7 +65,7 @@ export default function Footer() {
           <div className="footer-col footer-col-brand reveal-up" style={{ "--reveal-delay": "0s" }}>
             <Link to="/" className="footer-logo">
               <span className="logo-glow-wrap footer-logo-glow-wrap">
-                <img src="/assets/logo.png" alt="Nasser Al Ali Enterprises" />
+                <img src="/assets/logo.png" alt="Nasser Al Ali Enterprises"  decoding="sync" />
               </span>
             </Link>
             <p className="footer-blurb">{t("footer.blurb")}</p>
@@ -97,7 +97,7 @@ export default function Footer() {
               <div className="footer-cert-badges">
                 {certBadges.map((c) => (
                   <Link to="/certifications-awards#certifications" key={c.id} className="footer-cert-badge">
-                    <img src={c.imagePath} alt={c.data?.title?.en || c.data?.code || "Certification"} loading="lazy" />
+                    <img src={c.imagePath} alt={c.data?.title?.en || c.data?.code || "Certification"} loading="lazy"  decoding="sync" />
                   </Link>
                 ))}
               </div>
@@ -148,7 +148,7 @@ export default function Footer() {
               className="reveal-up"
               style={{ "--reveal-delay": "0s" }}
             >
-              <img src="/assets/qatarcharity.png" alt="Qatar Charity" />
+              <img src="/assets/qatarcharity.png" alt="Qatar Charity"  decoding="sync" />
             </a>
             <a
               href="https://www.greenpeace.org"
@@ -158,7 +158,7 @@ export default function Footer() {
               className="reveal-up"
               style={{ "--reveal-delay": "0.06s" }}
             >
-              <img src="/assets/greenpeace.png" alt="Greenpeace" />
+              <img src="/assets/greenpeace.png" alt="Greenpeace"  decoding="sync" />
             </a>
           </div>
         </div>

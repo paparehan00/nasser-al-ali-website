@@ -62,7 +62,7 @@ export default function Gallery() {
                     src={c.imagePath}
                     alt={c.data?.name || "Client logo"}
                     loading="lazy"
-                  />
+                   decoding="sync" />
                 </div>
               ))}
             </div>
@@ -98,7 +98,7 @@ export default function Gallery() {
                     style={{ "--reveal-delay": `${i * 0.06}s` }}
                   >
                     <div className={"gallery-photo-wrap tilt-frame clip-reveal" + (projectsInView ? " is-in" : "")} {...tiltHandlers}>
-                      <img src={p.imagePath} alt={name} loading="lazy" />
+                      <img src={p.imagePath} alt={name} loading="lazy"  decoding="sync" />
                     </div>
                     {(name || loc) && (
                       <figcaption className="gallery-photo-caption">
@@ -138,7 +138,7 @@ export default function Gallery() {
                   style={{ "--reveal-delay": `${i * 0.06}s` }}
                 >
                   <div className={"gallery-photo-wrap tilt-frame clip-reveal" + (awardsInView ? " is-in" : "")} {...tiltHandlers}>
-                    <img src={a.imagePath} alt={`Award recognition ${i + 1}`} loading="lazy" />
+                    <img src={a.imagePath} alt={`Award recognition ${i + 1}`} loading="lazy"  decoding="sync" />
                   </div>
                 </figure>
               ))}

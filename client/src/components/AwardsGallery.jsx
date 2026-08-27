@@ -54,7 +54,7 @@ export default function AwardsGallery({ onOpen }) {
                     onClick={() => onOpen && onOpen(it.imagePath, `Chairman presenting a recognition award (${i + 1})`)}
                   >
                     <div className={"award-img-wrap tilt-frame clip-reveal" + (galleryInView ? " is-in" : "")} {...tiltHandlers}>
-                      <img src={it.imagePath} alt={alt} loading="lazy" />
+                      <img src={it.imagePath} alt={alt} loading="lazy"  decoding="sync" />
                     </div>
                   </figure>
                 );

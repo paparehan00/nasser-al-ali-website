@@ -46,7 +46,7 @@ export default function FloatingButtons() {
         rel="noopener noreferrer"
         aria-label={t("cta.whatsappAria")}
       >
-        <img src="/assets/whatsapplogo.png" alt="" aria-hidden="true" width="56" height="56" />
+        <img src="/assets/whatsapplogo.png" alt="" aria-hidden="true" width="56" height="56"  decoding="sync" />
       </a>
 
       {/* Bottom of stack: Call */}

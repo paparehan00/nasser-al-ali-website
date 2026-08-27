@@ -25,7 +25,7 @@ export default function FleetGrid() {
           {FLEET.map((f, i) => (
             <div className="fleet-card reveal-up" key={f.id} style={{ "--reveal-delay": `${i * 0.06}s` }}>
               <div className={"fleet-illus clip-reveal" + (inView ? " is-in" : "")}>
-                <img src={f.img} alt={f.alt} loading="lazy" />
+                <img src={f.img} alt={f.alt} loading="lazy"  decoding="sync" />
               </div>
               <div className="fleet-body">
                 <h3>{t(`fleet.${f.id}.title`)}</h3>

@@ -52,7 +52,7 @@ export default function ProjectsMasonry({ onOpen }) {
                     alt={d.name ? `${d.name}${d.location ? `, ${d.location}` : ""}` : "Project"}
                     loading="lazy"
                     draggable={false}
-                  />
+                   decoding="sync" />
                 </div>
                 <div className="project-caption">
                   <h4>{d.name}</h4>

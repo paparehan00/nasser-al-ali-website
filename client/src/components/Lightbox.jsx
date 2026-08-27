@@ -22,7 +22,7 @@ export default function Lightbox({ src, alt, onClose }) {
       aria-modal="true"
     >
       <button className="lightbox-close" aria-label="Close lightbox" onClick={onClose}>×</button>
-      <img src={src} alt={alt || "Fullscreen image"} id="lightbox-img" />
+      <img src={src} alt={alt || "Fullscreen image"} id="lightbox-img"  decoding="sync" />
     </div>
   );
 }

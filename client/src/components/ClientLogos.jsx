@@ -34,7 +34,7 @@ export default function ClientLogos() {
                 alt={l.data?.name || ""}
                 loading="lazy"
                 draggable={false}
-              />
+               decoding="sync" />
             </div>
           )}
         />

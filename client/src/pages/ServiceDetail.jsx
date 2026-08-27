@@ -26,7 +26,7 @@ function SplitFeature({ id, photo, title, heading, copy }) {
   return (
     <section id={id} className="service-detail-split" ref={ref}>
       <div className="service-detail-split-media">
-        <img src={photo} alt={title} loading="lazy" />
+        <img src={photo} alt={title} loading="lazy"  decoding="sync" />
       </div>
       <div className="service-detail-split-panel">
         <div className={"service-detail-split-inner" + (inView ? " is-in-view" : "")}>

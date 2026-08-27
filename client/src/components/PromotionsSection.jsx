@@ -41,7 +41,7 @@ export default function PromotionsSection() {
                   {...wrapProps}
                 >
                   <div className="promo-card-img">
-                    <img src={p.imagePath} alt={title || "Promotion"} loading="lazy" />
+                    <img src={p.imagePath} alt={title || "Promotion"} loading="lazy"  decoding="sync" />
                   </div>
                   {title && <div className="promo-card-title">{title}</div>}
                 </Wrap>

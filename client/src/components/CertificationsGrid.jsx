@@ -49,7 +49,7 @@ export default function CertificationsGrid({ onOpen }) {
                 }}
               >
                 <div className={"cert-thumb tilt-frame clip-reveal" + (inView ? " is-in" : "")} {...tiltHandlers}>
-                  <img src={c.imagePath} alt={d.alt} loading="lazy" />
+                  <img src={c.imagePath} alt={d.alt} loading="lazy"  decoding="sync" />
                 </div>
                 <div className="cert-body">
                   <div className="cert-code">{d.code}</div>

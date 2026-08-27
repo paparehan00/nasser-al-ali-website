@@ -32,8 +32,8 @@ export default function AboutSection() {
             className="about-image-kenburns"
             src="/assets/about-theme-1.jpg"
             alt="Nasser Al Ali Enterprises site teams and engineers at work across Qatar"
-            loading="lazy"
-          />
+            loading="eager"
+           decoding="sync" />
         </div>
       </div>
     </section>

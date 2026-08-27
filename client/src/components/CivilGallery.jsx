@@ -66,7 +66,7 @@ export default function CivilGallery({ onOpen }) {
               onClick={() => onOpen && onOpen(it.imagePath, `Civil work ${(i % items.length) + 1}`)}
               {...tiltHandlers}
             >
-              <img src={it.imagePath} alt={it.data?.alt || "Civil Work"} loading="lazy" />
+              <img src={it.imagePath} alt={it.data?.alt || "Civil Work"} loading="lazy"  decoding="sync" />
             </div>
           ))}
         </div>
