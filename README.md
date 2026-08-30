@@ -66,6 +66,8 @@ Client dev proxies `/api` and `/uploads` → `:4000`, so cookies + CSRF work sam
 | `VITE_CHAT_API_URL` | | chat worker URL. Read here too so the CSP can allow the widget's fetch — see `middleware/csp.js` |
 | `BACKUP_S3_*` | | off-site backup to R2/S3/B2. See `.env.example`. Without it, backups sit on the same volume as the DB |
 | `BACKUP_EMAIL_TO` | | alternative off-site backup: emails the DB as an attachment |
+| `MAIL_FROM_EMAIL` | | leave blank on Gmail (domain SPF is Microsoft-only, `-all`). Set to `info@…` once a relay like Brevo is verified for the domain |
+| `MAIL_REPLY_TO` | | where customer replies go; defaults to `NOTIFY_EMAIL` |
 
 **Client** (`client/.env`):
 

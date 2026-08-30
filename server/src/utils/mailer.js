@@ -194,6 +194,7 @@ export async function sendCustomerConfirmation(booking) {
   await getTransport().sendMail({
     from: `"${env.mailFromName}" <${env.mailFromEmail || env.smtpUser}>`,
     to: email,
+    ...(env.mailReplyTo ? { replyTo: env.mailReplyTo } : {}),
     subject: "Thank You for Your Booking - Nasser Al Ali Enterprises",
     text: plain,
     html: emailShell(body),
@@ -250,11 +251,14 @@ export async function sendAdminNotification(booking) {
     .join("\n");
 
   await getTransport().sendMail({
-    // This internal copy specifically must read as coming from info@, not
-    // the leads@ inbox the SMTP account authenticates as — unlike the
-    // customer-facing confirmation above, which keeps the normal
-    // mailFromEmail/smtpUser fallback untouched.
-    from: `"${env.mailFromName}" <info@nasseralalienterprises.com>`,
+    // Sends from the SMTP account like every other path here. It used to
+    // hardcode info@<domain>, which the domain's SPF record (`-all`, Microsoft
+    // only) does not authorise Gmail to do — it survived purely because no
+    // DMARC record is published, and would start bouncing the day one is.
+    // This is an internal alert to our own inbox, so there is nothing to gain
+    // from putting the company address on it; Reply-To below is what actually
+    // matters for answering the customer.
+    from: `"${env.mailFromName}" <${env.mailFromEmail || env.smtpUser}>`,
     to: env.notifyEmail,
     replyTo: email,
     subject: `New consultation booking from ${name}`,
@@ -293,6 +297,7 @@ export async function sendApplicationConfirmation(application) {
   await getTransport().sendMail({
     from: `"${env.mailFromName}" <${env.mailFromEmail || env.smtpUser}>`,
     to: email,
+    ...(env.mailReplyTo ? { replyTo: env.mailReplyTo } : {}),
     subject: "Thank you for your application - Nasser Al Ali Enterprises",
     text: plain,
     html: emailShell(body),

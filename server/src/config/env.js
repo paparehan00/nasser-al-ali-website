@@ -56,6 +56,9 @@ export const env = {
   // relay providers like Brevo use a separate login, so set this explicitly there).
   mailFromEmail: optional("MAIL_FROM_EMAIL", ""),
   notifyEmail:  optional("NOTIFY_EMAIL", ""),
+  // Where a customer's reply should land. Defaults to the monitored company
+  // inbox rather than the SMTP account, which is a send-only leads address.
+  mailReplyTo:  optional("MAIL_REPLY_TO", "") || optional("NOTIFY_EMAIL", ""),
 
   // --- Off-platform backup targets (see utils/offsiteBackup.js) ---------
   // A backup that lives on the same volume as the database it copies is not

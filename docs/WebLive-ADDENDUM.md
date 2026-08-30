@@ -206,6 +206,67 @@ backups are arriving* is still worth having on top of that.
 
 ---
 
+## Part 3b — Email
+
+### How it is set up now
+
+Every email the site sends goes out through the Gmail account in `SMTP_USER`,
+and shows that Gmail address as the sender. Replies are steered to
+`info@nasseralalienterprises.com`, so staff answer from Outlook as normal.
+
+This is deliberate. The domain's SPF record is:
+
+```
+v=spf1 include:spf.protection.outlook.com -all
+```
+
+The `-all` means **only Microsoft's servers may send email as this domain**.
+Gmail is not on that list. An earlier version of the code sent the booking alert
+as `info@nasseralalienterprises.com` through Gmail, which fails that check. It
+was still arriving because the domain publishes no DMARC record, so receiving
+servers had no instruction to reject it. That is delivery on luck, and it would
+have started bouncing the moment anyone added DMARC.
+
+**Company email is on Microsoft 365** (the MX record points at
+`mail.protection.outlook.com`). Whoever changes DNS must leave the MX records
+alone, or company email stops immediately.
+
+Microsoft is retiring SMTP AUTH basic authentication (disabled by default for
+existing tenants from the end of December 2026). **This does not affect this
+site**, which sends through Gmail, nor the `info@` mailbox in Outlook. It would
+only matter if something were sending through `smtp.office365.com`, and nothing
+here does.
+
+### Optional improvement: send from the company address
+
+Emails to customers currently show a `@gmail.com` sender. That works reliably,
+but reads as small for a contracting business. To send as
+`info@nasseralalienterprises.com` properly:
+
+1. Create a free Brevo account (300 emails/day; this site sends a handful a week).
+2. Add the domain in Brevo and follow its verification steps.
+3. Add Brevo's DKIM records to DNS, and **extend** the SPF record rather than
+   replacing it:
+
+   ```
+   v=spf1 include:spf.protection.outlook.com include:spf.brevo.com -all
+   ```
+
+   Dropping the Microsoft entry here would break company email.
+4. In Railway, set `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER` and `SMTP_PASS` to
+   Brevo's values, and set:
+
+   ```
+   MAIL_FROM_EMAIL=info@nasseralalienterprises.com
+   ```
+
+No code change is required. Every send path reads that one variable.
+
+5. Once mail is authenticated this way, publishing a DMARC record is worth
+   doing. Do it **only after** step 4 is working, not before.
+
+---
+
 ## Part 4 — Ongoing running
 
 ### What paying the bill does and does not cover
