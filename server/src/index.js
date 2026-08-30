@@ -2,9 +2,18 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { db } from "./db/connection.js";
-import { createApp } from "./app.js";
 import { env } from "./config/env.js";
 import { verifyMailer } from "./utils/mailer.js";
+
+// NOTE: ./app.js is imported *dynamically*, further down, and must stay that
+// way. Its route modules (routes/admin.js, routes/content.js, utils/audit.js)
+// call db.prepare() at module scope, and ES imports are fully evaluated before
+// the importing module's body runs. A static import here would therefore run
+// all 18 of those prepare() calls before the schema below has been applied,
+// and every one of them throws "no such table" against an empty database.
+//
+// That is precisely the fresh-volume first-deploy case the schema apply exists
+// to serve, so a static import turns the first boot into a crash loop.
 
 // Auto-apply the schema on boot. Idempotent (all statements are IF NOT EXISTS).
 // This means a fresh Railway deploy with a fresh volume just works — no
@@ -56,6 +65,10 @@ function seedUploads() {
 }
 
 seedUploads();
+
+// Safe now: the schema exists, so the route modules' module-scope prepare()
+// calls will resolve. See the note at the top of this file.
+const { createApp } = await import("./app.js");
 
 const app = createApp();
 
