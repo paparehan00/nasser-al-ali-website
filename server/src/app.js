@@ -9,6 +9,7 @@ import { fileURLToPath } from "node:url";
 import { env } from "./config/env.js";
 import { issueCsrfIfMissing } from "./middleware/csrf.js";
 import { generalLimiter } from "./middleware/rateLimit.js";
+import { buildCsp, inlineScriptHashes } from "./middleware/csp.js";
 import { notFound, errorHandler } from "./middleware/errors.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -28,7 +29,18 @@ export function createApp() {
   app.set("trust proxy", 1);
   app.disable("x-powered-by");
 
-  app.use(helmet());
+  // Default helmet, minus its CSP - ours is built in middleware/csp.js and
+  // has to know the chat worker's origin plus the hashes of the inline
+  // scripts Vite emitted into index.html.
+  app.use(
+    helmet({
+      contentSecurityPolicy: buildCsp({
+        chatApiUrl: env.chatApiUrl,
+        scriptHashes: inlineScriptHashes(path.join(CLIENT_DIST, "index.html")),
+        isProd: env.isProd,
+      }),
+    })
+  );
   app.use(
     cors({
       origin(origin, cb) {

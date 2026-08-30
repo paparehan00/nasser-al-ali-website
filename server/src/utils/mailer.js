@@ -31,6 +31,22 @@ export async function verifyMailer() {
   }
 }
 
+// Plain internal mail (no marketing shell) for machine-to-operator messages
+// such as off-site backup copies. Always sent from the SMTP account itself so
+// it never depends on domain alignment being set up correctly.
+export async function sendSystemMail({ to, subject, text, attachments }) {
+  if (!env.smtpUser || !env.smtpPass) {
+    throw new Error("SMTP not configured (SMTP_USER / SMTP_PASS)");
+  }
+  await getTransport().sendMail({
+    from: `"${env.mailFromName} (system)" <${env.smtpUser}>`,
+    to,
+    subject,
+    text,
+    attachments,
+  });
+}
+
 // ─── HTML shell ──────────────────────────────────────────────────────────────
 
 function emailShell(bodyHtml) {

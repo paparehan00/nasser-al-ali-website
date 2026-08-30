@@ -43,6 +43,10 @@ export const env = {
   adminSeedPassword: optional("ADMIN_PASSWORD", ""),
   groqApiKey: optional("GROQ_API_KEY", ""),
 
+  // Build-time var for the client, read here too so the CSP can allow the
+  // chat widget's fetch to the worker origin.
+  chatApiUrl: optional("VITE_CHAT_API_URL", ""),
+
   smtpHost:     optional("SMTP_HOST", "smtp.gmail.com"),
   smtpPort:     Number(optional("SMTP_PORT", "465")),
   smtpUser:     optional("SMTP_USER", ""),
@@ -52,6 +56,19 @@ export const env = {
   // relay providers like Brevo use a separate login, so set this explicitly there).
   mailFromEmail: optional("MAIL_FROM_EMAIL", ""),
   notifyEmail:  optional("NOTIFY_EMAIL", ""),
+
+  // --- Off-platform backup targets (see utils/offsiteBackup.js) ---------
+  // A backup that lives on the same volume as the database it copies is not
+  // a backup: one lost volume takes the live DB and all 30 rotations with it.
+  backup: {
+    s3Endpoint:  optional("BACKUP_S3_ENDPOINT", ""),
+    s3Bucket:    optional("BACKUP_S3_BUCKET", ""),
+    s3Region:    optional("BACKUP_S3_REGION", "auto"),
+    s3KeyId:     optional("BACKUP_S3_ACCESS_KEY_ID", ""),
+    s3Secret:    optional("BACKUP_S3_SECRET_ACCESS_KEY", ""),
+    s3Prefix:    optional("BACKUP_S3_PREFIX", "naa-backups"),
+    emailTo:     optional("BACKUP_EMAIL_TO", ""),
+  },
 
   serverRoot,
 };

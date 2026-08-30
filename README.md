@@ -63,6 +63,9 @@ Client dev proxies `/api` and `/uploads` → `:4000`, so cookies + CSRF work sam
 | `JWT_TTL_SECONDS` | | session lifetime, default 12h |
 | `ADMIN_EMAIL` | ✓ (once) | used only by `npm run server:seed` |
 | `ADMIN_PASSWORD` | ✓ (once) | used only by `npm run server:seed` — user is forced to change on first login |
+| `VITE_CHAT_API_URL` | | chat worker URL. Read here too so the CSP can allow the widget's fetch — see `middleware/csp.js` |
+| `BACKUP_S3_*` | | off-site backup to R2/S3/B2. See `.env.example`. Without it, backups sit on the same volume as the DB |
+| `BACKUP_EMAIL_TO` | | alternative off-site backup: emails the DB as an attachment |
 
 **Client** (`client/.env`):
 

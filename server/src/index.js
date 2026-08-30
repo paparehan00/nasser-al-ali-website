@@ -18,6 +18,45 @@ try {
   process.exit(1);
 }
 
+// The repo ships server/uploads/ with the images the seeded content rows
+// point at. In production UPLOAD_ROOT points at the mounted volume instead,
+// so a fresh volume starts empty and every /uploads/... URL 404s until the
+// files are put there by hand. Copy them across on boot instead - it is the
+// same idea as applying the schema above, and it removes the one manual
+// drag-and-drop step from the go-live runbook.
+//
+// Never overwrites: a file already on the volume is one an admin uploaded (or
+// one we copied on an earlier boot), and always wins over the repo copy.
+function seedUploads() {
+  const repoUploads = path.join(env.serverRoot, "uploads");
+  if (path.resolve(repoUploads) === path.resolve(env.uploadRoot)) return; // dev
+  if (!fs.existsSync(repoUploads)) return;
+
+  let copied = 0;
+  const walk = (srcDir, destDir) => {
+    fs.mkdirSync(destDir, { recursive: true });
+    for (const entry of fs.readdirSync(srcDir, { withFileTypes: true })) {
+      const src = path.join(srcDir, entry.name);
+      const dest = path.join(destDir, entry.name);
+      if (entry.isDirectory()) walk(src, dest);
+      else if (!fs.existsSync(dest)) {
+        fs.copyFileSync(src, dest);
+        copied += 1;
+      }
+    }
+  };
+
+  try {
+    walk(repoUploads, env.uploadRoot);
+    if (copied > 0) console.log(`Boot: seeded ${copied} upload file(s) into ${env.uploadRoot}`);
+  } catch (err) {
+    // Non-fatal: the site still serves, some images just 404 until fixed.
+    console.error("Boot: seeding uploads failed:", err.message);
+  }
+}
+
+seedUploads();
+
 const app = createApp();
 
 app.listen(env.port, () => {
